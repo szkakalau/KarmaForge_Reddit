@@ -1,0 +1,142 @@
+# ============================================================
+# KarmaForge v1 Configuration
+# ============================================================
+
+credentials:
+  reddit:
+    client_id: ${REDDIT_CLIENT_ID}
+    client_secret: ${REDDIT_CLIENT_SECRET}
+    user_agent: "karmaforge-v1-research/0.1 by u/your_username"
+  llm:
+    provider: deepseek
+    api_key: ${LLM_API_KEY}
+    model: deepseek-chat
+    api_base_url: https://api.deepseek.com/v1
+    max_tokens: 2000
+    temperature: 0.0
+    request_timeout: 60
+
+paths:
+  data_raw: ./data/raw
+  data_processed: ./data/processed
+  data_patterns: ./data/patterns
+  reports: ./分析报告
+  logs: ./logs
+  kaggle:
+    ucsd_dataset: ./data/raw/kaggle/ucsd_reddit_submissions.csv
+    snap_dataset: ./data/raw/kaggle/snap_reddit_hyperlinks.csv
+
+collection:
+  subreddits:
+    t1:
+      - funny
+      - AskReddit
+      - pics
+      - gaming
+      - worldnews
+      - videos
+      - todayilearned
+      - aww
+    t2:
+      - productivity
+      - Fitness
+      - personalfinance
+      - technology
+      - science
+      - books
+      - cooking
+      - lifehacks
+      - getdisciplined
+      - Entrepreneur
+      - dataisbeautiful
+      - InternetIsBeautiful
+    t3:
+      - SaaS
+      - kubernetes
+      - digitalnomad
+      - selfhosted
+      - indiehackers
+      - startups
+      - SideProject
+      - solopreneur
+
+  posts_per_subreddit: 500
+  comments_per_post: 20
+  deep_thread_comments: 5
+  time_window_years: 2
+
+  sources:
+    kaggle_enabled: true
+    praw_enabled: false
+    thirdparty_enabled: true
+    browser_enabled: false
+
+  rate_limit:
+    requests_per_minute: 60
+    delay_between_requests: 1.0
+    batch_size: 100
+    batch_delay: 60
+
+  exclude_subreddits: []
+  min_upvotes: 1
+
+analysis:
+  viral_threshold:
+    method: percentile
+    value: 90
+    min_absolute_upvotes: 100
+
+  significance_level: 0.05
+
+  llm:
+    enabled: true
+    batch_size: 50
+    max_concurrent_calls: 3
+    cache_responses: true
+
+  text:
+    min_title_length: 5
+    min_body_length: 20
+    readability_metrics:
+      - flesch_kincaid_grade
+      - flesch_reading_ease
+      - gunning_fog
+      - smog_index
+
+  pattern_extraction:
+    min_cluster_size: 30
+    max_patterns: 8
+    viral_percentile: 90
+    title_similarity_threshold: 0.6
+    min_pattern_significance: 0.05
+
+  subreddit_specificity:
+    deviation_threshold: 0.3
+
+validation:
+  backtesting:
+    train_start: "2023-01-01"
+    train_end: "2023-12-31"
+    test_start: "2024-01-01"
+    test_end: "2024-12-31"
+    min_recall: 0.60
+    min_precision: 0.40
+    viral_percentile: 90
+    pattern_match_threshold: 0.6
+
+  holdout:
+    num_holdout_subreddits: 4
+    min_precision_ratio: 0.70
+    seed: 42
+    stratify_by_tier: true
+
+  stratified:
+    enabled: true
+    min_posts_per_tier_for_validation: 500
+
+output:
+  report_language: zh
+  include_raw_data_in_reports: true
+  generate_csv_exports: true
+  chart_style: unicode
+  verbose_logging: false
