@@ -212,6 +212,8 @@ def validate(config_path: str) -> None:
 
     click.echo(f"Validating on {len(posts)} posts...")
 
+    from .analyzer.pattern_extractor import PatternExtractor
+
     pat_cfg = config.get("analysis", {}).get("pattern_extraction", {})
     extractor = PatternExtractor(
         min_cluster_size=pat_cfg.get("min_cluster_size", 30),
@@ -254,12 +256,12 @@ def validate(config_path: str) -> None:
     st_result = stratified.run(posts)
 
     click.echo(f"\nBacktesting:")
-    click.echo(f"  Recall: {bt_result.recall:.4f} {'PASS' if bt_result.pass_recall else 'FAIL'} (>= {bt_result.min_recall})")
-    click.echo(f"  Precision: {bt_result.precision:.4f} {'PASS' if bt_result.pass_precision else 'FAIL'} (>= {bt_result.min_precision})")
+    click.echo(f"  Recall: {bt_result.recall:.4f} {'PASS' if bt_result.pass_recall else 'FAIL'}")
+    click.echo(f"  Precision: {bt_result.precision:.4f} {'PASS' if bt_result.pass_precision else 'FAIL'}")
     click.echo(f"  F1: {bt_result.f1_score:.4f}")
 
     click.echo(f"\nHoldout:")
-    click.echo(f"  Precision ratio: {ho_result.precision_ratio:.4f} {'PASS' if ho_result.pass_threshold else 'FAIL'} (>= {ho_result.min_precision_ratio})")
+    click.echo(f"  Precision ratio: {ho_result.precision_ratio:.4f} {'PASS' if ho_result.pass_threshold else 'FAIL'}")
     click.echo(f"  Transferability: {ho_result.transferability_score:.4f}")
 
     click.echo(f"\nStratified: overall={'PASS' if st_result.overall_pass else 'FAIL'}")

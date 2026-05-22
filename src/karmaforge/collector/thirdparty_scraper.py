@@ -6,6 +6,7 @@ Posts from this source have empty body fields and are marked source_dataset="thi
 
 import logging
 import time
+from html.parser import HTMLParser
 from typing import Optional
 
 from ..storage import Post, SubredditMeta, ContentType

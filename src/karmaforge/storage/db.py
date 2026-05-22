@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Optional, Union
 
-from .schemas import Post, Comment, SubredditMeta, Tier
+from .schemas import Post, Comment, SubredditMeta, Tier, ContentType
 
 
 SCHEMA_SQL = """
@@ -185,7 +185,7 @@ class Database:
     @staticmethod
     def _row_to_post(row: sqlite3.Row) -> Post:
         d = dict(row)
-        d["content_type"] = d.get("content_type", "text")
+        d["content_type"] = ContentType.from_string(d.get("content_type", "text"))
         awards_json = d.pop("awards_json", "{}")
         d["awards"] = json.loads(awards_json) if awards_json else {}
         tier_val = d.pop("tier", None)
