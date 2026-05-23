@@ -4,11 +4,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Best posting day + hour by tier (from V1 meta_analyzer results — UTC)
+# 最佳发帖日 + 小时（基于 V1 meta_analyzer 结果 — UTC）
 BEST_TIMES = {
-    "t1": {"day": "Monday", "hour": 9},
-    "t2": {"day": "Tuesday", "hour": 14},
-    "t3": {"day": "Wednesday", "hour": 15},
+    "t1": {"day": "周一", "hour": 9},
+    "t2": {"day": "周二", "hour": 14},
+    "t3": {"day": "周三", "hour": 15},
 }
 
 # Common flairs by subreddit (from V1 reports)
@@ -54,10 +54,10 @@ class MetadataSuggester:
         recommended_flair = self._pick_flair(flairs, user_topic)
 
         return {
-            "recommended_day": time_info["day"],
-            "recommended_hour_utc": time_info["hour"],
-            "recommended_flair": recommended_flair,
-            "should_mark_oc": self._should_mark_oc(subreddit, user_topic),
+            "推荐发帖日": time_info["day"],
+            "推荐发帖时间(UTC)": time_info["hour"],
+            "推荐Flair": recommended_flair,
+            "标记为OC": self._should_mark_oc(subreddit, user_topic),
         }
 
     @staticmethod

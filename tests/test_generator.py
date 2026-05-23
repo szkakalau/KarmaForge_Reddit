@@ -440,7 +440,7 @@ class TestSelfChecker:
             "recommended_metrics": {"title_words": [10, 20], "body_words": [50, 600]},
         }
         report = checker.check("Hi", "Some body text that is long enough for the check", pattern, "programming")
-        assert not report.passed or report.dimensions["title_length"]["status"] == "fail"
+        assert not report.passed or report.dimensions["标题长度"]["状态"] == "失败"
 
     def test_body_too_short_warns(self, temp_anti_patterns_file):
         checker = SelfChecker(temp_anti_patterns_file)
@@ -454,8 +454,8 @@ class TestSelfChecker:
             pattern,
             "programming",
         )
-        dim = report.dimensions.get("body_length", {})
-        assert dim.get("status") in ("warn", "fail")
+        dim = report.dimensions.get("正文长度", {})
+        assert dim.get("状态") in ("警告", "失败")
 
     def test_anti_pattern_detected(self, temp_anti_patterns_file):
         checker = SelfChecker(temp_anti_patterns_file)
@@ -469,7 +469,7 @@ class TestSelfChecker:
             pattern,
             "programming",
         )
-        triggered = report.dimensions.get("anti_patterns", {}).get("triggered", [])
+        triggered = report.dimensions.get("反模式检测", {}).get("触发的反模式", [])
         assert len(triggered) > 0
 
     def test_no_body_pattern_passes(self, temp_anti_patterns_file):
@@ -484,7 +484,7 @@ class TestSelfChecker:
             pattern,
             "pics",
         )
-        assert report.dimensions["body_length"]["status"] == "ok"
+        assert report.dimensions["正文长度"]["状态"] == "正常"
 
     def test_readability_check(self, temp_anti_patterns_file):
         checker = SelfChecker(temp_anti_patterns_file)
@@ -499,7 +499,7 @@ class TestSelfChecker:
             pattern,
             "programming",
         )
-        assert "readability" in report.dimensions
+        assert "可读性" in report.dimensions
 
     def test_hook_presence_check(self, temp_anti_patterns_file):
         checker = SelfChecker(temp_anti_patterns_file)
@@ -513,8 +513,8 @@ class TestSelfChecker:
             pattern,
             "programming",
         )
-        hook_dim = report.dimensions.get("hook_presence", {})
-        assert hook_dim.get("score", 100) < 80  # weak hook presence
+        hook_dim = report.dimensions.get("钩子体现", {})
+        assert hook_dim.get("得分", 100) < 80  # weak hook presence
 
 
 # ── MetadataSuggester ────────────────────────────────────────────
@@ -523,35 +523,35 @@ class TestMetadataSuggester:
     def test_suggest_by_tier(self):
         suggester = MetadataSuggester()
         result = suggester.suggest("productivity", "t2", "automation script")
-        assert "recommended_day" in result
-        assert "recommended_hour_utc" in result
-        assert "recommended_flair" in result
-        assert isinstance(result["should_mark_oc"], bool)
+        assert "推荐发帖日" in result
+        assert "推荐发帖时间(UTC)" in result
+        assert "推荐Flair" in result
+        assert isinstance(result["标记为OC"], bool)
 
     def test_flair_matches_topic(self):
         suggester = MetadataSuggester()
         result = suggester.suggest("programming", "t2", "I built a new tool for automation")
-        assert result["recommended_flair"] in ("Resource", "I made this")
+        assert result["推荐Flair"] in ("Resource", "I made this")
 
     def test_flair_fallback_to_first(self):
         suggester = MetadataSuggester()
         result = suggester.suggest("productivity", "t2", "random topic")
-        assert result["recommended_flair"] in ["Technique", "Tool", "Discussion", "Story"]
+        assert result["推荐Flair"] in ["Technique", "Tool", "Discussion", "Story"]
 
     def test_oc_marking_for_personal_content(self):
         suggester = MetadataSuggester()
         result = suggester.suggest("programming", "t2", "I built my first web app")
-        assert result["should_mark_oc"] is True
+        assert result["标记为OC"] is True
 
     def test_no_oc_for_impersonal_content(self):
         suggester = MetadataSuggester()
         result = suggester.suggest("programming", "t2", "a discussion about Python types")
-        assert result["should_mark_oc"] is False
+        assert result["标记为OC"] is False
 
     def test_unknown_subreddit_defaults(self):
         suggester = MetadataSuggester()
         result = suggester.suggest("nonexistent_sub", "t2", "some topic")
-        assert result["recommended_flair"] in ("Discussion", "Question")
+        assert result["推荐Flair"] in ("Discussion", "Question")
 
 
 # ── GeneratorOrchestrator ────────────────────────────────────────

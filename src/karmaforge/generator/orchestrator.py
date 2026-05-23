@@ -240,9 +240,9 @@ class GeneratorOrchestrator:
             "metadata": result.metadata,
             "self_check": (
                 {
-                    "passed": result.self_check.passed,
-                    "dimensions": result.self_check.dimensions,
-                    "suggestions": result.self_check.suggestions,
+                    "是否通过": result.self_check.passed,
+                    "各维度": result.self_check.dimensions,
+                    "改进建议": result.self_check.suggestions,
                 }
                 if result.self_check else None
             ),

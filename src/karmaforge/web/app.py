@@ -512,7 +512,7 @@ def _build_generate_tab(shared: dict) -> None:
             return
 
         yield (gr.update(visible=True), None,
-               "> analyzing topic + generating titles...",
+               "> 分析主题 + 生成标题中...",
                "", "", "", None, None, "")
 
         from ..generator.orchestrator import GeneratorOrchestrator
@@ -530,8 +530,8 @@ def _build_generate_tab(shared: dict) -> None:
         if not result.candidate_titles:
             matched_str = ", ".join(f"r/{s}" for s, _ in result.matched_subreddits)
             yield (gr.update(visible=True), None,
-                   f"[FAIL] no matching patterns found.\n\nMatched subreddits: {matched_str}",
-                   f"**Matched:** {matched_str}", "", "", None, None, "")
+                   f"[失败] 未找到匹配模式。\n\n匹配到的 Subreddit: {matched_str}",
+                   f"**匹配:** {matched_str}", "", "", None, None, "")
             return
 
         subs_text = " | ".join(f"r/{s} ({sc:.0%})" for s, sc in result.matched_subreddits)
@@ -546,7 +546,7 @@ def _build_generate_tab(shared: dict) -> None:
         yield (gr.update(visible=True),
                {"titles": titles_data, "topic": topic_val, "subreddit": primary_sub,
                 "tier": tier, "patterns": patterns_map},
-               f"[OK] {len(titles_data)} titles ready — {subs_text}\n\nClick a title to select it, then click **生成完整帖子** to generate the full post.",
+               f"[完成] {len(titles_data)} 个标题已生成 — {subs_text}\n\n点击标题选中，然后点击 **生成完整帖子** 生成正文。",
                f"**Matched Subreddits:** {subs_text}",
                _render_titles_html(titles_data),
                "",
@@ -608,11 +608,11 @@ def _build_generate_tab(shared: dict) -> None:
             sc = checker.check(selected_title_text, body, pattern, subreddit)
             sc_data = None
             if sc:
-                sc_data = {"passed": sc.passed, "dimensions": sc.dimensions, "suggestions": sc.suggestions}
+                sc_data = {"是否通过": sc.passed, "各维度": sc.dimensions, "改进建议": sc.suggestions}
 
             passed = sc.passed if sc else True
-            check_tag = "[DONE]" if passed else "[WARN]"
-            check_note = "quality check passed." if passed else f"quality check: {len(sc.suggestions)} suggestion(s)."
+            check_tag = "[完成]" if passed else "[警告]"
+            check_note = "质量检查通过。" if passed else f"质量检查: {len(sc.suggestions)} 条建议。"
 
             from ..generator.metadata_suggester import MetadataSuggester
             meta = MetadataSuggester()
@@ -621,7 +621,7 @@ def _build_generate_tab(shared: dict) -> None:
             yield (gr.update(visible=True),
                    {**gen_state, "body_text": body, "body_title": selected_title_text,
                     "body_sc": sc_data, "body_meta": metadata, "selected_title": selected},
-                   f"{check_tag} complete — {check_note}",
+                   f"{check_tag} — {check_note}",
                    f"**Matched Subreddits:** {subs_text}",
                    _render_titles_html(titles, selected_title_text),
                    _render_body_html(body),
@@ -642,7 +642,7 @@ def _build_generate_tab(shared: dict) -> None:
         )
 
         yield (gr.update(visible=True), None,
-               "> analyzing topic + generating titles + body...",
+               "> 分析主题 + 生成标题及正文中...",
                "", "", "", None, None, "")
 
         result = orch.generate_titles(topic_val, target, n_titles=n_val)
@@ -650,8 +650,8 @@ def _build_generate_tab(shared: dict) -> None:
         if not result.candidate_titles:
             matched_str = ", ".join(f"r/{s}" for s, _ in result.matched_subreddits)
             yield (gr.update(visible=True), None,
-                   f"[FAIL] no matching patterns found.\n\nMatched subreddits: {matched_str}",
-                   f"**Matched:** {matched_str}", "", "", None, None, "")
+                   f"[失败] 未找到匹配模式。\n\n匹配到的 Subreddit: {matched_str}",
+                   f"**匹配:** {matched_str}", "", "", None, None, "")
             return
 
         primary_sub = result.matched_subreddits[0][0]
@@ -689,18 +689,18 @@ def _build_generate_tab(shared: dict) -> None:
 
         sc_data = None
         if sc:
-            sc_data = {"passed": sc.passed, "dimensions": sc.dimensions, "suggestions": sc.suggestions}
+            sc_data = {"是否通过": sc.passed, "各维度": sc.dimensions, "改进建议": sc.suggestions}
 
         orch.save_generation(result)
 
         passed = sc.passed if sc else True
-        check_tag = "[DONE]" if passed else "[WARN]"
-        check_note = "quality check passed." if passed else f"quality check: {len(sc.suggestions)} suggestion(s)."
+        check_tag = "[完成]" if passed else "[警告]"
+        check_note = "质量检查通过。" if passed else f"质量检查: {len(sc.suggestions)} 条建议。"
 
         yield (gr.update(visible=True),
                {**base_state, "body_text": body, "body_title": selected_title_text,
                 "body_sc": sc_data, "body_meta": result.metadata if result.metadata else None},
-               f"{check_tag} complete — {check_note}\n\n{subs_text}",
+               f"{check_tag} — {check_note}\n\n{subs_text}",
                f"**Matched Subreddits:** {subs_text}",
                _render_titles_html(titles_data, selected_title_text),
                _render_body_html(body),
@@ -717,8 +717,8 @@ def _build_generate_tab(shared: dict) -> None:
 
 
 def _build_track_tab(shared: dict) -> None:
-    """Build the Track tab — URL → PostTracker → perf classification."""
-    gen_choices = ["(none)"]
+    """Build the Track tab — generation-centric: select gen → enter stats → classify + attribute."""
+    gen_choices = ["(选择一条生成记录...)"]
     gen_files = _list_generation_files()
     gen_map: dict[str, dict] = {}
     for g in gen_files:
@@ -733,53 +733,94 @@ def _build_track_tab(shared: dict) -> None:
         gen_choices.append(label)
         gen_map[label] = g
 
-    with gr.Row():
-        with gr.Column(scale=3):
-            url_input = gr.Textbox(
-                label="Reddit 帖子 URL",
-                placeholder="https://www.reddit.com/r/productivity/comments/abc123/...",
-            )
-        with gr.Column(scale=1):
-            gen_dd = gr.Dropdown(
-                label="关联生成记录",
-                choices=gen_choices,
-                value="(none)",
-            )
+    gen_dd = gr.Dropdown(
+        label="选择生成记录",
+        choices=gen_choices,
+        value=gen_choices[0],
+    )
 
-    track_btn = gr.Button("追踪效果", variant="primary")
+    # Generation preview card
+    gen_preview = gr.Markdown(visible=False, elem_classes=["kf-gen-preview"])
+
+    with gr.Row():
+        upvotes_num = gr.Number(label="Upvotes", value=0, precision=0, minimum=0)
+        comments_num = gr.Number(label="Comments", value=0, precision=0, minimum=0)
+        ratio_slider = gr.Slider(
+            0, 100, value=90, step=1, label="Upvote Ratio (%)",
+        )
+        subreddit_display = gr.Textbox(
+            label="目标 Subreddit (自动识别)",
+            interactive=False,
+            scale=1,
+        )
+
+    track_btn = gr.Button("记录效果", variant="primary")
 
     with gr.Column(visible=False) as track_result_col:
         stats_md = gr.Markdown()
         perf_label = gr.Label(label="效果判定")
-        attribution_json = gr.JSON(label="归因分析")
+        attr_btn = gr.Button("分析归因", variant="secondary", visible=False)
+        attribution_json = gr.JSON(label="归因分析", value=None)
 
-    def on_track(url: str, gen_label: str):
-        if not url.strip():
-            return gr.update(visible=False), "请输入 URL", "", None
+    # Store last entry for on-demand attribution
+    last_entry_state = gr.State(None)
 
-        from ..tracker.post_tracker import PostTracker
-        from ..tracker.metrics import classify_performance, get_subreddit_median
-
-        tracker = PostTracker(
-            db_path=shared["db_path"],
-            feedback_path=shared["feedback_path"],
-            headless=shared.get("headless", True),
-        )
-        tracker.initialize()
-
-        if not tracker.is_available:
-            return (
-                gr.update(visible=True),
-                "**Playwright 不可用。** 请先安装: `pip install karmaforge[browser]`",
-                "", None,
-            )
+    def on_gen_select(gen_label: str):
+        """When user selects a generation, show preview and auto-fill subreddit."""
+        if not gen_label or gen_label.startswith("(选择"):
+            return gr.update(visible=False), ""
 
         gen_data = gen_map.get(gen_label, {})
-        generation_id = gen_data.get("generation_id", "manual")
-        subreddit = ""
+        if not gen_data:
+            return gr.update(visible=False), ""
+
+        title = ""
+        st = gen_data.get("selected_title")
+        if st:
+            title = st.get("title", "")
+        candidates = gen_data.get("candidate_titles", [])
+        if not title and candidates:
+            title = candidates[0].get("title", "")
+
+        body_text = gen_data.get("body", "")
+
         matched = gen_data.get("matched_subreddits", [])
-        if matched:
-            subreddit = matched[0].get("subreddit", "unknown")
+        subreddit = matched[0].get("subreddit", "") if matched else ""
+
+        patterns = gen_data.get("selected_patterns", [])
+        pattern_name = patterns[0].get("name", "") if patterns else ""
+        pattern_hook = patterns[0].get("hook_type", "") if patterns else ""
+
+        gid = gen_data.get("generation_id", "")
+        created = gen_data.get("created_at", "")[:16]
+
+        lines = [
+            f"## {_html.escape(title or '(未选择标题)')}",
+            "",
+            f"**Subreddit:** r/{subreddit or 'unknown'} | **Pattern:** {_html.escape(pattern_name)} ({pattern_hook})",
+            f"**ID:** `{gid}` | **Created:** {created}",
+            "",
+        ]
+        if body_text:
+            excerpt = body_text[:250].replace("\n", " ")
+            lines.append(f"> {_html.escape(excerpt)}...")
+            lines.append("")
+
+        preview_md = "\n".join(lines)
+        return (
+            gr.update(value=preview_md, visible=True),
+            subreddit or "",
+        )
+
+    gen_dd.change(
+        fn=on_gen_select,
+        inputs=[gen_dd],
+        outputs=[gen_preview, subreddit_display],
+    )
+
+    def on_track(upvotes, num_comments, ratio_pct, gen_label):
+        gen_data = gen_map.get(gen_label, {})
+        generation_id = gen_data.get("generation_id", "manual")
         title = ""
         st = gen_data.get("selected_title")
         if st:
@@ -793,14 +834,38 @@ def _build_track_tab(shared: dict) -> None:
         if patterns:
             pid = patterns[0].get("pattern_id", "")
 
-        entry = tracker.track(url, generation_id, subreddit, title, body_text, pid)
+        matched = gen_data.get("matched_subreddits", [])
+        subreddit = matched[0].get("subreddit", "") if matched else ""
 
-        if not entry:
+        if not generation_id or generation_id == "manual":
             return (
-                gr.update(visible=True),
-                "**提取失败。** 请确认 URL 正确且帖子可公开访问。",
-                "", None,
+                gr.update(visible=True), "", "", gr.update(visible=False),
+                gr.update(value=None), None,
             )
+
+        if upvotes is None or upvotes < 0:
+            return (
+                gr.update(visible=False), "", "", gr.update(visible=False),
+                gr.update(value=None), None,
+            )
+
+        from ..tracker.post_tracker import PostTracker
+
+        tracker = PostTracker(
+            db_path=shared["db_path"],
+            feedback_path=shared["feedback_path"],
+        )
+
+        entry = tracker.track(
+            generation_id=generation_id,
+            subreddit=subreddit,
+            title=title,
+            body=body_text,
+            pattern_id=pid,
+            upvotes=int(upvotes),
+            num_comments=int(num_comments),
+            upvote_ratio=ratio_pct / 100.0,
+        )
 
         perf = entry.performance
         perf_display = {
@@ -811,25 +876,68 @@ def _build_track_tab(shared: dict) -> None:
         }.get(perf, perf)
 
         stats = (
+            f"**r/{subreddit}** | "
             f"**Upvotes:** {entry.actual_upvotes} | "
             f"**Comments:** {entry.num_comments} | "
             f"**Ratio:** {entry.upvote_ratio:.0%} | "
             f"**Median:** {entry.subreddit_median:.0f}"
         )
 
-        attr_data = entry.attribution
+        is_failed = perf == "failed"
 
         return (
             gr.update(visible=True),
             stats,
             f"**[{perf}]** {perf_display}",
-            attr_data,
+            gr.update(visible=is_failed),
+            gr.update(value=None),
+            {
+                "generation_id": generation_id,
+                "subreddit": subreddit,
+                "title": title,
+                "body": body_text,
+                "pattern_id": pid,
+                "actual_upvotes": entry.actual_upvotes,
+                "num_comments": entry.num_comments,
+                "upvote_ratio": entry.upvote_ratio,
+                "performance": perf,
+                "subreddit_median": entry.subreddit_median,
+                "patterns": patterns,
+            },
         )
 
     track_btn.click(
         fn=on_track,
-        inputs=[url_input, gen_dd],
-        outputs=[track_result_col, stats_md, perf_label, attribution_json],
+        inputs=[upvotes_num, comments_num, ratio_slider, gen_dd],
+        outputs=[
+            track_result_col, stats_md, perf_label,
+            attr_btn, attribution_json, last_entry_state,
+        ],
+    )
+
+    def on_attr(last_entry):
+        if not last_entry:
+            return gr.update(value=None)
+
+        from ..evolution.failure_attributor import FailureAttributor
+
+        attributor = FailureAttributor(llm_client=shared.get("llm"))
+        pattern = last_entry.get("patterns", [{}])[0] if last_entry.get("patterns") else None
+
+        attribution = attributor.attribute(last_entry, pattern)
+        attr_data = {
+            "主要失败原因": attribution.primary_reason,
+            "次要因素": attribution.secondary_reasons,
+            "改进建议": attribution.action_items,
+            "诊断信心度": attribution.confidence,
+            "各维度分析": attribution.dimensions,
+        }
+        return gr.update(value=attr_data)
+
+    attr_btn.click(
+        fn=on_attr,
+        inputs=[last_entry_state],
+        outputs=[attribution_json],
     )
 
 
@@ -842,12 +950,15 @@ def _build_history_tab(shared: dict) -> None:
         fb_by_gen[fb.get("generation_id", "")] = fb
 
     rows = []
+    all_subs = set()
     for g in gen_files:
         gid = g.get("generation_id", "")
         fb = fb_by_gen.get(gid)
         created = g.get("created_at", "")[:10]
         matched = g.get("matched_subreddits", [])
-        subs = ", ".join(f"r/{m['subreddit']}" for m in matched[:2]) if matched else "-"
+        subs = [f"r/{m['subreddit']}" for m in matched] if matched else []
+        sub_display = subs[0] if subs else "-"
+        all_subs.update(subs)
         st = g.get("selected_title") or {}
         title = st.get("title", "")
         if not title:
@@ -856,8 +967,9 @@ def _build_history_tab(shared: dict) -> None:
                 title = candidates[0].get("title", "")
         perf = fb.get("performance", "-") if fb else "-"
         rows.append({
-            "ID": gid, "Date": created, "Subreddit": subs,
-            "Title": title[:80], "Performance": perf, "gen_data": g, "fb_data": fb,
+            "ID": gid, "Date": created, "Subreddit": sub_display,
+            "Subreddits": subs, "Title": title[:80],
+            "Performance": perf, "gen_data": g, "fb_data": fb,
         })
 
     if not rows:
@@ -867,26 +979,26 @@ def _build_history_tab(shared: dict) -> None:
     with gr.Row():
         sub_filter = gr.Dropdown(
             label="按 Subreddit 筛选",
-            choices=["All"] + sorted(set(r["Subreddit"] for r in rows if r["Subreddit"] != "-")),
-            value="All",
+            choices=["全部"] + sorted(all_subs),
+            value="全部",
         )
         perf_filter = gr.Dropdown(
             label="按效果筛选",
-            choices=["All", "super_viral", "viral", "passing", "failed", "-"],
-            value="All",
+            choices=["全部", "super_viral", "viral", "passing", "failed", "-"],
+            value="全部",
         )
 
     # Prepare dataframe
     def filter_rows(sub_filt: str, perf_filt: str):
         filtered = [r for r in rows
-                    if (sub_filt == "All" or r["Subreddit"] == sub_filt)
-                    and (perf_filt == "All" or r["Performance"] == perf_filt)]
+                    if (sub_filt == "全部" or sub_filt in r["Subreddits"])
+                    and (perf_filt == "全部" or r["Performance"] == perf_filt)]
         display = [[r["ID"], r["Date"], r["Subreddit"], r["Title"][:60], r["Performance"]] for r in filtered]
         return display
 
     df = gr.Dataframe(
-        headers=["ID", "Date", "Subreddit", "Title", "Perf"],
-        value=filter_rows("All", "All"),
+        headers=["ID", "日期", "Subreddit", "标题", "效果"],
+        value=filter_rows("全部", "全部"),
         label="生成历史",
         interactive=False,
     )
@@ -905,7 +1017,7 @@ def _build_history_tab(shared: dict) -> None:
         idx = evt.index[0] if hasattr(evt, 'index') else evt.index
         if isinstance(idx, (list, tuple)):
             idx = idx[0]
-        gid = filter_rows("All", "All")[idx][0]
+        gid = filter_rows("全部", "全部")[idx][0]
         gen_data = None
         fb_data = None
         for r in rows:
@@ -945,8 +1057,8 @@ def _format_gen_detail(gen_data: dict, fb_data: dict | None) -> str:
 
     sc = gen_data.get("self_check") or {}
     if sc:
-        passed = "Passed" if sc.get("passed") else "Failed"
-        lines.extend(["", f"**Self Check:** {passed}"])
+        passed = "通过" if sc.get("是否通过") else "未通过"
+        lines.extend(["", f"**自检:** {passed}"])
 
     if fb_data:
         lines.extend([
@@ -977,7 +1089,7 @@ def _build_patterns_tab(shared: dict) -> None:
     gr.Markdown("## Viral Patterns (爆款模式)")
 
     if not patterns_data:
-        gr.Markdown("No pattern data loaded.")
+        gr.Markdown("未加载模式数据。")
     else:
         with gr.Column():
             for i, p in enumerate(patterns_data):
@@ -991,7 +1103,7 @@ def _build_patterns_tab(shared: dict) -> None:
     gr.Markdown("## Anti-Patterns (反模式)")
 
     if not anti_data:
-        gr.Markdown("No anti-pattern data loaded.")
+        gr.Markdown("未加载反模式数据。")
     else:
         for ap in anti_data:
             with gr.Accordion(f"{ap.get('name', 'Unknown')} (failure rate: {ap.get('failure_rate', 0):.0%})"):

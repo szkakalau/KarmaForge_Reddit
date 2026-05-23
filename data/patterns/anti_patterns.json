@@ -1,54 +1,54 @@
 [
   {
     "pattern_id": "anti_generic_low_engagement",
-    "name": "Generic Low Engagement",
-    "description": "Posts with generic low engagement consistently underperform",
+    "name": "通用低互动",
+    "description": "通用低互动帖子持续表现不佳",
     "failure_rate": 0.545,
     "exemplar_posts": [
       "t3_43wo5e",
       "t3_43vs49",
       "t3_43unoz"
     ],
-    "why_it_fails": "Posts without a clear hook type, narrative mode, or structural pattern fail to compete for attention",
+    "why_it_fails": "缺少明确钩子类型、叙事模式或结构模式的帖子难以竞争注意力",
     "sample_size": 2248
   },
   {
     "pattern_id": "anti_very_short_title",
-    "name": "Very Short Title",
-    "description": "Posts with very short title consistently underperform",
+    "name": "标题过短",
+    "description": "标题过短的帖子持续表现不佳",
     "failure_rate": 0.654,
     "exemplar_posts": [
       "t3_43zezm",
       "t3_43wcz7",
       "t3_43wf2i"
     ],
-    "why_it_fails": "Titles under 5 words fail to provide enough information to attract clicks",
+    "why_it_fails": "标题少于5个词无法提供足够信息吸引点击",
     "sample_size": 947
   },
   {
     "pattern_id": "anti_very_long_title",
-    "name": "Very Long Title",
-    "description": "Posts with very long title consistently underperform",
+    "name": "标题过长",
+    "description": "标题过长的帖子持续表现不佳",
     "failure_rate": 0.345,
     "exemplar_posts": [
       "t3_43vnwh",
       "t3_7x56q",
       "t3_7sb0w"
     ],
-    "why_it_fails": "Titles over 30 words overwhelm readers; most subreddits prefer concise hooks (12-22 words)",
+    "why_it_fails": "标题超过30个词会让读者不知所措；多数 subreddit 偏好简洁钩子（12-22词）",
     "sample_size": 142
   },
   {
     "pattern_id": "anti_no_body_text",
-    "name": "No Body Text",
-    "description": "Posts with no body text consistently underperform",
+    "name": "无正文内容",
+    "description": "无正文内容的帖子持续表现不佳",
     "failure_rate": 0.466,
     "exemplar_posts": [
       "t3_80aug",
       "t3_89xdr",
       "t3_81b1y"
     ],
-    "why_it_fails": "Posts with no body text (link/image-only with no context) generate less discussion",
+    "why_it_fails": "无正文内容（仅链接/图片）的帖子产生的讨论更少",
     "sample_size": 4048
   }
 ]
