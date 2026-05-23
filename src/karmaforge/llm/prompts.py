@@ -189,7 +189,7 @@ Return a JSON object with these exact keys:
 
 Return only valid JSON, nothing else."""
 
-FAILURE_ATTRIBUTE_V2 = """Analyze why this Reddit post underperformed relative to expectations.
+FAILURE_ATTRIBUTE_V2 = """Analyze why this Reddit post underperformed. Reply in Chinese (中文).
 
 Post details:
 - Title: {title}
@@ -207,17 +207,17 @@ Pattern avg upvotes: {avg_upvotes}
 
 Subreddit median upvotes: {subreddit_median}
 
-Diagnose the most likely failure reasons. Consider:
+Diagnose the most likely failure reasons:
 1. Title mismatch with pattern's hook type
 2. Body structure deviation from pattern
 3. Posting time vs subreddit optimal window
 4. Topic relevance to subreddit audience
 5. Content quality (too short/long, readability, depth)
 
-Return a JSON object with:
-- primary_reason: single most important reason (1 sentence)
-- secondary_reasons: list of 1-2 contributing factors
-- action_items: list of 1-3 specific improvements for next attempt
-- confidence: 0-100 how confident this diagnosis is
+Return a JSON object (all values in Chinese):
+- primary_reason: 最重要的失败原因 (1 sentence in Chinese)
+- secondary_reasons: 1-2 个辅助因素 (list of Chinese strings)
+- action_items: 1-3 条具体改进建议 (list of Chinese strings)
+- confidence: 0-100 对此诊断的信心程度
 
 Return only valid JSON, nothing else."""
