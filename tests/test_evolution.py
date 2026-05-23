@@ -99,7 +99,7 @@ class TestFailureAttributor:
             "upvote_ratio": 0.75,
         }
         result = attributor.attribute(entry)
-        title_dim = result.dimensions.get("title_hook_fit", {})
+        title_dim = result.dimensions.get("标题钩子适配", {})
         assert title_dim.get("score", 0) >= 50  # decent title length
 
     def test_too_short_title_flagged(self):
@@ -114,7 +114,7 @@ class TestFailureAttributor:
             "upvote_ratio": 0.5,
         }
         result = attributor.attribute(entry)
-        title_dim = result.dimensions.get("title_hook_fit", {})
+        title_dim = result.dimensions.get("标题钩子适配", {})
         assert title_dim.get("score", 100) < 50
 
     def test_low_upvote_ratio_flagged(self):
@@ -129,7 +129,7 @@ class TestFailureAttributor:
             "upvote_ratio": 0.2,  # very low
         }
         result = attributor.attribute(entry)
-        quality_dim = result.dimensions.get("content_quality", {})
+        quality_dim = result.dimensions.get("内容质量", {})
         assert quality_dim.get("score", 100) < 50
 
     def test_low_viral_rate_pattern_flagged(self):
@@ -148,7 +148,7 @@ class TestFailureAttributor:
             "historical_viral_rate": 10,  # only 10%
         }
         result = attributor.attribute(entry, pattern)
-        assert "pattern_fit" in result.dimensions
+        assert "模式匹配度" in result.dimensions
 
     def test_synthesize_identifies_primary_reason(self):
         attributor = FailureAttributor()
@@ -222,7 +222,7 @@ class TestFailureAttributor:
 
     def test_synthesize_no_issues_fallback(self):
         primary, secondary, actions = FailureAttributor._synthesize({})
-        assert "No clear failure reason" in primary
+        assert "未发现明显失败原因" in primary
         assert secondary == []
         assert len(actions) == 1
 

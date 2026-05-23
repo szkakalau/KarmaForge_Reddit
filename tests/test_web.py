@@ -250,7 +250,7 @@ class TestFormatDetail:
         }
         result = _format_gen_detail(gen, None)
         assert "Python" in result
-        assert "Passed" in result
+        assert "通过" in result
 
     def test_format_gen_detail_with_tracking(self):
         from karmaforge.web.app import _format_gen_detail
