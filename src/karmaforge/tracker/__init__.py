@@ -1,19 +1,8 @@
-"""Post tracking — extract Reddit post performance via browser."""
+"""Post tracking — record and classify Reddit post performance."""
 
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
-
-
-@dataclass
-class TrackingRecord:
-    """Raw stats extracted from a Reddit post page."""
-
-    url: str
-    upvotes: int
-    num_comments: int
-    upvote_ratio: float  # 0.0-1.0
-    extracted_at: str  # ISO 8601
 
 
 @dataclass
@@ -28,7 +17,7 @@ class FeedbackEntry:
     body: str
     pattern_id: str
 
-    # Actual performance
+    # Actual performance (entered manually by user)
     actual_upvotes: int
     num_comments: int
     upvote_ratio: float

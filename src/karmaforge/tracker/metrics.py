@@ -26,18 +26,27 @@ def classify_performance(upvotes: int, subreddit_median: float) -> str:
 
 
 def get_subreddit_median(db_path: str | Path, subreddit: str) -> float:
-    """Get median upvotes for a subreddit from the v1 database."""
+    """Get median upvotes for a subreddit from the v1 database.
+
+    Uses ORDER BY + Python median since SQLite lacks percentile_cont.
+    """
     try:
         conn = sqlite3.connect(str(db_path))
-        row = conn.execute(
-            "SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY upvotes) "
-            "FROM posts WHERE subreddit=?",
+        rows = conn.execute(
+            "SELECT upvotes FROM posts WHERE subreddit=? AND upvotes > 0 "
+            "ORDER BY upvotes",
             (subreddit,),
-        ).fetchone()
+        ).fetchall()
         conn.close()
-        if row and row[0] is not None:
-            return float(row[0])
-        return 50.0
+
+        if not rows:
+            return 50.0
+
+        values = [r[0] for r in rows]
+        n = len(values)
+        if n % 2 == 1:
+            return float(values[n // 2])
+        return (values[n // 2 - 1] + values[n // 2]) / 2.0
     except Exception as e:
         logger.warning("Failed to get median for r/%s: %s", subreddit, e)
         return 50.0

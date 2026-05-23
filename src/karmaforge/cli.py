@@ -538,32 +538,38 @@ def pipeline(config_path: str, no_llm: bool) -> None:
 
 
 @main.command()
-@click.argument("post_url", required=False)
+@click.option("--upvotes", "-u", type=int, default=None, help="Post upvote count")
+@click.option("--comments", "-c", type=int, default=None, help="Post comment count")
+@click.option("--ratio", "-r", type=float, default=None, help="Upvote ratio (0.0-1.0)")
+@click.option("--subreddit", "-s", default=None, help="Subreddit name (e.g. productivity)")
+@click.option("--url", default="", help="Optional post URL for reference")
 @click.option("--generation-id", "-g", default=None, help="Link to a prior generation result")
 @click.option("--list", "list_mode", is_flag=True, help="List recent tracking entries")
 @click.option("--history", "-H", "history_sub", default=None, help="Filter tracking by subreddit")
 @click.option("--detail", "-d", "detail_id", default=None, help="Show detail for a generation ID")
 @click.option("--config", "config_path", default="config.yaml")
-@click.option("--browser/--no-browser", "use_browser", default=True, help="Use Playwright browser (default: yes)")
 def track(
-    post_url: str | None,
+    upvotes: int | None,
+    comments: int | None,
+    ratio: float | None,
+    subreddit: str | None,
+    url: str,
     generation_id: str | None,
     list_mode: bool,
     history_sub: str | None,
     detail_id: str | None,
     config_path: str,
-    use_browser: bool,
 ) -> None:
-    """Track Reddit post performance by URL.
+    """Record Reddit post performance manually.
 
     \b
-    Paste the post URL after 24-72 hours to extract upvotes/comments/ratio.
-    Stats are extracted via Playwright from old.reddit.com (no API needed).
+    Enter upvotes, comments, and upvote ratio to classify post performance.
+    Data is saved to feedback.jsonl for the evolution engine.
 
     \b
     Examples:
-      karmaforge track "https://reddit.com/r/productivity/comments/xxx"
-      karmaforge track <url> --generation-id gen_abc123
+      karmaforge track --upvotes 245 --comments 32 --ratio 0.94 --subreddit productivity
+      karmaforge track -u 500 -c 45 -r 0.88 -s rust --generation-id gen_abc123
       karmaforge track --list
       karmaforge track --history productivity
       karmaforge track --detail gen_abc123
@@ -577,11 +583,8 @@ def track(
     feedback_path = Path(path_cfg.get("data_tracking", "./data/tracking")) / "feedback.jsonl"
 
     from .tracker.post_tracker import PostTracker
-    from .tracker.metrics import get_performance_label, get_subreddit_median
 
     tracker = PostTracker(db_path=db_path, feedback_path=feedback_path)
-    if use_browser:
-        tracker.initialize()
 
     # --list
     if list_mode:
@@ -612,16 +615,20 @@ def track(
         _print_track_list(filtered, None)
         return
 
-    # URL required for tracking
-    if not post_url:
-        click.echo("Error: Provide a post URL to track, or use --list / --history / --detail.", err=True)
+    # Manual record requires upvotes, comments, ratio, subreddit
+    if upvotes is None or comments is None or ratio is None or not subreddit:
+        click.echo(
+            "Error: Provide --upvotes, --comments, --ratio, and --subreddit to record.\n"
+            "  Or use --list / --history / --detail to browse.",
+            err=True,
+        )
         return
 
-    # If no generation_id, try to find the generation file
+    # Load generation context if linked
     gen_title = ""
     gen_body = ""
     gen_pattern_id = ""
-    gen_subreddit = ""
+    gen_sub = subreddit.lower()
 
     if generation_id:
         gen_path = Path("data/generations") / f"{generation_id}.json"
@@ -633,52 +640,30 @@ def track(
             gen_body = gen_data.get("body", "")
             if gen_data.get("selected_patterns"):
                 gen_pattern_id = gen_data["selected_patterns"][0].get("pattern_id", "")
-            if gen_data.get("matched_subreddits"):
-                gen_subreddit = gen_data["matched_subreddits"][0].get("subreddit", "")
         else:
             click.echo(f"Generation '{generation_id}' not found. Proceeding without context.")
 
-    if not gen_subreddit:
-        # Try to extract subreddit from URL
-        import re
-        m = re.search(r"/r/(\w+)", post_url)
-        if m:
-            gen_subreddit = m.group(1)
-
-    click.echo(f"Tracking: {post_url}")
-    if gen_subreddit:
-        click.echo(f"  Subreddit: r/{gen_subreddit}")
-
-    if not use_browser or not tracker.is_available:
-        click.echo(
-            "\nPlaywright not available. Install with: pip install karmaforge[browser]\n"
-            "  Then run: playwright install chromium\n"
-            "Stats must be extracted via browser — cannot continue without Playwright."
-        )
-        return
-
-    click.echo("  Opening in browser...")
     entry = tracker.track(
-        url=post_url,
         generation_id=generation_id or "manual",
-        subreddit=gen_subreddit,
+        subreddit=gen_sub,
         title=gen_title,
         body=gen_body,
         pattern_id=gen_pattern_id,
+        upvotes=upvotes,
+        num_comments=comments,
+        upvote_ratio=ratio,
+        url=url,
     )
 
-    if entry:
-        click.echo(f"\n  Results:")
-        click.echo(f"    Upvotes:      {entry.actual_upvotes}")
-        click.echo(f"    Comments:     {entry.num_comments}")
-        click.echo(f"    Upvote ratio: {entry.upvote_ratio:.0%}")
-        click.echo(f"    Performance:  {entry.performance}")
-        click.echo(f"    Subreddit median: {entry.subreddit_median:.0f}")
+    click.echo(f"\n  Recorded for r/{gen_sub}:")
+    click.echo(f"    Upvotes:      {entry.actual_upvotes}")
+    click.echo(f"    Comments:     {entry.num_comments}")
+    click.echo(f"    Upvote ratio: {entry.upvote_ratio:.0%}")
+    click.echo(f"    Performance:  {entry.performance}")
+    click.echo(f"    Subreddit median: {entry.subreddit_median:.0f}")
 
-        if entry.performance == "failed":
-            click.echo(f"\n  This post underperformed. Run 'karmaforge evolve' to learn from it.")
-    else:
-        click.echo("  Failed to extract post stats. Check the URL and try again.", err=True)
+    if entry.performance == "failed":
+        click.echo(f"\n  This post underperformed. Run 'karmaforge evolve' to learn from it.")
 
 
 def _print_track_list(entries: list[dict], sub_filter: str | None) -> None:

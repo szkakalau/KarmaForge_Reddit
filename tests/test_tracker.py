@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from karmaforge.tracker import TrackingRecord, FeedbackEntry
+from karmaforge.tracker import FeedbackEntry
 from karmaforge.tracker.metrics import (
     classify_performance,
     get_subreddit_median,
@@ -77,32 +77,58 @@ class TestGetPerformanceLabel:
         assert "40" in label
 
 
-# ── PostTracker ──────────────────────────────────────────────────
+# ── PostTracker (manual entry) ───────────────────────────────────
 
 class TestPostTracker:
-    def test_initialize_without_playwright(self):
+    def test_track_manual(self):
         tracker = PostTracker()
-        # playwright may or may not be installed; initialize returns bool
-        result = tracker.initialize()
-        assert isinstance(result, bool)
+        entry = tracker.track(
+            generation_id="gen_001",
+            subreddit="test",
+            title="Test Title",
+            body="Test body",
+            pattern_id="pat_01",
+            upvotes=200,
+            num_comments=30,
+            upvote_ratio=0.92,
+        )
+        assert entry is not None
+        assert entry.actual_upvotes == 200
+        assert entry.num_comments == 30
+        assert entry.upvote_ratio == 0.92
+        assert entry.generation_id == "gen_001"
+        assert entry.subreddit == "test"
+        assert entry.performance in (
+            "super_viral", "viral", "passing", "failed",
+        )
+        # Cleanup
+        tracker._feedback_path.unlink()
 
-    def test_url_to_old_reddit(self):
-        result = PostTracker._to_old_reddit("https://www.reddit.com/r/programming/comments/abc123")
-        assert result.startswith("https://old.reddit.com")
-        assert "/r/programming/comments/abc123" in result
+    def test_track_with_url(self):
+        tracker = PostTracker()
+        entry = tracker.track(
+            generation_id="gen_url",
+            subreddit="test",
+            title="T", body="B", pattern_id="p1",
+            upvotes=50, num_comments=5, upvote_ratio=0.80,
+            url="https://reddit.com/r/test/comments/abc",
+        )
+        assert entry.url == "https://reddit.com/r/test/comments/abc"
+        tracker._feedback_path.unlink()
 
-    def test_url_to_old_reddit_already_old(self):
-        result = PostTracker._to_old_reddit("https://old.reddit.com/r/programming/comments/abc123")
-        assert result == "https://old.reddit.com/r/programming/comments/abc123"
-
-    def test_url_to_old_reddit_no_protocol(self):
-        result = PostTracker._to_old_reddit("reddit.com/r/test/comments/xyz")
-        assert result.startswith("https://old.reddit.com")
+    def test_track_empty_url_defaults_to_empty_str(self):
+        tracker = PostTracker()
+        entry = tracker.track(
+            generation_id="gen_empty_url",
+            subreddit="test",
+            title="T", body="B", pattern_id="p1",
+            upvotes=50, num_comments=5, upvote_ratio=0.80,
+        )
+        assert entry.url == ""
+        tracker._feedback_path.unlink()
 
     def test_save_and_load_feedback(self):
         tracker = PostTracker()
-        # Manually create a feedback entry via _save_feedback
-        from karmaforge.tracker import FeedbackEntry
         entry = FeedbackEntry(
             generation_id="test_gen_001",
             tracked_at="2024-01-15T12:00:00Z",
@@ -124,18 +150,15 @@ class TestPostTracker:
         found = any(e["generation_id"] == "test_gen_001" for e in entries)
         assert found
 
-        # Cleanup: remove test entry
         tracker._feedback_path.unlink()
 
     def test_feedback_count(self):
         tracker = PostTracker()
-        # Start from scratch
         if tracker._feedback_path.exists():
             tracker._feedback_path.unlink()
 
         assert tracker.feedback_count() == 0
 
-        from karmaforge.tracker import FeedbackEntry
         entry = FeedbackEntry(
             generation_id="count_test",
             tracked_at="2024-01-15T12:00:00Z",
@@ -157,7 +180,6 @@ class TestPostTracker:
 
     def test_load_feedback_empty_file(self):
         tracker = PostTracker()
-        # Ensure clean state
         if tracker._feedback_path.exists():
             tracker._feedback_path.unlink()
         tracker._feedback_path.write_text("", encoding="utf-8")
@@ -172,7 +194,6 @@ class TestPostTracker:
 
     def test_save_feedback_truncates_body(self):
         tracker = PostTracker()
-        from karmaforge.tracker import FeedbackEntry
         long_body = "x" * 500
         entry = FeedbackEntry(
             generation_id="trunc_test",
@@ -196,12 +217,3 @@ class TestPostTracker:
         assert saved["body"] == long_body[:200]
 
         tracker._feedback_path.unlink()
-
-    def test_track_requires_playwright(self):
-        tracker = PostTracker()
-        tracker._available = False
-        result = tracker.track(
-            "https://reddit.com/r/test/comments/abc",
-            "gen_001", "test", "Title", "Body", "pat_01",
-        )
-        assert result is None
