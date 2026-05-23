@@ -1,0 +1,106 @@
+{
+  "generation_id": "gen_39e7aa0b",
+  "created_at": "2026-05-23T10:50:11.248480+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "productivity",
+      "score": 0.6
+    },
+    {
+      "subreddit": "programming",
+      "score": 0.4
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.4
+    },
+    {
+      "subreddit": "lifehacks",
+      "score": 0.4
+    },
+    {
+      "subreddit": "Entrepreneur",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "My automation script that saves my team 10 hours per week journey: what I learned along the way",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    },
+    {
+      "title": "How to automation script that saves my team 10 hours per week — a practical guide",
+      "score": 60.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    },
+    {
+      "title": "Why does automation script that saves my team 10 hours per week work the way it does?",
+      "score": 60.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    }
+  ],
+  "selected_title": {
+    "title": "My automation script that saves my team 10 hours per week journey: what I learned along the way",
+    "score": 90.0
+  },
+  "body": "I've been working on automation script that saves my team 10 hours per week for a while now, and I wanted to share my experience.\n\nThe journey hasn't been straightforward — there were plenty of lessons along the way.\n\nThe key insight I gained was that most advice out there misses the mark. What actually worked for me was different.\n\nWould love to hear if others have had similar experiences.",
+  "metadata": {
+    "recommended_day": "Tuesday",
+    "recommended_hour_utc": 14,
+    "recommended_flair": "Technique",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 100,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 70 words, above target 1-1"
+    ]
+  }
+}

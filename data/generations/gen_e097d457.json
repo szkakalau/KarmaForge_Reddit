@@ -1,0 +1,106 @@
+{
+  "generation_id": "gen_e097d457",
+  "created_at": "2026-05-23T17:22:44.864521+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    },
+    {
+      "subreddit": "SideProject",
+      "score": 0.2
+    },
+    {
+      "subreddit": "indiehackers",
+      "score": 0.2
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.2
+    },
+    {
+      "subreddit": "startups",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "Is building an MVP in 2025 actually cheaper than 2020?",
+      "score": 90.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "We spent 6 months building our SaaS app, only to realize our core feature solved a problem nobody had.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    },
+    {
+      "title": "How I built a SaaS app without writing a single line of code",
+      "score": 75.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    }
+  ],
+  "selected_title": {
+    "title": "Is building an MVP in 2025 actually cheaper than 2020?",
+    "score": 90.0
+  },
+  "body": "Is building an MVP in 2025 actually cheaper than 2020? I keep going back and forth on this, and I’d love to hear from people who’ve launched recently.\n\nBack in 2020, I bootstrapped a small B2B SaaS tool. Stack was React + Node + PostgreSQL, hosted on a basic DigitalOcean droplet. MVP took about 3 months, total dev cost was around $8k (freelancer in Eastern Europe). CAC via cold email was roughly $12, churn was brutal at 8% monthly, but MRR hit $2k within 6 months. It felt cheap because the tooling was simple and the ecosystem was less bloated.\n\nFast forward to 2025. I’m scoping a new product — similar complexity, but now everyone’s talking about AI features, vector databases, and serverless architectures. I’m seeing quotes from agencies for $15k-$25k just for a basic MVP with an LLM wrapper. Even if I use no-code tools like Bolt or Lovable, the monthly infra costs (OpenAI API, Supabase, Vercel) add up fast. My back-of-the-napkin math says first-year burn is 40% higher than 2020, even before marketing.\n\nBut here’s the twist: user acquisition feels different. With AI hype, early adopters seem more willing to try janky MVPs. I’ve seen founders hit $5k MRR in 3 months with a single GPT wrapper and a landing page. Churn is still high (10-15% monthly), but CAC via organic Twitter/Reddit can be under $5. So maybe the cost shifted from development to retention? Or am I just looking at the wrong metrics?\n\nFor those of you who’ve shipped in both eras: is the 2025 MVP actually cheaper when you factor in faster time-to-revenue? Or are we all just paying more for the privilege of saying “AI-powered”? Would love to hear your MRR, churn, and CAC numbers — especially if you’re using modern stacks vs. 2020-era simplicity.",
+  "metadata": {
+    "recommended_day": "Wednesday",
+    "recommended_hour_utc": 15,
+    "recommended_flair": "Resource",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 60,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 300 words, above target 1-1"
+    ]
+  }
+}

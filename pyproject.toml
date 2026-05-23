@@ -42,6 +42,9 @@ browser = [
     "browser-use>=0.1",
     "playwright>=1.40",
 ]
+web = [
+    "gradio>=5.0",
+]
 
 [project.scripts]
 karmaforge = "karmaforge.cli:main"

@@ -1,0 +1,101 @@
+{
+  "generation_id": "gen_15bf0a65",
+  "created_at": "2026-05-23T13:48:10.630492+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "AskReddit",
+      "score": 0.4
+    },
+    {
+      "subreddit": "LifeProTips",
+      "score": 0.3
+    },
+    {
+      "subreddit": "Showerthoughts",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "我做了一个ANKI产品：一份实用指南",
+      "score": 50.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    },
+    {
+      "title": "关于我做了一个ANKI产品，有个问题一直想不通",
+      "score": 50.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "我的我做了一个ANKI产品之路：那些踩过的坑和学到的经验",
+      "score": 50.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    }
+  ],
+  "selected_title": {
+    "title": "我做了一个ANKI产品：一份实用指南",
+    "score": 50.0
+  },
+  "body": "",
+  "metadata": {
+    "recommended_day": "Monday",
+    "recommended_hour_utc": 9,
+    "recommended_flair": "Serious",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": false,
+    "dimensions": {
+      "title_length": {
+        "score": 30,
+        "status": "fail"
+      },
+      "body_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 80,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 70,
+        "status": "fail",
+        "triggered": [
+          "Very Short Title"
+        ]
+      }
+    },
+    "suggestions": [
+      "Title is 1 words, outside target 8-11",
+      "Triggered anti-pattern: Very Short Title — Titles under 5 words fail to provide enough information to attract clicks"
+    ]
+  }
+}

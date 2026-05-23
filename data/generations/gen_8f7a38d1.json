@@ -1,0 +1,106 @@
+{
+  "generation_id": "gen_8f7a38d1",
+  "created_at": "2026-05-23T18:16:54.806494+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "SaaS",
+      "score": 0.4
+    },
+    {
+      "subreddit": "indiehackers",
+      "score": 0.4
+    },
+    {
+      "subreddit": "programming",
+      "score": 0.4
+    },
+    {
+      "subreddit": "SideProject",
+      "score": 0.2
+    },
+    {
+      "subreddit": "lifehacks",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I built a Python CLI for automated LLM code review—cut review time by 40% in my SaaS.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    },
+    {
+      "title": "How I built a Python CLI tool to automate code review with LLMs",
+      "score": 75.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    },
+    {
+      "title": "I built a CLI tool that automates code review with LLMs—does anyone else see the scaling issue?",
+      "score": 60.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    }
+  ],
+  "selected_title": {
+    "title": "I built a Python CLI for automated LLM code review—cut review time by 40% in my SaaS.",
+    "score": 90.0
+  },
+  "body": "So there I was, three months ago, staring at a 2 AM Slack thread from our lead engineer. He’d flagged a PR that looked fine on the surface, but after a deep dive, we found a subtle memory leak that would have blown up our AWS bill by $3k/month once we hit 2,000 active users. We caught it, but it cost us six hours of collective review time and pushed a feature release back by two days.\n\nThat was the fourth time in a month we’d lost a full day to code review bottlenecks. Our MRR was around $18k at the time, churn was hovering at 4.2% monthly, and we were spending roughly $1,200 in engineering hours per week just on manual PR reviews. The CAC was climbing because we couldn’t ship fast enough to justify our ad spend. Something had to give.\n\nI’m not a machine learning guy—I’m a backend dev who got tired of context-switching. So I built a Python CLI tool that runs a static analysis pass, then fires off each changed function to an LLM (we use GPT-4-turbo) with the project’s coding standards and known failure patterns injected into the prompt. It flags things like insecure ORM queries, missing edge-case handling, and even suggests test coverage gaps. The output is a markdown report that gets posted directly into the PR thread.\n\nAfter two weeks of tuning the prompt templates and adding a local cache layer to avoid re-analyzing unchanged files, we started seeing real results. Our average review time dropped from 45 minutes per PR to just under 18 minutes. That’s a 60% reduction in human review time, though I’m conservative and say 40% because we still do a full pass on every critical path. The tool catches about 70% of the issues we used to find manually, and we’ve only had one false positive that caused a real headache.\n\nThe real win? We’ve reduced our weekly engineering overhead on reviews by roughly $500/week in time cost. Our churn ticked down to 3.1% last month because we’re shipping features faster and with fewer regressions. The CLI is about 400 lines of Python, uses the OpenAI API, and respects a `.reviewignore` file so we don’t waste tokens on generated code or vendor files.\n\nI’m thinking about open-sourcing it, but I’m curious—how are other SaaS teams handling the code review bottleneck? Are you using automated tools, or is manual review still the standard for you? And if you’ve tried LLM-based review, did you run into issues with hallucinations on complex logic?",
+  "metadata": {
+    "recommended_day": "Wednesday",
+    "recommended_hour_utc": 15,
+    "recommended_flair": "Resource",
+    "should_mark_oc": true
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 60,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 423 words, above target 1-1"
+    ]
+  }
+}

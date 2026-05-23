@@ -1,0 +1,90 @@
+{
+  "generation_id": "gen_d93e50a9",
+  "created_at": "2026-05-23T18:55:11.414018+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "programming",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_29",
+      "name": "Pattern 30: number_shock + no_body",
+      "hook_type": "number_shock",
+      "viral_rate": 0.235
+    },
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "Python devs who learned Rust from scratch - what broke your brain first?",
+      "score": 90.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "Spent 6 months learning Rust from scratch as a Python dev—here’s what shocked me most about memory ownership",
+      "score": 90.0,
+      "hook_type": "number_shock",
+      "pattern_id": "pattern_29"
+    },
+    {
+      "title": "How I learned Rust from scratch as a Python developer",
+      "score": 90.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    }
+  ],
+  "selected_title": {
+    "title": "Python devs who learned Rust from scratch - what broke your brain first?",
+    "score": 90.0
+  },
+  "body": "**Python devs who learned Rust from scratch - what broke your brain first?**\n\nI’ve been writing Python for about 8 years—everything from data pipelines to REST APIs to a few half-baked CLI tools. Loved it. Hated the slowness, but accepted it as the cost of productivity. Then I decided to actually learn Rust properly, not just read the book, but build something real. I picked a small network service that parses a custom binary protocol and spits out metrics. Simple enough in Python. In Rust? It broke my brain in a way I didn’t expect.\n\nThe first thing that really got me wasn’t the borrow checker—though that hurt too. It was the *ownership model applied to data structures I thought I understood*. Specifically, trying to build a directed acyclic graph for a dependency resolver. In Python, you just throw a `Node` into a `list`, pass references around, and pretend everything is fine. In Rust, I spent a weekend fighting `Rc<RefCell<Node>>` and wondering why my life had come to this. I ended up using `petgraph` (shoutout to the crate), but the mental shift from “just use a dict” to “what is the lifetime of this edge?” was brutal.\n\nSecond thing: error handling. Python’s `try/except` is a safety net you can ignore until runtime. Rust’s `Result` and `?` operator forces you to think about every failure path at compile time. That’s great for reliability, but writing a function that returns `Result<Vec<u8>, Box<dyn Error>>` for the fifth time made me miss the chaos of Python exceptions. I eventually learned to define custom error enums, but the upfront design cost felt heavy.\n\nThird: the standard library. Python’s `os.path`, `json`, `csv`—all batteries included. Rust’s `std` is lean, so you’re reaching for crates like `serde`, `tokio`, `clap` immediately. It’s not bad, but the *discovery friction* is real. You can’t just `import requests`—you need to evaluate async runtimes, TLS backends, and version compatibility.\n\nFor context, here’s the repo of the project that nearly broke me: [github.com/yourusername/rust-protocol-parser](https://github.com/yourusername/rust-protocol-parser) (it’s a mess, but it compiles).\n\nSo, for those who made the jump: what was *your* “this is not Python” moment? Was it lifetimes? Pattern matching? The lack of a global interpreter lock? Or something more specific like dealing with `dyn Trait` vs generics? I’m curious what other Python refugees found hardest to unlearn.",
+  "metadata": {
+    "recommended_day": "Tuesday",
+    "recommended_hour_utc": 14,
+    "recommended_flair": "Tutorial",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 60,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 383 words, above target 1-1"
+    ]
+  }
+}

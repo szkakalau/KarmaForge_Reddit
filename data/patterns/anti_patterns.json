@@ -1,1 +1,54 @@
-[]
+[
+  {
+    "pattern_id": "anti_generic_low_engagement",
+    "name": "Generic Low Engagement",
+    "description": "Posts with generic low engagement consistently underperform",
+    "failure_rate": 0.545,
+    "exemplar_posts": [
+      "t3_43wo5e",
+      "t3_43vs49",
+      "t3_43unoz"
+    ],
+    "why_it_fails": "Posts without a clear hook type, narrative mode, or structural pattern fail to compete for attention",
+    "sample_size": 2248
+  },
+  {
+    "pattern_id": "anti_very_short_title",
+    "name": "Very Short Title",
+    "description": "Posts with very short title consistently underperform",
+    "failure_rate": 0.654,
+    "exemplar_posts": [
+      "t3_43zezm",
+      "t3_43wcz7",
+      "t3_43wf2i"
+    ],
+    "why_it_fails": "Titles under 5 words fail to provide enough information to attract clicks",
+    "sample_size": 947
+  },
+  {
+    "pattern_id": "anti_very_long_title",
+    "name": "Very Long Title",
+    "description": "Posts with very long title consistently underperform",
+    "failure_rate": 0.345,
+    "exemplar_posts": [
+      "t3_43vnwh",
+      "t3_7x56q",
+      "t3_7sb0w"
+    ],
+    "why_it_fails": "Titles over 30 words overwhelm readers; most subreddits prefer concise hooks (12-22 words)",
+    "sample_size": 142
+  },
+  {
+    "pattern_id": "anti_no_body_text",
+    "name": "No Body Text",
+    "description": "Posts with no body text consistently underperform",
+    "failure_rate": 0.466,
+    "exemplar_posts": [
+      "t3_80aug",
+      "t3_89xdr",
+      "t3_81b1y"
+    ],
+    "why_it_fails": "Posts with no body text (link/image-only with no context) generate less discussion",
+    "sample_size": 4048
+  }
+]

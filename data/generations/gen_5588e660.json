@@ -1,0 +1,106 @@
+{
+  "generation_id": "gen_5588e660",
+  "created_at": "2026-05-23T18:19:51.223709+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    },
+    {
+      "subreddit": "SideProject",
+      "score": 0.2
+    },
+    {
+      "subreddit": "indiehackers",
+      "score": 0.2
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.2
+    },
+    {
+      "subreddit": "startups",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "Why are 90% of SaaS apps abandoned after the first MVP launch?",
+      "score": 90.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "Built an MVP in 3 weeks, got 200 beta signups overnight—here's what I learned about app development.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    },
+    {
+      "title": "How I built a SaaS app with zero code and 500 beta users",
+      "score": 75.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    }
+  ],
+  "selected_title": {
+    "title": "Why are 90% of SaaS apps abandoned after the first MVP launch?",
+    "score": 90.0
+  },
+  "body": "I’ve been digging into this after launching my own SaaS last year, and the numbers are brutal. We hit $1.2k MRR in month three, then flatlined. Churn hit 18% by month six. CAC was $140, but LTV barely cracked $200. I thought we were just bad at this, but looking at the data across a dozen failed launches in my network, the pattern is the same.\n\nThe problem isn’t the MVP itself. It’s that most founders treat the MVP like a finish line, not a starting block. You get that first 50 users, maybe some early MRR, and then you stop. You don’t have the feedback loops to figure out why people leave. You don’t know if your CAC is sustainable because you haven’t hit scale. And the worst part? You don’t know if your product actually solves a real, recurring pain—or just a one-time itch.\n\nI’ve seen teams with solid MVPs burn through cash because they optimized for features instead of retention. They’d ship a new integration every week, but churn stayed high. Meanwhile, the 10% that survive are the ones who obsess over the first 30-day onboarding flow. They track activation metrics like it’s life or death. They call users who cancel. They kill features that don’t move the needle on LTV.\n\nSo here’s my genuine question: for those of you who’ve crossed $10k MRR and kept churn under 5%, what was the single biggest change you made after the MVP that actually kept users around? Was it pricing, onboarding, or something else I’m missing?",
+  "metadata": {
+    "recommended_day": "Wednesday",
+    "recommended_hour_utc": 15,
+    "recommended_flair": "Resource",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 60,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 257 words, above target 1-1"
+    ]
+  }
+}

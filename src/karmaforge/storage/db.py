@@ -193,7 +193,14 @@ class Database:
         d.pop("created_at", None)
         created = d.get("created_utc")
         if created and isinstance(created, str):
-            d["created_utc"] = None  # Will be parsed if needed
+            from datetime import datetime, timezone
+            try:
+                dt = datetime.fromisoformat(created)
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                d["created_utc"] = dt
+            except (ValueError, TypeError):
+                d["created_utc"] = None
         return Post(**{k: v for k, v in d.items() if k in Post.__dataclass_fields__})
 
     @staticmethod

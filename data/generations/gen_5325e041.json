@@ -1,0 +1,106 @@
+{
+  "generation_id": "gen_5325e041",
+  "created_at": "2026-05-23T17:11:32.691266+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    },
+    {
+      "subreddit": "SideProject",
+      "score": 0.2
+    },
+    {
+      "subreddit": "indiehackers",
+      "score": 0.2
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.2
+    },
+    {
+      "subreddit": "startups",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I spent 6 months building a SaaS app that got 12 signups on launch day. Here’s what I learned.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    },
+    {
+      "title": "What’s the real cost of building an app that only 10 people will use?",
+      "score": 75.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "How I built an MVP in 3 days without writing a single line of code",
+      "score": 60.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    }
+  ],
+  "selected_title": {
+    "title": "I spent 6 months building a SaaS app that got 12 signups on launch day. Here’s what I learned.",
+    "score": 90.0
+  },
+  "body": "It was 2 AM when the first Stripe notification popped up on my phone. I nearly dropped my coffee. After six months of late nights, rewrites, and convincing myself that “this time it’s different,” someone had actually paid for my SaaS. By the end of launch day, I had 12 signups and a grand total of $87 in MRR. Not exactly a unicorn, but it felt like winning the lottery.\n\nHere’s the honest breakdown. The app is a niche project management tool for freelance video editors. I built it because I was tired of Trello and Notion not understanding what “render queue” means. I spent the first three months building features I thought were cool, then the next three months stripping them out because no one cared. My CAC ended up being about $14 per signup (mostly Reddit ads and a few cold DMs), and churn? Let’s just say I learned that “free trial” often means “free forever” if you don’t have a strong onboarding flow.\n\nThe biggest lesson wasn’t about code. It was about distribution. I assumed if I built it, they would come. They didn’t. The 12 signups came from a single post in a private Discord for editors, not from my polished landing page or the $200 I spent on Google Ads. I also learned that MRR at $87 feels fragile, but it’s a signal. People paid. That means there’s a problem worth solving.\n\nNow I’m sitting at $230 MRR two months later, with a 14% churn rate that I’m desperately trying to fix. I’m not quitting my day job yet, but I’m not giving up either.\n\nFor those of you who’ve launched a SaaS: what was your first month’s MRR, and what do you wish you’d known about churn before you started? I’m trying to figure out if I should focus on retention or just keep pushing for more signups.",
+  "metadata": {
+    "recommended_day": "Wednesday",
+    "recommended_hour_utc": 15,
+    "recommended_flair": "Resource",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 100,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 314 words, above target 1-1"
+    ]
+  }
+}

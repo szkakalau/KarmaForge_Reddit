@@ -1,0 +1,108 @@
+{
+  "generation_id": "gen_ee6cd825",
+  "created_at": "2026-05-23T18:02:08.918940+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    },
+    {
+      "subreddit": "SideProject",
+      "score": 0.2
+    },
+    {
+      "subreddit": "indiehackers",
+      "score": 0.2
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.2
+    },
+    {
+      "subreddit": "startups",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "How I built an MVP app in 3 days with zero code",
+      "score": 75.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    },
+    {
+      "title": "Is anyone else shocked by how long it takes to build a simple CRUD app?",
+      "score": 75.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "I spent 6 months building an app that nobody used—here's exactly what I changed to get 500 signups in week one.",
+      "score": 75.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    }
+  ],
+  "selected_title": {
+    "title": "How I built an MVP app in 3 days with zero code",
+    "score": 75.0
+  },
+  "body": "So I finally got tired of overthinking and decided to test something the \"wrong\" way. No code, no dev handoffs, just straight into validation.\n\nHere’s the short version: I built a simple B2B tool that scrapes competitor pricing data and sends weekly Slack alerts. It took 72 hours from idea to first paying user. Zero lines of code.\n\n**The stack I used:**\n\nBubble for the frontend and logic layer. Make.com (formerly Integromat) for the scraping and data processing. Airtable as the database. Stripe via Bubble’s native plugin for payments. That’s it.\n\n**How the 3 days broke down:**\n\nDay 1: Set up the Bubble app with a basic landing page, signup flow, and a dashboard that just showed a loading state. Connected Airtable to store user preferences (which competitors to track). Got the Stripe integration working with a single $29/month plan.\n\nDay 2: Built the Make.com scenario. It runs once a day, hits the target competitor URLs, extracts pricing tables using regex and CSS selectors, then dumps the changes into Airtable. If there’s a price drop of more than 10%, it triggers a Slack webhook. Took some fiddling with rate limits, but Make handles retries well.\n\nDay 3: Wired everything together. The Bubble app reads from Airtable to show the latest data. Added a simple \"last updated\" timestamp. Tested with a friend’s business. He paid $29 on the spot.\n\n**The ugly numbers so far:**\n\nMRR: $58 (2 users). Churn: zero so far but it’s only been 3 weeks. CAC: effectively $0 besides my time. The real test will be month 2.\n\n**What I learned:**\n\nBubble handles auth and payments shockingly well for something that took a weekend. Make.com is genuinely powerful for data pipelines if you’re okay with its quirky UI. Airtable as a backend is fine for under 100 users, but I’ll migrate to Supabase if this grows.\n\nThe biggest surprise? Users don’t care if it’s no-code. They care if it works and if it saves them time. One guy asked if I had an API. I said \"not yet\" and he still signed up.\n\n**What I’d do differently:**\n\nSkip the fancy Bubble responsive design on day one. I wasted 4 hours on mobile breakpoints that nobody used. Also, I should have set up error logging from the start. Make.com fails silently sometimes and I lost a day of data before I noticed.\n\nIf you’re sitting on an idea and the blocker is \"I can’t code,\" just try this approach. Worst case you waste a weekend. Best case you have an MRR line before you even write a line of real code.\n\nAnyone else here running a no-code MVP that’s actually generating revenue? What’s your stack and how long did it take you to get that first paying user?",
+  "metadata": {
+    "recommended_day": "Wednesday",
+    "recommended_hour_utc": 15,
+    "recommended_flair": "Resource",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 70,
+        "status": "warn"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 25,
+        "status": "warn"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Title is 12 words (target: 8-11)",
+      "Body is 459 words, above target 1-1",
+      "Hook type 'tutorial_howto' not clearly present"
+    ]
+  }
+}

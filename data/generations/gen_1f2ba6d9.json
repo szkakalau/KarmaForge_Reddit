@@ -1,0 +1,103 @@
+{
+  "generation_id": "gen_1f2ba6d9",
+  "created_at": "2026-05-23T17:57:00.203046+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "Fitness",
+      "score": 0.6
+    },
+    {
+      "subreddit": "Entrepreneur",
+      "score": 0.2
+    },
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    },
+    {
+      "subreddit": "indiehackers",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I lost 30 pounds in 6 months using 16:8 intermittent fasting",
+      "score": 90.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    },
+    {
+      "title": "I tried intermittent fasting for 6 months and dropped 30 pounds without counting calories.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    },
+    {
+      "title": "Is anyone else shocked by how much easier hunger gets after the first 2 weeks of fasting?",
+      "score": 60.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    }
+  ],
+  "selected_title": {
+    "title": "I lost 30 pounds in 6 months using 16:8 intermittent fasting",
+    "score": 90.0
+  },
+  "body": "**Title:** I lost 30 pounds in 6 months using 16:8 intermittent fasting\n\nI see a lot of posts here about cutting, bulking, and complicated meal plans, so I wanted to share what actually worked for me without losing my mind.\n\n**The setup:** 32M, 5’10”, started at 220 lbs, currently at 190 lbs. I’ve been lifting on and off for years, but my diet was always the weak point. I’d track macros for two weeks, get overwhelmed, and quit. This time I tried 16:8 intermittent fasting—eating window from 12pm to 8pm, fasting the other 16 hours.\n\n**How I did it:**\n\n- **First month:** Just the fasting window. No calorie counting. I ate whatever I wanted between 12 and 8, but naturally ate less because I skipped breakfast and stopped late-night snacking. Lost 8 pounds.\n- **Months 2-4:** Added a 500-calorie deficit (tracked loosely, around 2,000-2,200 calories per day). Still fasted 16:8. Lost another 15 pounds.\n- **Months 5-6:** Started lifting 4x/week (PPL split, 3 sets of 8-12 reps per exercise). Kept the deficit. Lost the last 7 pounds.\n\n**What I actually ate:** Coffee and water during the fast. Lunch was usually a chicken breast or salmon with rice and veggies (400-500 cal). Dinner was a bigger meal—lean protein, sweet potato, salad. Snack was Greek yogurt or fruit. I didn’t cut out carbs or go keto.\n\n**The honest timeline:** The first two weeks were rough. Headaches and hunger around 11am. That passed. Weight loss wasn’t linear—I stalled for 10 days in month 3, then dropped 4 pounds in a week. Strength stayed the same or slightly increased during the cut, which surprised me.\n\n**What I’d tell someone starting:** Don’t overthink it. Just pick a 16-hour window that fits your schedule (mine was 8pm to 12pm). Drink black coffee in the morning. Give it 3-4 weeks before you decide if it works. And be real about the timeline—this took me 6 months, not 6 weeks.\n\n**Question for you:** For those who’ve done 16:8 long-term, did you eventually switch to a different protocol (like 18:6 or OMAD), or stick with it? I’m thinking about maintaining at 16:8 with a slight surplus to build muscle.",
+  "metadata": {
+    "recommended_day": "Tuesday",
+    "recommended_hour_utc": 14,
+    "recommended_flair": "Progress",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 25,
+        "status": "warn"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 360 words, above target 1-1",
+      "Hook type 'tutorial_howto' not clearly present"
+    ]
+  }
+}

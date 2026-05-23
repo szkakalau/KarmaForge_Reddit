@@ -1,0 +1,104 @@
+{
+  "generation_id": "gen_299eb9c4",
+  "created_at": "2026-05-23T16:33:29.001147+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "programming",
+      "score": 0.6
+    },
+    {
+      "subreddit": "productivity",
+      "score": 0.4
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.4
+    },
+    {
+      "subreddit": "lifehacks",
+      "score": 0.4
+    },
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_29",
+      "name": "Pattern 30: number_shock + no_body",
+      "hook_type": "number_shock",
+      "viral_rate": 0.235
+    },
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I automated 80% of my data entry work with a 50-line Python script",
+      "score": 90.0,
+      "hook_type": "number_shock",
+      "pattern_id": "pattern_29"
+    },
+    {
+      "title": "Why does my Python automation script run perfectly in testing but fail in production?",
+      "score": 75.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "How I automated my workflow with a Python script in 10 lines",
+      "score": 75.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    }
+  ],
+  "selected_title": {
+    "title": "I automated 80% of my data entry work with a 50-line Python script",
+    "score": 90.0
+  },
+  "body": "80% of my data entry is now handled by a 50-line Python script. I’m not a data engineer—just a regular office worker who got tired of manually copying invoices into spreadsheets every morning.\n\nIt started with a simple pattern I noticed: every invoice had the same fields (vendor, date, amount, PO number) in the same PDF template. I was spending about 2 hours a day just transcribing numbers. So I wrote a script using `pdfplumber` to extract the text, `re` to parse it, and `pandas` to dump it into a CSV. The whole thing is under 50 lines, including error handling for missing fields.\n\nHere’s the core loop:\n\n```python\nfor pdf in Path(\"invoices\").glob(\"*.pdf\"):\n    with pdfplumber.open(pdf) as f:\n        text = f.pages[0].extract_text()\n        vendor = re.search(r\"Vendor:\\s*(.+)\", text).group(1)\n        amount = re.search(r\"Total:\\s*\\$?([\\d,]+\\.\\d{2})\", text).group(1)\n        data.append({\"vendor\": vendor, \"amount\": amount, \"file\": pdf.name})\n```\n\nI added a simple GUI with `tkinter` so my non-technical coworkers could drag and drop PDFs. Now the team saves about 10 hours a week collectively. The script lives on a shared network drive, and we run it manually once a day. No API calls, no cloud services—just pure local automation.\n\nThe biggest surprise was how little code it actually took. Most of the work was understanding the data structure, not writing loops. I’ve since open-sourced it with a few more features (like batch renaming and duplicate detection) on GitHub: [redacted, but it’s under my username].\n\nHas anyone else automated a boring office task with a tiny script? What was the ROI in terms of time saved? I’m curious if other people are using Python for similar “lazy but effective” solutions.",
+  "metadata": {
+    "recommended_day": "Tuesday",
+    "recommended_hour_utc": 14,
+    "recommended_flair": "Resource",
+    "should_mark_oc": true
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 100,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": []
+  }
+}
