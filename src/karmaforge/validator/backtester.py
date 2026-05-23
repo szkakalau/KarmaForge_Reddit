@@ -6,7 +6,7 @@ then measures recall and precision on test period (e.g. 2024).
 
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 import numpy as np
@@ -17,6 +17,12 @@ from ..analyzer.content_analyzer import ContentAnalyzer
 from ..analyzer.meta_analyzer import MetaAnalyzer
 from ..analyzer.visual_analyzer import VisualAnalyzer
 from ..analyzer.pattern_extractor import PatternExtractor, ViralPattern
+from ..analyzer.analysis_utils import (
+    batch_classify_heuristic, batch_classify_llm,
+    HOOK_KEYWORDS, HOOK_CATEGORIES, HOOK_DESCRIPTIONS,
+)
+
+DEFAULT_SEED = 42
 
 logger = logging.getLogger(__name__)
 
@@ -56,16 +62,18 @@ class Backtester:
         match_threshold: float = 0.6,
         min_recall: float = 0.60,
         min_precision: float = 0.40,
+        llm_client = None,
     ) -> None:
         self.pattern_extractor = pattern_extractor
-        self.train_start = datetime.fromisoformat(train_start)
-        self.train_end = datetime.fromisoformat(train_end)
-        self.test_start = datetime.fromisoformat(test_start)
-        self.test_end = datetime.fromisoformat(test_end)
+        self.train_start = datetime.fromisoformat(train_start).replace(tzinfo=timezone.utc)
+        self.train_end = datetime.fromisoformat(train_end).replace(tzinfo=timezone.utc)
+        self.test_start = datetime.fromisoformat(test_start).replace(tzinfo=timezone.utc)
+        self.test_end = datetime.fromisoformat(test_end).replace(tzinfo=timezone.utc)
         self.viral_percentile = viral_percentile
         self.match_threshold = match_threshold
         self.min_recall = min_recall
         self.min_precision = min_precision
+        self.llm = llm_client
 
     def run(self, all_posts: list[Post]) -> BacktestResult:
         train_posts, test_posts = self._split_temporal(all_posts)
@@ -80,8 +88,9 @@ class Backtester:
 
         logger.info("Backtesting: %d train posts, %d test posts", len(train_posts), len(test_posts))
 
-        title_results = TitleAnalyzer(use_llm=False).analyze(train_posts)
-        content_results = ContentAnalyzer(use_llm=False).analyze(train_posts)
+        use_llm = self.llm is not None
+        title_results = TitleAnalyzer(use_llm=use_llm).analyze(train_posts)
+        content_results = ContentAnalyzer(use_llm=use_llm).analyze(train_posts)
         meta_results = MetaAnalyzer().analyze(train_posts)
         visual_results = VisualAnalyzer().analyze(train_posts)
 
@@ -143,6 +152,25 @@ class Backtester:
                 train.append(p)
             elif self.test_start <= p.created_utc <= self.test_end:
                 test.append(p)
+        # Fall back to random stratified split if temporal split is too imbalanced
+        if len(train) < 30 or len(test) < 30:
+            logger.info("Temporal split insufficient (train=%d, test=%d), using random split", len(train), len(test))
+            return self._split_random(posts)
+        return train, test
+
+    def _split_random(self, posts: list[Post]) -> tuple[list[Post], list[Post]]:
+        from collections import defaultdict
+        rng = np.random.default_rng(DEFAULT_SEED)
+        by_sub = defaultdict(list)
+        for p in posts:
+            if p.created_utc:
+                by_sub[p.subreddit].append(p)
+        train, test = [], []
+        for sub, sub_posts in by_sub.items():
+            indices = rng.permutation(len(sub_posts))
+            split = max(1, len(sub_posts) * 3 // 5)
+            train.extend(sub_posts[i] for i in indices[:split])
+            test.extend(sub_posts[i] for i in indices[split:])
         return train, test
 
     def _match_and_evaluate(
@@ -151,55 +179,31 @@ class Backtester:
         upvotes = [p.upvotes for p in posts]
         threshold = np.percentile(upvotes, self.viral_percentile) if upvotes else 0
 
+        titles = [p.title for p in posts]
+        if self.llm:
+            post_hooks = batch_classify_llm(
+                titles, HOOK_CATEGORIES, HOOK_DESCRIPTIONS,
+                self.llm, batch_size=20, task_name="title",
+            )
+        else:
+            post_hooks = batch_classify_heuristic(titles, list(HOOK_KEYWORDS.keys()), HOOK_KEYWORDS)
+        post_narratives = [_classify_narrative(p.body or "") for p in posts]
+
         predictions = []
         actuals = []
 
-        for p in posts:
+        for i, p in enumerate(posts):
             is_viral = p.upvotes >= threshold
             actuals.append(is_viral)
 
             matched = False
             for pattern in patterns:
-                if self._post_matches_pattern(p, pattern):
+                if _post_matches_pattern(p, pattern, post_hooks[i], post_narratives[i], self.match_threshold):
                     matched = True
                     break
             predictions.append(matched)
 
         return predictions, actuals
-
-    def _post_matches_pattern(self, post: Post, pattern: ViralPattern) -> bool:
-        score = 0.0
-
-        if pattern.title_template:
-            sim = self._title_similarity(post.title, pattern.title_template)
-            score += sim * 0.5
-
-        if pattern.recommended_metrics:
-            metrics = pattern.recommended_metrics
-            title_words = len(post.title.split())
-            if "title_words" in metrics:
-                low, high = metrics["title_words"]
-                if low <= title_words <= high:
-                    score += 0.25
-            body_words = len(post.body.split()) if post.body else 0
-            if "body_words" in metrics:
-                low, high = metrics["body_words"]
-                if low <= body_words <= high:
-                    score += 0.25
-
-        return score >= self.match_threshold
-
-    @staticmethod
-    def _title_similarity(title: str, template: str) -> float:
-        title_words = set(title.lower().split())
-        template_words = set(template.lower().replace("{var}", "").split())
-
-        if not template_words:
-            return 0.0
-
-        intersection = title_words & template_words
-        union = title_words | template_words
-        return len(intersection) / max(len(union), 1)
 
     @staticmethod
     def _compute_metrics(predictions: list[bool], actuals: list[bool]) -> dict:
@@ -216,3 +220,91 @@ class Backtester:
             "precision": precision,
             "confusion": {"tp": tp, "fp": fp, "tn": tn, "fn": fn},
         }
+
+
+_STOP_WORDS = {
+    "the", "a", "an", "is", "are", "was", "were", "be", "been", "being",
+    "have", "has", "had", "do", "does", "did", "will", "would", "could",
+    "should", "may", "might", "can", "shall", "to", "of", "in", "for",
+    "on", "with", "at", "by", "from", "as", "into", "through", "during",
+    "before", "after", "above", "below", "between", "and", "but", "or",
+    "nor", "not", "so", "yet", "both", "either", "neither", "each", "every",
+    "all", "any", "few", "more", "most", "other", "some", "such", "no",
+    "only", "own", "same", "than", "too", "very", "just", "about", "also",
+    "if", "then", "else", "this", "that", "these", "those", "it", "its",
+    "i", "me", "my", "we", "our", "you", "your", "he", "she", "they",
+    "him", "his", "her", "them", "what", "which", "who", "whom", "when",
+    "where", "why", "how", "am", "don", "didn", "doesn", "isn", "aren",
+    "wasn", "weren", "haven", "hasn", "hadn", "won", "wouldn", "can", "couldn",
+    "{var}", "up", "out", "get", "one", "like", "really", "make", "know",
+    "think", "people", "time", "day", "thing", "even", "still", "back",
+    "way", "well", "also", "much", "new", "good", "first",
+}
+
+
+def _post_matches_pattern(
+    post: Post, pattern: ViralPattern, post_hook: str, post_narrative: str, match_threshold: float
+) -> bool:
+    score = 0.0
+
+    if pattern.hook_type:
+        if post_hook == pattern.hook_type:
+            score += 0.20
+
+    if pattern.narrative_mode:
+        if post_narrative == pattern.narrative_mode:
+            score += 0.20
+
+    if pattern.title_template:
+        sim = _title_match(post.title, pattern.title_template)
+        score += sim * 0.35
+
+    if pattern.recommended_metrics:
+        metrics = pattern.recommended_metrics
+        title_words = len(post.title.split())
+        if "title_words" in metrics:
+            low, high = metrics["title_words"]
+            if low <= title_words <= high:
+                score += 0.125
+        body_words = len(post.body.split()) if post.body else 0
+        if "body_words" in metrics:
+            low, high = metrics["body_words"]
+            if low <= body_words <= high:
+                score += 0.125
+
+    return score >= match_threshold
+
+
+def _title_match(title: str, template: str) -> float:
+    """Score how well a title matches a pattern template (pipe-separated bigrams).
+
+    Returns 0.0 to 1.0 based on how many signature bigrams appear in the title.
+    """
+    if not template:
+        return 0.0
+    title_lower = title.lower()
+    bigrams = [bg.strip() for bg in template.split("|") if bg.strip()]
+    if not bigrams:
+        return 0.0
+    matches = sum(1 for bg in bigrams if bg in title_lower)
+    # At least 1 bigram match to contribute; scale by fraction matched
+    if matches == 0:
+        return 0.0
+    return 0.4 + 0.6 * (matches / len(bigrams))
+
+
+def _classify_narrative(body: str) -> str:
+    if not body or len(body) < 20:
+        return "no_body"
+    b_lower = body.lower()
+    if any(kw in b_lower for kw in ["step 1", "how to", "tutorial", "guide", "here's how"]):
+        return "tutorial_howto"
+    if any(kw in b_lower for kw in ["i think", "in my opinion", "unpopular", "should be"]):
+        return "opinion_argument"
+    if any(kw in b_lower for kw in ["i built", "i made", "i created", "check out my", "github.com"]):
+        return "resource_showcase"
+    if body.strip().endswith("?") or "anyone else" in b_lower:
+        return "question_discussion"
+    if any(kw in b_lower for kw in ["i ", "my ", "me ", "we "]) and len(b_lower) > 200:
+        return "story_personal"
+    return "opinion_argument"

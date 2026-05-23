@@ -1,0 +1,106 @@
+{
+  "generation_id": "gen_34d910a0",
+  "created_at": "2026-05-23T18:22:59.598288+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "SideProject",
+      "score": 0.4
+    },
+    {
+      "subreddit": "digitalnomad",
+      "score": 0.4
+    },
+    {
+      "subreddit": "getdisciplined",
+      "score": 0.4
+    },
+    {
+      "subreddit": "startups",
+      "score": 0.4
+    },
+    {
+      "subreddit": "todayilearned",
+      "score": 0.4
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I quit my job to learn Rust in 30 days—here’s what actually worked while working full-time.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    },
+    {
+      "title": "Is it possible to learn Rust in 30 days while working full-time?",
+      "score": 90.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "I learned Rust in 30 days while working full-time—here's my honest roadmap",
+      "score": 75.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    }
+  ],
+  "selected_title": {
+    "title": "I quit my job to learn Rust in 30 days—here’s what actually worked while working full-time.",
+    "score": 90.0
+  },
+  "body": "I’ve been a backend dev for about six years, mostly writing Python and a bit of Go. Last month, I hit a wall. Every project felt the same—same patterns, same bugs, same “just use this ORM” solutions. I needed something that would actually make me think differently.\n\nSo I did something stupid. I told my manager I was taking 30 days off, no pay, to learn Rust full-time. Then I realized I couldn’t afford that, so I compromised: I kept my job and tried to learn Rust in the margins. Morning commutes, lunch breaks, evenings after my kid went to bed. Thirty days, start to finish.\n\nHere’s what actually worked.\n\nFirst, I stopped trying to read the Rust Book cover to cover. That’s a trap. Instead, I picked a tiny real project—a CLI tool that parses my messy CSV expense logs. Every time I hit a compiler error (which was constantly), I’d search for exactly that error and understand it before moving on. The borrow checker stopped being scary around day 12 when I finally internalized that it’s not punishing me, it’s preventing me from writing C-level bugs.\n\nSecond, I wrote a Rust script every single day, even if it was just 15 lines. No skipped days. Day 7 I wrote a program that crashed because I forgot to handle a None value. Day 8 I fixed it. That repetition matters more than any tutorial.\n\nThird, I used ChatGPT as a rubber duck, not a code generator. I’d explain my logic out loud, ask why my lifetime annotations were wrong, and then fix it myself. That forced me to actually understand.\n\nAfter 30 days, I shipped that CLI tool. It’s ugly, it panics in edge cases, and I love it. More importantly, I feel like a beginner again in the best way. The mental model shift from “everything is an object” to “everything has an owner” has already made my Python code cleaner.\n\nHas anyone else tried learning a completely different paradigm while working full-time? What language broke your brain in a good way?",
+  "metadata": {
+    "recommended_day": "Wednesday",
+    "recommended_hour_utc": 15,
+    "recommended_flair": "I made this",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 100,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 344 words, above target 1-1"
+    ]
+  }
+}

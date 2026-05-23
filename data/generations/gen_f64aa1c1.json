@@ -1,0 +1,106 @@
+{
+  "generation_id": "gen_f64aa1c1",
+  "created_at": "2026-05-23T17:00:04.391152+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "productivity",
+      "score": 0.4
+    },
+    {
+      "subreddit": "programming",
+      "score": 0.4
+    },
+    {
+      "subreddit": "LifeProTips",
+      "score": 0.2
+    },
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    },
+    {
+      "subreddit": "Showerthoughts",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I automated 14 hours of weekly work with a Python script and it changed how I manage time.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    },
+    {
+      "title": "How I automated 14 hours of weekly Python work in one script",
+      "score": 75.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    },
+    {
+      "title": "What did I do with the 14 hours my Python script freed up each week?",
+      "score": 75.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    }
+  ],
+  "selected_title": {
+    "title": "I automated 14 hours of weekly work with a Python script and it changed how I manage time.",
+    "score": 90.0
+  },
+  "body": "I’m still kind of amazed this actually worked, so I have to share it somewhere people might get it.\n\nEvery week, I was losing about 14 hours to what I called “ghost work.” Not the big, meaningful tasks. Just the invisible stuff: exporting reports, reformatting spreadsheets, cross-referencing client data from three different platforms, sending status update emails. It was the kind of work that feels urgent in the moment but adds zero value to anyone’s life. I’d sit down to do actual deep work, and suddenly I’d remember I needed to pull numbers from last Tuesday and email them to accounting. Boom. Forty minutes gone.\n\nLast month, I finally got fed up. I spent a Sunday afternoon learning enough Python to build a script that does all of it. Now, when I open my laptop, a single command runs the reports, cleans the data, checks for discrepancies, and drafts the emails. I just hit send.\n\nThe time savings are obvious, but what surprised me was the mental shift. I used to start every day already behind, because I knew those 14 hours were waiting for me. Now I walk into my mornings with a clean slate. I’ve started using the extra time for things I actually care about: reading, exercising, even just sitting with my coffee before the chaos starts. I feel like I got my brain back.\n\nI’m not a programmer. I just found a repetitive problem and spent a weekend solving it permanently. If you’re drowning in tiny, recurring tasks, I promise it’s worth looking into.\n\nHas anyone else had a similar moment where automating one thing changed how you see your whole schedule? What was the task that broke the camel’s back for you?",
+  "metadata": {
+    "recommended_day": "Tuesday",
+    "recommended_hour_utc": 14,
+    "recommended_flair": "Technique",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 60,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 287 words, above target 1-1"
+    ]
+  }
+}

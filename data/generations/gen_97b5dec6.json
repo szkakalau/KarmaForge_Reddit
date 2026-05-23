@@ -1,0 +1,106 @@
+{
+  "generation_id": "gen_97b5dec6",
+  "created_at": "2026-05-23T19:03:55.301955+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "SaaS",
+      "score": 0.4
+    },
+    {
+      "subreddit": "indiehackers",
+      "score": 0.4
+    },
+    {
+      "subreddit": "SideProject",
+      "score": 0.2
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.2
+    },
+    {
+      "subreddit": "startups",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "How we scaled a Next.js app to handle 100k concurrent users",
+      "score": 90.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    },
+    {
+      "title": "We scaled a Next.js app to 100k users—what did we miss?",
+      "score": 90.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "We scaled our Next.js app to handle 100k concurrent users—here’s how we optimized the database layer.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    }
+  ],
+  "selected_title": {
+    "title": "How we scaled a Next.js app to handle 100k concurrent users",
+    "score": 90.0
+  },
+  "body": "We hit 100k concurrent users last week without the site going down, and I wanted to share the exact steps we took. A lot of the guides out there are either too basic or assume you’re at Google scale, so here’s the real middle-ground approach that worked for us.\n\nWe run a B2B SaaS analytics dashboard, built on Next.js (App Router) with a Postgres backend. For the first year, we were fine with a single server and some basic caching. Then we landed a few enterprise clients and our traffic graph went vertical. Our MRR was around $18k at the time, but our churn was creeping up because of slow load times during peak hours. CAC was already high ($120), so we couldn’t afford to lose those accounts.\n\nHere’s what we changed, in order of impact:\n\nFirst, we moved all API routes that didn’t need real-time data to static generation with ISR (Incremental Static Regeneration). That cut our server load by about 40% overnight. For the dynamic routes that had to stay server-side, we implemented Redis-based caching with a 30-second TTL for dashboard data. That was the single biggest win—page loads dropped from 4 seconds to under 200ms.\n\nSecond, we stopped using Next.js as a full API gateway. We moved heavy data processing to a separate Node.js worker service behind a load balancer. The Next.js app now just handles UI rendering and passes auth tokens to the worker. This decoupling meant we could scale the worker independently during traffic spikes.\n\nThird, we switched from Vercel to a Docker-based deployment on AWS ECS with auto-scaling. Vercel is great for low-to-medium traffic, but the cost per request at our scale was unsustainable. We’re now paying about $600/month for infrastructure that handles the same load, compared to $2k+ on Vercel.\n\nFourth, we implemented aggressive client-side caching with React Query and a service worker for offline-capable static assets. This sounds fancy, but it’s literally just setting stale-while-revalidate headers and telling the browser to cache API responses for 5 minutes. Reduced our backend calls by another 30%.\n\nThe result? We hit 100k concurrent users during a product launch webinar last week. Peak CPU on our main server was 65%, and average response time stayed under 300ms. Our churn dropped to 4.2% monthly, and we’re now targeting $30k MRR.\n\nOne thing I’ll say honestly: we didn’t need all this until we passed about 20k concurrent users. Before that, a beefy single server with good caching would have been fine. Don’t over-engineer early.\n\nFor anyone else scaling a Next.js app—what’s been your biggest bottleneck? And are you using Vercel or self-hosting? Curious what’s working for others at this stage.",
+  "metadata": {
+    "recommended_day": "Wednesday",
+    "recommended_hour_utc": 15,
+    "recommended_flair": "Resource",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 60,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 442 words, above target 1-1"
+    ]
+  }
+}

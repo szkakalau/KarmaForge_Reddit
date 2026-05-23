@@ -1,0 +1,107 @@
+{
+  "generation_id": "gen_5c344c02",
+  "created_at": "2026-05-23T19:09:48.029142+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "SaaS",
+      "score": 0.4
+    },
+    {
+      "subreddit": "indiehackers",
+      "score": 0.4
+    },
+    {
+      "subreddit": "SideProject",
+      "score": 0.2
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.2
+    },
+    {
+      "subreddit": "startups",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "How we scaled our Next.js app to handle 100k concurrent users",
+      "score": 90.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    },
+    {
+      "title": "My Next.js app hit 100k users last week—here’s exactly where caching and DB sharding broke.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    },
+    {
+      "title": "How did we scale our Next.js app to 100k users without breaking the bank?",
+      "score": 75.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    }
+  ],
+  "selected_title": {
+    "title": "How we scaled our Next.js app to handle 100k concurrent users",
+    "score": 90.0
+  },
+  "body": "We hit a wall about six months ago. Our Next.js app was growing fast, but around 15k concurrent users the whole thing started to buckle. Pages took five seconds to load, the database was screaming, and our churn rate jumped from 3% to 8% in a single week. That was the wake-up call.\n\nWe’re a B2B SaaS in the analytics space, so uptime and speed are literally our product. MRR was around $45k at the time, and we were bleeding customers. Our CAC was already high at around $600, so losing users to slow load times hurt twice as much.\n\nHere’s what actually worked for us to get to 100k concurrent users without burning the budget.\n\nFirst, we moved away from server-side rendering for authenticated dashboard pages. That sounds counterintuitive for Next.js, but we switched to static generation with client-side data fetching for all user-facing dashboards. The landing pages and marketing site stay SSR for SEO, but the heavy stuff is now statically generated and cached behind a CDN. That alone cut our server load by about 60%.\n\nSecond, we implemented incremental static regeneration (ISR) with a very aggressive revalidation strategy. For data that updates frequently but not in real-time, we set revalidation to 30 seconds. That means most users hit a cached page, and only the first visitor after 30 seconds triggers a rebuild. It smoothed out the traffic spikes massively.\n\nThird, we optimized our API routes. We were doing too many database calls per request. We consolidated endpoints using GraphQL-style batching with a simple custom hook that queues requests and sends them as one batch every 100ms. This dropped our database connection pool usage by half.\n\nFourth, we added edge caching for authenticated assets. We use Vercel’s Edge Network with a custom middleware that checks auth tokens at the edge before serving the cached page. That way, even logged-in users get fast responses from the closest data center.\n\nThe result? Our average page load time went from 4.2 seconds to 0.8 seconds. Churn dropped back to 2.5%. And we handled a peak of 112k concurrent users during a product launch last month without a single timeout.\n\nWe’re still early in this journey. Our MRR is now around $78k, and we’re working on reducing CAC further by improving the onboarding flow.\n\nWhat’s your biggest bottleneck when scaling Next.js? For us, it was database connections. Would love to hear how others are solving this.",
+  "metadata": {
+    "recommended_day": "Wednesday",
+    "recommended_hour_utc": 15,
+    "recommended_flair": "Resource",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 25,
+        "status": "warn"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 404 words, above target 1-1",
+      "Hook type 'tutorial_howto' not clearly present"
+    ]
+  }
+}

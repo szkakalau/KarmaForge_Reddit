@@ -1,0 +1,106 @@
+{
+  "generation_id": "gen_7fd9ab7b",
+  "created_at": "2026-05-23T18:24:42.686938+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    },
+    {
+      "subreddit": "SideProject",
+      "score": 0.2
+    },
+    {
+      "subreddit": "indiehackers",
+      "score": 0.2
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.2
+    },
+    {
+      "subreddit": "startups",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "Why do 80% of SaaS apps fail before reaching 100 paying users?",
+      "score": 90.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "We spent 6 months building our SaaS app, only to discover our first 100 users hated the onboarding flow.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    },
+    {
+      "title": "How I built an MVP in 48 hours with zero code and 20 users",
+      "score": 75.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    }
+  ],
+  "selected_title": {
+    "title": "Why do 80% of SaaS apps fail before reaching 100 paying users?",
+    "score": 90.0
+  },
+  "body": "I’ve been digging into this stat that keeps floating around—something like 80% of SaaS apps never hit 100 paying users. It feels brutal, but honestly, after building a few products myself and talking to other founders, I’m starting to see the patterns.\n\nFor me, the biggest killer isn’t the product itself. It’s the assumption that a good feature set equals revenue. I’ve launched MVPs with decent MRR from day one—maybe $500–$1k—but then churn hits hard. You get those first 20–30 users, often from Product Hunt or a launch week, and they’re sticky for a month. But then month two rolls around and your retention graph looks like a cliff. CAC is through the roof because you’re burning money on ads or cold outreach, and your LTV doesn’t justify it.\n\nI think a lot of founders ignore the “100 user” milestone because it’s not glamorous. Everyone wants to talk about Series A or unicorn growth, but staying power at that scale is a different beast. You need a product that solves a real, recurring pain—not just a nice-to-have. I’ve seen apps with flawless UX and zero churn because they automate something painful (like invoicing or compliance), while others with slick interfaces die because users try once and forget.\n\nWhat’s your experience? Is it mostly a marketing problem, a product-market fit gap, or something else like pricing or onboarding friction? I’m trying to figure out if there’s a common thread—like maybe the ones that survive have a super low CAC from day one, or they nail a specific niche where word-of-mouth kicks in before the 100-user mark. Would love to hear your MRR or churn numbers if you’ve tracked them.",
+  "metadata": {
+    "recommended_day": "Wednesday",
+    "recommended_hour_utc": 15,
+    "recommended_flair": "Resource",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 60,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 278 words, above target 1-1"
+    ]
+  }
+}

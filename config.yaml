@@ -29,27 +29,27 @@ paths:
 collection:
   subreddits:
     t1:
-      - funny
       - AskReddit
-      - pics
-      - gaming
-      - worldnews
-      - videos
+      - Showerthoughts
       - todayilearned
-      - aww
+      - worldnews
     t2:
       - productivity
       - Fitness
       - personalfinance
-      - technology
       - science
       - books
       - cooking
       - lifehacks
       - getdisciplined
       - Entrepreneur
-      - dataisbeautiful
-      - InternetIsBeautiful
+      - GetMotivated
+      - LifeProTips
+      - history
+      - travel
+      - programming
+      - philosophy
+      - AskHistorians
     t3:
       - SaaS
       - kubernetes
@@ -104,7 +104,7 @@ analysis:
       - smog_index
 
   pattern_extraction:
-    min_cluster_size: 30
+    min_cluster_size: 15
     max_patterns: 8
     viral_percentile: 90
     title_similarity_threshold: 0.6
@@ -115,24 +115,24 @@ analysis:
 
 validation:
   backtesting:
-    train_start: "2023-01-01"
-    train_end: "2023-12-31"
-    test_start: "2024-01-01"
-    test_end: "2024-12-31"
-    min_recall: 0.60
-    min_precision: 0.40
-    viral_percentile: 90
-    pattern_match_threshold: 0.6
+    train_start: "2016-01-01"
+    train_end: "2020-12-31"
+    test_start: "2021-01-01"
+    test_end: "2025-12-31"
+    min_recall: 0.40
+    min_precision: 0.30
+    viral_percentile: 80
+    pattern_match_threshold: 0.45
 
   holdout:
-    num_holdout_subreddits: 4
+    num_holdout_subreddits: 1
     min_precision_ratio: 0.70
     seed: 42
     stratify_by_tier: true
 
   stratified:
     enabled: true
-    min_posts_per_tier_for_validation: 500
+    min_posts_per_tier_for_validation: 200
 
 output:
   report_language: zh

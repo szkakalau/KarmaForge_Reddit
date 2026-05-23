@@ -1,0 +1,104 @@
+{
+  "generation_id": "gen_b4ff1ada",
+  "created_at": "2026-05-23T16:24:31.249122+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "programming",
+      "score": 0.6
+    },
+    {
+      "subreddit": "productivity",
+      "score": 0.4
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.4
+    },
+    {
+      "subreddit": "lifehacks",
+      "score": 0.4
+    },
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_29",
+      "name": "Pattern 30: number_shock + no_body",
+      "hook_type": "number_shock",
+      "viral_rate": 0.235
+    },
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I wrote a Python script that automated 40 hours of manual data entry per week",
+      "score": 90.0,
+      "hook_type": "number_shock",
+      "pattern_id": "pattern_29"
+    },
+    {
+      "title": "What happens when you let a Python automation script run unsupervised for 48 hours?",
+      "score": 75.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "How I automated my Python script to run without any manual intervention",
+      "score": 75.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    }
+  ],
+  "selected_title": {
+    "title": "I wrote a Python script that automated 40 hours of manual data entry per week",
+    "score": 90.0
+  },
+  "body": "I’ve been doing data entry for a logistics company for the last two years. The main task was taking order spreadsheets from 12 different vendors, normalizing the formats, cross-referencing inventory levels, and updating a master database. Every week, that process took me around 40 hours. I’d start Monday morning and barely finish by Friday afternoon. It was mind-numbing, error-prone, and honestly made me dread opening my laptop.\n\nAbout three months ago, I decided to try automating it. I wrote a Python script using pandas for the heavy lifting, openpyxl for reading and writing Excel files, and a simple SQLite backend to track changes. The script ingests each vendor’s CSV or XLSX, maps columns to a standard schema, checks inventory thresholds, and pushes updates to the master DB. It also logs every change with timestamps for audit trails. The whole thing runs in about 4 minutes now, including error handling for missing fields or corrupted files.\n\nHere’s a simplified snippet of the normalization logic:\n\n```python\nimport pandas as pd\n\ndef normalize_vendor_data(file_path, vendor_id):\n    df = pd.read_excel(file_path, sheet_name=0)\n    # Map vendor-specific column names to standard schema\n    mapping = {\n        'Product Code': 'sku',\n        'Qty Available': 'stock',\n        'Price (USD)': 'unit_price'\n    }\n    df.rename(columns=mapping, inplace=True)\n    df['vendor'] = vendor_id\n    return df[['sku', 'stock', 'unit_price', 'vendor']]\n```\n\nThe hardest part wasn’t the code—it was convincing my manager to let me test it on live data. I ran it in parallel for two weeks, comparing outputs manually. Zero discrepancies. They approved the switch last month, and I’ve basically been free since then. I’ve now got a GitHub repo with the full pipeline, including a config file for adding new vendors without touching code.\n\n[Repo link: github.com/yourusername/vendor-data-automation]\n\nHas anyone else here automated a tedious workflow that management was skeptical about? How did you handle the buy-in phase?",
+  "metadata": {
+    "recommended_day": "Tuesday",
+    "recommended_hour_utc": 14,
+    "recommended_flair": "Resource",
+    "should_mark_oc": true
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 100,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": []
+  }
+}

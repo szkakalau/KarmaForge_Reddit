@@ -1,1 +1,333 @@
-[]
+[
+  {
+    "pattern_id": "pattern_30",
+    "name": "Pattern 31: tutorial_howto + no_body",
+    "description": "tutorial_howto × no_body in t2/image",
+    "applicable_subreddits": [
+      "lifehacks"
+    ],
+    "title_template": "",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.733,
+    "confidence_interval": [
+      0.0,
+      0.2667
+    ],
+    "avg_upvotes": 1465.1,
+    "p_value": 0.0,
+    "exemplar_posts": [
+      "t3_6u0nnn",
+      "t3_6u8r3q",
+      "t3_6srvzm",
+      "t3_6vj5s9",
+      "t3_6ux0yx"
+    ],
+    "hook_type": "tutorial_howto",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        8,
+        11
+      ],
+      "body_words": [
+        1,
+        1
+      ]
+    },
+    "tier_effectiveness": {
+      "t2": 0.7333333333333333
+    },
+    "sample_size": 15
+  },
+  {
+    "pattern_id": "pattern_23",
+    "name": "Pattern 24: curious_question + no_body",
+    "description": "curious_question × no_body in t2/image",
+    "applicable_subreddits": [
+      "LifeProTips",
+      "lifehacks",
+      "GetMotivated",
+      "philosophy",
+      "travel",
+      "personalfinance",
+      "programming",
+      "books",
+      "history"
+    ],
+    "title_template": "",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.322,
+    "confidence_interval": [
+      0.0667,
+      0.1403
+    ],
+    "avg_upvotes": 734.3,
+    "p_value": 0.0,
+    "exemplar_posts": [
+      "t3_7vipi",
+      "t3_6ukwqm",
+      "t3_6vhlyc",
+      "t3_6uw1tu",
+      "t3_6sg12d"
+    ],
+    "hook_type": "curious_question",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        5,
+        13
+      ],
+      "body_words": [
+        1,
+        1
+      ]
+    },
+    "tier_effectiveness": {
+      "t2": 0.32217573221757323
+    },
+    "sample_size": 239
+  },
+  {
+    "pattern_id": "pattern_54",
+    "name": "Pattern 55: identity_label + no_body",
+    "description": "identity_label × no_body in t1/link",
+    "applicable_subreddits": [
+      "todayilearned"
+    ],
+    "title_template": "today learned|new york",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.308,
+    "confidence_interval": [
+      0.0256,
+      0.1795
+    ],
+    "avg_upvotes": 29.6,
+    "p_value": 6.1e-05,
+    "exemplar_posts": [
+      "t3_8vzek",
+      "t3_8n5jm",
+      "t3_8s33p",
+      "t3_8mz7a",
+      "t3_8vus4"
+    ],
+    "hook_type": "identity_label",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        14,
+        23
+      ],
+      "body_words": [
+        1,
+        1
+      ]
+    },
+    "tier_effectiveness": {
+      "t1": 0.3076923076923077
+    },
+    "sample_size": 39
+  },
+  {
+    "pattern_id": "pattern_47",
+    "name": "Pattern 48: story_opener + no_body",
+    "description": "story_opener × no_body in t1/link",
+    "applicable_subreddits": [
+      "todayilearned"
+    ],
+    "title_template": "today learned",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.196,
+    "confidence_interval": [
+      0.0669,
+      0.1309
+    ],
+    "avg_upvotes": 25.7,
+    "p_value": 0.0,
+    "exemplar_posts": [
+      "t3_8ux7m",
+      "t3_8ujir",
+      "t3_8tiss",
+      "t3_8p8n7",
+      "t3_8omcq"
+    ],
+    "hook_type": "story_opener",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        12,
+        20
+      ],
+      "body_words": [
+        1,
+        1
+      ]
+    },
+    "tier_effectiveness": {
+      "t1": 0.19607843137254902
+    },
+    "sample_size": 306
+  },
+  {
+    "pattern_id": "pattern_67",
+    "name": "Pattern 68: curious_question + no_body",
+    "description": "curious_question × no_body in t1/text",
+    "applicable_subreddits": [
+      "Showerthoughts",
+      "todayilearned"
+    ],
+    "title_template": "",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.194,
+    "confidence_interval": [
+      0.0654,
+      0.141
+    ],
+    "avg_upvotes": 58.6,
+    "p_value": 1e-06,
+    "exemplar_posts": [
+      "t3_89c35",
+      "t3_19mshn",
+      "t3_19zhta",
+      "t3_18yyyo",
+      "t3_19kust"
+    ],
+    "hook_type": "curious_question",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        9,
+        14
+      ],
+      "body_words": [
+        3,
+        3
+      ]
+    },
+    "tier_effectiveness": {
+      "t1": 0.19444444444444445
+    },
+    "sample_size": 252
+  },
+  {
+    "pattern_id": "pattern_50",
+    "name": "Pattern 51: number_shock + no_body",
+    "description": "number_shock × no_body in t1/link",
+    "applicable_subreddits": [
+      "todayilearned"
+    ],
+    "title_template": "today learned",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.179,
+    "confidence_interval": [
+      0.0517,
+      0.1604
+    ],
+    "avg_upvotes": 27.9,
+    "p_value": 0.012112,
+    "exemplar_posts": [
+      "t3_8yaev",
+      "t3_8vmge",
+      "t3_8njdm",
+      "t3_8nwno",
+      "t3_8ucy0"
+    ],
+    "hook_type": "number_shock",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        15,
+        18
+      ],
+      "body_words": [
+        1,
+        1
+      ]
+    },
+    "tier_effectiveness": {
+      "t1": 0.1792452830188679
+    },
+    "sample_size": 106
+  },
+  {
+    "pattern_id": "pattern_29",
+    "name": "Pattern 30: number_shock + no_body",
+    "description": "number_shock × no_body in t2/image",
+    "applicable_subreddits": [
+      "LifeProTips",
+      "lifehacks",
+      "GetMotivated",
+      "travel",
+      "programming",
+      "books"
+    ],
+    "title_template": "",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.235,
+    "confidence_interval": [
+      0.0294,
+      0.2059
+    ],
+    "avg_upvotes": 220.6,
+    "p_value": 0.021106,
+    "exemplar_posts": [
+      "t3_6uflux",
+      "t3_6t8xqc",
+      "t3_4412s5",
+      "t3_46iu48",
+      "t3_47cmk4"
+    ],
+    "hook_type": "number_shock",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        9,
+        18
+      ]
+    },
+    "tier_effectiveness": {
+      "t2": 0.23529411764705882
+    },
+    "sample_size": 34
+  },
+  {
+    "pattern_id": "pattern_53",
+    "name": "Pattern 54: number_shock + no_body",
+    "description": "number_shock × no_body in t1/text",
+    "applicable_subreddits": [
+      "Showerthoughts",
+      "todayilearned"
+    ],
+    "title_template": "today learned",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.214,
+    "confidence_interval": [
+      0.0238,
+      0.1792
+    ],
+    "avg_upvotes": 47.0,
+    "p_value": 0.029819,
+    "exemplar_posts": [
+      "t3_8ty7k",
+      "t3_8htj7",
+      "t3_8aqn4",
+      "t3_89b0s",
+      "t3_19ikee"
+    ],
+    "hook_type": "number_shock",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        17,
+        21
+      ],
+      "body_words": [
+        1,
+        1
+      ]
+    },
+    "tier_effectiveness": {
+      "t1": 0.21428571428571427
+    },
+    "sample_size": 42
+  }
+]

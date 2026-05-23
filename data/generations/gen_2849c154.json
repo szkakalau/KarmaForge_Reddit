@@ -1,0 +1,104 @@
+{
+  "generation_id": "gen_2849c154",
+  "created_at": "2026-05-23T16:18:20.122263+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "programming",
+      "score": 0.6
+    },
+    {
+      "subreddit": "productivity",
+      "score": 0.4
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.4
+    },
+    {
+      "subreddit": "lifehacks",
+      "score": 0.4
+    },
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_29",
+      "name": "Pattern 30: number_shock + no_body",
+      "hook_type": "number_shock",
+      "viral_rate": 0.235
+    },
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I built a Python automation script that saved 40 hours of manual data entry in one week",
+      "score": 90.0,
+      "hook_type": "number_shock",
+      "pattern_id": "pattern_29"
+    },
+    {
+      "title": "How I automated my Python workflow with a 50-line script",
+      "score": 90.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    },
+    {
+      "title": "Built a Python automation script for my job — how do I know if it's actually good?",
+      "score": 60.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    }
+  ],
+  "selected_title": {
+    "title": "I built a Python automation script that saved 40 hours of manual data entry in one week",
+    "score": 90.0
+  },
+  "body": "I’ve been doing data entry for a client that involves cross-referencing ~2,000 rows of CSV data against a web portal every day. Last week, I finally automated it with Python. The script ran in 12 minutes total. That’s about 40 hours of manual clicking saved in five days.\n\nHere’s the architecture: I used `pandas` to read the CSV and normalize the columns (dates, IDs, amounts). Then I used `requests` with session handling to log into the portal, parse the HTML with `BeautifulSoup`, and extract the relevant fields. The tricky part was the pagination — the portal showed results 50 at a time, so I built a loop that checks for a “Next” button and increments the page parameter until no more results appear. I matched rows by a unique invoice number, then wrote the matched data back to a new CSV with a “status” column (found/missing).\n\nI also added a `time.sleep(1.5)` between requests to avoid rate limiting, and wrapped everything in try/except blocks for connection errors. The repo is here if you want to see the full mess: [link].\n\nWhat surprised me most was how much time the manual process actually consumed — I’d never timed it before. The script exposed inefficiencies I’d normalized. Now I’m wondering: for those of you who automate similar workflows, what’s your go-to for handling inconsistent HTML structures across different pages? I used CSS selectors with fallback patterns, but it still breaks on some edge cases.",
+  "metadata": {
+    "recommended_day": "Tuesday",
+    "recommended_hour_utc": 14,
+    "recommended_flair": "Resource",
+    "should_mark_oc": true
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 100,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": []
+  }
+}

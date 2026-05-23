@@ -1,0 +1,106 @@
+{
+  "generation_id": "gen_a09c9c37",
+  "created_at": "2026-05-23T17:06:09.514748+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "programming",
+      "score": 0.4
+    },
+    {
+      "subreddit": "LifeProTips",
+      "score": 0.2
+    },
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    },
+    {
+      "subreddit": "SideProject",
+      "score": 0.2
+    },
+    {
+      "subreddit": "books",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_29",
+      "name": "Pattern 30: number_shock + no_body",
+      "hook_type": "number_shock",
+      "viral_rate": 0.235
+    },
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I automated my weekly data entry with Python—why didn't I do this sooner?",
+      "score": 90.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "I automated 40 hours of weekly data entry with 15 lines of Python and no dependencies",
+      "score": 90.0,
+      "hook_type": "number_shock",
+      "pattern_id": "pattern_29"
+    },
+    {
+      "title": "How I automated my weekly data entry with a Python script",
+      "score": 90.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    }
+  ],
+  "selected_title": {
+    "title": "I automated my weekly data entry with Python—why didn't I do this sooner?",
+    "score": 90.0
+  },
+  "body": "I’ve been doing this weekly data entry task for almost two years. Every Monday morning, I’d spend about an hour copying numbers from a vendor portal into our internal spreadsheet. It’s not hard work, but it’s mind-numbing and leaves me feeling drained before the week even starts.\n\nLast month, I finally snapped. I wrote a Python script using Selenium to log into the portal, extract the table, and pandas to clean and append the data to our Excel file. Then I added a simple argparse interface so I can pass in the week range and run it from the terminal. The whole thing is about 150 lines, and it works on the first try (miraculously).\n\nHere’s the rough architecture:\n- Selenium with headless Chrome for the login flow (handles a CSRF token and session cookie)\n- BeautifulSoup to parse the table HTML into a list of dicts\n- Pandas to align columns, handle missing values, and append to an existing xlsx file using openpyxl\n- A small config.json for credentials (stored locally, encrypted with keyring)\n- A cron job runs it every Monday at 6 AM\n\nI also set up a simple logging module that writes to a file and sends me a Discord webhook notification if something fails (e.g., the portal changed its layout). So far, zero failures in three weeks.\n\nThe biggest surprise was how much mental energy this frees up. I used to dread Monday mornings because of this chore. Now I just check the webhook confirmation and move on to actual work.\n\nI’m honestly kicking myself for not doing this sooner. The script took about two hours to write, and it saves me roughly 50 hours a year.\n\nIf you’re curious, the repo is here: [link to GitHub]\n\nFor those who’ve done similar automation: what’s the one thing you wish you’d automated earlier? And for anyone considering it—what’s holding you back?",
+  "metadata": {
+    "recommended_day": "Tuesday",
+    "recommended_hour_utc": 14,
+    "recommended_flair": "Resource",
+    "should_mark_oc": true
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 60,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 315 words, above target 1-1"
+    ]
+  }
+}

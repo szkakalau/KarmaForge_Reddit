@@ -1,0 +1,106 @@
+{
+  "generation_id": "gen_08bf2078",
+  "created_at": "2026-05-23T17:35:17.159664+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    },
+    {
+      "subreddit": "SideProject",
+      "score": 0.2
+    },
+    {
+      "subreddit": "indiehackers",
+      "score": 0.2
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.2
+    },
+    {
+      "subreddit": "startups",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "Why is nobody talking about the hidden cost of app store compliance?",
+      "score": 90.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "I spent 6 months building a SaaS app, hit 100 beta users, and still got zero paying customers.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    },
+    {
+      "title": "How I built an MVP in 3 days using no-code tools and APIs",
+      "score": 75.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    }
+  ],
+  "selected_title": {
+    "title": "Why is nobody talking about the hidden cost of app store compliance?",
+    "score": 90.0
+  },
+  "body": "I’ve been running a B2B SaaS for about 18 months now. MRR is hovering around $22k, churn is 3.2% monthly, and our CAC is finally under $400. Things are looking solid on the product side. But every time I think about expanding to mobile, I hit a wall that nobody seems to mention in the “just build an app” advice threads.\n\nIt’s not the 30% cut. That’s painful but obvious. What’s killing me is the hidden compliance cost baked into app store policies.\n\nHere’s what I mean. Apple’s App Store Review Guidelines are 170+ pages. Google’s are similar. To even get approved for something like a subscription-based SaaS, you need to implement specific in-app purchase flows for any digital goods or services. That means rebuilding your payment logic, integrating StoreKit or Play Billing, and handling receipt validation on your backend. For a small team, that’s easily 2-3 sprints of dev time. At our burn rate, that’s roughly $15k-$20k in engineering cost just to comply with the payment rules.\n\nThen there’s the ongoing maintenance. Every iOS update or policy change can break your app. Last year, Apple started requiring “Sign in with Apple” for any app using third-party login. That’s another integration. And if you offer a free trial? You need to handle entitlement syncing across devices, which means building a server-side receipt checker. Suddenly your simple CRUD app needs a mini IAM system.\n\nWe also ran into the “private API” trap. One of our analytics libraries used a private framework call that Apple flagged. We had to rip it out and re-architect our event tracking. That cost another week of a senior dev’s time.\n\nI’m not saying app stores are evil. But the hidden cost of compliance—both upfront and recurring—is way higher than the visible revenue share. For a SaaS with tight margins, that’s a serious hit to unit economics. Our blended CAC for web is $380. For mobile, we’re looking at an effective CAC of $600+ when you factor in compliance overhead.\n\nAm I missing something? Has anyone here successfully navigated this without burning through runway? How do you budget for policy changes when the rules shift every quarter?",
+  "metadata": {
+    "recommended_day": "Wednesday",
+    "recommended_hour_utc": 15,
+    "recommended_flair": "Resource",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 60,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 360 words, above target 1-1"
+    ]
+  }
+}

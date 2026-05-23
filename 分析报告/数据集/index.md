@@ -2,21 +2,27 @@
 # 数据集索引
 
 
-**总帖子数**：10
-**总Subreddit数**：8
-**数据源**：test(10)
-**按Tier**：t1(3), t2(4), t3(3)
+**总帖子数**：8222
+**总Subreddit数**：14
+**数据源**：huggingface_pushshift(8222)
+**按Tier**：t1(1231), t2(6991)
 
 
 ## Subreddit列表
 
 | Subreddit | 帖子数 | Tier |
 |-----------|--------|------|
-| r/productivity | 2 | t2 |
-| r/saas | 2 | t3 |
-| r/technology | 1 | t2 |
-| r/fitness | 1 | t2 |
-| r/kubernetes | 1 | t3 |
-| r/pics | 1 | t1 |
-| r/askreddit | 1 | t1 |
-| r/explainlikeimfive | 1 | t1 |
+| r/books | 742 | t2 |
+| r/personalfinance | 740 | t2 |
+| r/todayilearned | 731 | t1 |
+| r/science | 702 | t2 |
+| r/fitness | 655 | t2 |
+| r/lifehacks | 652 | t2 |
+| r/showerthoughts | 500 | t1 |
+| r/getmotivated | 500 | t2 |
+| r/lifeprotips | 500 | t2 |
+| r/history | 500 | t2 |
+| r/travel | 500 | t2 |
+| r/programming | 500 | t2 |
+| r/philosophy | 500 | t2 |
+| r/askhistorians | 500 | t2 |

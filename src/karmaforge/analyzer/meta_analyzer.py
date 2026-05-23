@@ -183,15 +183,19 @@ class MetaAnalyzer:
         for p in posts:
             by_sub[p.subreddit.lower()].append(p)
 
-        global_title_median = statistics.median([len(p.title.split()) for p in posts if p.title])
-        global_body_median = statistics.median([len(p.body.split()) for p in posts if p.body])
+        global_title_words = [len(p.title.split()) for p in posts if p.title]
+        global_body_words = [len(p.body.split()) for p in posts if p.body]
+        global_title_median = statistics.median(global_title_words) if global_title_words else 0
+        global_body_median = statistics.median(global_body_words) if global_body_words else 0
 
         scores = {}
         for sub, sub_posts in by_sub.items():
             if len(sub_posts) < 20:
                 continue
-            title_med = statistics.median([len(p.title.split()) for p in sub_posts if p.title])
-            body_med = statistics.median([len(p.body.split()) for p in sub_posts if p.body])
+            title_words = [len(p.title.split()) for p in sub_posts if p.title]
+            body_words = [len(p.body.split()) for p in sub_posts if p.body]
+            title_med = statistics.median(title_words) if title_words else 0
+            body_med = statistics.median(body_words) if body_words else 0
 
             title_dev = abs(title_med - global_title_median) / max(global_title_median, 1)
             body_dev = abs(body_med - global_body_median) / max(global_body_median, 1)

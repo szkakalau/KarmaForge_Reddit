@@ -1,0 +1,99 @@
+{
+  "generation_id": "gen_9f6c6ec5",
+  "created_at": "2026-05-23T14:20:35.554428+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "AskReddit",
+      "score": 0.4
+    },
+    {
+      "subreddit": "LifeProTips",
+      "score": 0.3
+    },
+    {
+      "subreddit": "Showerthoughts",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    },
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_47",
+      "name": "Pattern 48: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.196
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "How do I use Anki to remember anything I study?",
+      "score": 90.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    },
+    {
+      "title": "What's the one thing you wish you could memorize instantly?",
+      "score": 90.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "People who use Anki, what is one thing you wish you knew before you started building your own decks?",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_47"
+    }
+  ],
+  "selected_title": {
+    "title": "How do I use Anki to remember anything I study?",
+    "score": 90.0
+  },
+  "body": "I’ve been using Anki for a few months now and it’s honestly changed how I study, but it took me a while to figure out the right approach. The key isn’t just downloading the app and cramming cards—it’s about how you set up your reviews.\n\nFirst, I make my own cards instead of downloading pre-made decks. Writing the question in my own words helps me actually understand the concept. I keep each card super specific: one fact, one answer. No walls of text. Then I set the steps for new cards to something like 1m 10m 1d so I see the info quickly before it goes into the spaced repetition cycle.\n\nThe real game-changer was sticking to a daily habit. Even 10 minutes a day keeps the backlog from piling up. I also use the “bury related cards” option so I don’t see the same info twice in one session. And if I keep failing a card, I rewrite it or add a mnemonic instead of just hitting “again” over and over.\n\nWhat’s your biggest struggle with Anki? Is it making cards, staying consistent, or something else?",
+  "metadata": {
+    "recommended_day": "Monday",
+    "recommended_hour_utc": 9,
+    "recommended_flair": "Serious",
+    "should_mark_oc": false
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 40,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 25,
+        "status": "warn"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "Body is 187 words, above target 1-1",
+      "Hook type 'tutorial_howto' not clearly present"
+    ]
+  }
+}

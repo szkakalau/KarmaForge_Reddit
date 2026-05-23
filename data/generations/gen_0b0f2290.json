@@ -1,0 +1,104 @@
+{
+  "generation_id": "gen_0b0f2290",
+  "created_at": "2026-05-23T16:29:03.663520+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "programming",
+      "score": 0.6
+    },
+    {
+      "subreddit": "productivity",
+      "score": 0.4
+    },
+    {
+      "subreddit": "selfhosted",
+      "score": 0.4
+    },
+    {
+      "subreddit": "lifehacks",
+      "score": 0.4
+    },
+    {
+      "subreddit": "SaaS",
+      "score": 0.2
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_23",
+      "name": "Pattern 24: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.322
+    },
+    {
+      "pattern_id": "pattern_29",
+      "name": "Pattern 30: number_shock + no_body",
+      "hook_type": "number_shock",
+      "viral_rate": 0.235
+    },
+    {
+      "pattern_id": "pattern_30",
+      "name": "Pattern 31: tutorial_howto + no_body",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.733
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I automated 14 hours of weekly work with a 47-line Python script and nobody noticed the difference.",
+      "score": 90.0,
+      "hook_type": "number_shock",
+      "pattern_id": "pattern_29"
+    },
+    {
+      "title": "I wrote a Python script that automates my entire workflow — is this sustainable?",
+      "score": 75.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_23"
+    },
+    {
+      "title": "How I automated my workflow with a Python script in 10 lines",
+      "score": 75.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_30"
+    }
+  ],
+  "selected_title": {
+    "title": "I automated 14 hours of weekly work with a 47-line Python script and nobody noticed the difference.",
+    "score": 90.0
+  },
+  "body": "I’ve been doing this one data reconciliation task every single week for the past two years. It’s a tedious, soul-crushing 14-hour slog where I manually cross-reference three different Excel exports, check for mismatches in about 2,000 rows of transactions, and then email a summary to the team. Nobody complained about the output, but I was dying inside every Monday.\n\nLast month, I finally snapped. I wrote a 47-line Python script over a weekend. It uses `pandas` to load the CSVs, `difflib` for fuzzy matching on vendor names (because of course they’re never spelled the same), and a simple `smtplib` wrapper to format and send the email. I even added a little `argparse` so I can pass in the week number. The whole thing runs in under 3 minutes.\n\nI didn’t tell anyone. I just let it run automatically via a cron job every Monday at 9 AM. The first week, I sat there nervously checking my inbox. Nothing bounced. No panicked Slack messages. Week two, same thing. It’s now been six weeks, and my manager actually complimented me on the “consistent quality” of the reports. I’ve just been reading the email drafts on my phone while having coffee.\n\nThe real kicker? I’m pretty sure the script is more accurate than I ever was. It never forgets to check a column, and it never gets tired. I’ve been using the extra 14 hours to actually learn new frameworks and contribute to open source. My team thinks I’m working harder, but I’m really just working smarter.\n\nI’ve cleaned up the script and thrown it on GitHub if anyone’s curious: [link to repo]. It’s not production-grade, but it’s a solid starting point for anyone stuck in a similar data-purgatory.\n\nHas anyone else automated themselves out of a boring task and kept quiet about it? How long did you wait before telling your boss? I’m starting to feel a little guilty, but not guilty enough to stop.",
+  "metadata": {
+    "recommended_day": "Tuesday",
+    "recommended_hour_utc": 14,
+    "recommended_flair": "Resource",
+    "should_mark_oc": true
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 100,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": []
+  }
+}

@@ -22,7 +22,11 @@ import numpy as np
 from ..storage import Post, Tier
 from ..llm import LLMClient
 from ..llm.prompts import PATTERN_SUMMARIZE
-from .analysis_utils import chi_square_test, bootstrap_confidence_interval
+from .analysis_utils import (
+    chi_square_test, bootstrap_confidence_interval,
+    batch_classify_heuristic, batch_classify_llm,
+    HOOK_KEYWORDS, HOOK_CATEGORIES, HOOK_DESCRIPTIONS,
+)
 from .title_analyzer import TitleAnalyzer, TitleAnalysisResult
 from .content_analyzer import ContentAnalyzer, ContentAnalysisResult
 from .meta_analyzer import MetaAnalyzer, MetaAnalysisResult
@@ -169,29 +173,48 @@ class PatternExtractor:
     def _cluster_posts(
         self, posts: list[Post], viral_posts: list[Post], non_viral_posts: list[Post]
     ) -> list[dict]:
-        clusters: dict[tuple, dict] = {}
+        titles = [p.title for p in posts]
+        if self.llm:
+            hook_types = batch_classify_llm(
+                titles, HOOK_CATEGORIES, HOOK_DESCRIPTIONS,
+                self.llm, batch_size=20, task_name="title",
+            )
+        else:
+            hook_types = batch_classify_heuristic(titles, list(HOOK_KEYWORDS.keys()), HOOK_KEYWORDS)
 
-        for p in posts:
+        bodies = [p.body or "" for p in posts]
+        narrative_modes = [self._heuristic_narrative_mode(b) for b in bodies]
+
+        clusters: dict[tuple, dict] = {}
+        for i, p in enumerate(posts):
             tier = p.tier.value if p.tier else "unknown"
-            ct = p.content_type.value
-            key = (tier, ct)
-            clusters.setdefault(key, {"viral": 0, "total": 0, "total_upvotes": 0, "posts": []})
+            hook_type = hook_types[i]
+            narrative_mode = narrative_modes[i]
+            content_type = p.content_type.value if p.content_type else "text"
+            key = (tier, hook_type, narrative_mode, content_type)
+
+            clusters.setdefault(key, {
+                "viral": 0, "total": 0, "total_upvotes": 0, "posts": [],
+                "tier": tier, "hook_type": hook_type,
+                "narrative_mode": narrative_mode, "content_type": content_type,
+            })
             clusters[key]["total"] += 1
             clusters[key]["total_upvotes"] += p.upvotes
             clusters[key]["posts"].append(p)
 
-        for p in viral_posts:
-            tier = p.tier.value if p.tier else "unknown"
-            ct = p.content_type.value
-            key = (tier, ct)
-            if key in clusters:
-                clusters[key]["viral"] += 1
+        viral_ids = {p.post_id for p in viral_posts}
+        for key, stats in clusters.items():
+            for p in stats["posts"]:
+                if p.post_id in viral_ids:
+                    stats["viral"] += 1
 
         result = []
         for key, stats in clusters.items():
             result.append({
-                "tier": key[0],
-                "content_type": key[1],
+                "tier": stats["tier"],
+                "hook_type": stats["hook_type"],
+                "narrative_mode": stats["narrative_mode"],
+                "content_type": stats["content_type"],
                 "viral_count": stats["viral"],
                 "total": stats["total"],
                 "viral_rate": stats["viral"] / max(stats["total"], 1),
@@ -201,13 +224,33 @@ class PatternExtractor:
 
         return result
 
+    @staticmethod
+    def _heuristic_narrative_mode(body: str) -> str:
+        if not body or len(body) < 20:
+            return "no_body"
+        b_lower = body.lower()
+        if any(kw in b_lower for kw in ["step 1", "how to", "tutorial", "guide", "here's how"]):
+            return "tutorial_howto"
+        if any(kw in b_lower for kw in ["i think", "in my opinion", "unpopular", "should be"]):
+            return "opinion_argument"
+        if any(kw in b_lower for kw in ["i built", "i made", "i created", "check out my", "github.com"]):
+            return "resource_showcase"
+        if body.strip().endswith("?") or "anyone else" in b_lower:
+            return "question_discussion"
+        if any(kw in b_lower for kw in ["i ", "my ", "me ", "we "]) and len(b_lower) > 200:
+            return "story_personal"
+        return "opinion_argument"
+
     def _extract_patterns_from_clusters(
         self,
         clusters: list[dict],
         all_posts: list[Post],
         title_results: TitleAnalysisResult,
     ) -> list[ViralPattern]:
-        overall_viral_rate = sum(c["viral_count"] for c in clusters) / max(sum(c["total"] for c in clusters), 1)
+        all_upvotes = [p.upvotes for p in all_posts]
+        viral_threshold = np.percentile(all_upvotes, self.viral_percentile) if all_upvotes else 0
+        v_all = sum(c["viral_count"] for c in clusters)
+        t_all = sum(c["total"] for c in clusters)
         patterns = []
 
         for i, cluster in enumerate(clusters):
@@ -216,8 +259,11 @@ class PatternExtractor:
             if cluster["viral_count"] < 5:
                 continue
 
+            v_in = cluster["viral_count"]
+            t_in = cluster["total"]
             observed = [
-                [cluster["viral_count"], cluster["total"] - cluster["viral_count"]],
+                [v_in, t_in - v_in],
+                [v_all - v_in, (t_all - t_in) - (v_all - v_in)],
             ]
             chi_result = chi_square_test(observed)
             p_value = chi_result.get("p_value", 1.0)
@@ -225,17 +271,15 @@ class PatternExtractor:
             if p_value > self.alpha:
                 continue
 
-            viral_posts_in_cluster = [p for p in cluster["posts"] if p.upvotes >= np.percentile(
-                [pp.upvotes for pp in all_posts], self.viral_percentile
-            )]
+            viral_posts_in_cluster = [p for p in cluster["posts"] if p.upvotes >= viral_threshold]
 
             titles = [p.title for p in viral_posts_in_cluster if p.title]
             title_template = self._extract_title_template(titles)
 
             viral_rates = []
             for _ in range(100):
-                sample = np.random.choice([p.upvotes for p in all_posts], size=cluster["total"], replace=True)
-                viral_rates.append(sum(1 for s in sample if s >= np.percentile([p.upvotes for p in all_posts], self.viral_percentile)) / len(sample))
+                sample = np.random.choice(all_upvotes, size=cluster["total"], replace=True)
+                viral_rates.append(sum(1 for s in sample if s >= viral_threshold) / len(sample))
 
             ci_lower = round(float(np.percentile(viral_rates, 2.5)), 4)
             ci_upper = round(float(np.percentile(viral_rates, 97.5)), 4)
@@ -245,8 +289,8 @@ class PatternExtractor:
 
             pattern = ViralPattern(
                 pattern_id=pattern_id,
-                name=f"Pattern {i+1}: {cluster['tier']} {cluster['content_type']}",
-                description=f"Extracted from {cluster['total']} posts in tier {cluster['tier']} with content type {cluster['content_type']}",
+                name=f"Pattern {i+1}: {cluster.get('hook_type', '')} + {cluster.get('narrative_mode', '')}",
+                description=f"{cluster.get('hook_type', '')} × {cluster.get('narrative_mode', '')} in {cluster['tier']}/{cluster.get('content_type', 'any')}",
                 applicable_subreddits=list(set(p.subreddit for p in cluster["posts"])),
                 title_template=title_template,
                 historical_viral_rate=round(cluster["viral_rate"], 3),
@@ -254,6 +298,8 @@ class PatternExtractor:
                 avg_upvotes=round(cluster["avg_upvotes"], 1),
                 p_value=p_value,
                 exemplar_posts=exemplar_ids,
+                hook_type=cluster.get("hook_type", ""),
+                narrative_mode=cluster.get("narrative_mode", ""),
                 tier_effectiveness={cluster["tier"]: cluster["viral_rate"]},
                 sample_size=cluster["total"],
             )
@@ -277,28 +323,42 @@ class PatternExtractor:
         return patterns
 
     def _extract_title_template(self, titles: list[str]) -> str:
-        if not titles:
+        """Extract discriminative bigrams from viral cluster titles.
+
+        Returns pipe-separated bigrams that appear across multiple titles.
+        These are used for matching: a post matches if its title contains any bigram.
+        """
+        if not titles or len(titles) < 3:
             return ""
-        if len(titles) < 3:
-            return titles[0]
 
-        words_lists = [t.lower().split() for t in titles]
-        segments = []
-        min_len = min(len(wl) for wl in words_lists)
+        from collections import Counter
 
-        for i in range(min_len):
-            words_at_pos = [wl[i] for wl in words_lists]
-            most_common = max(set(words_at_pos), key=words_at_pos.count)
-            freq = words_at_pos.count(most_common) / len(words_at_pos)
-            if freq >= 0.5:
-                segments.append(most_common)
-            else:
-                segments.append("{var}")
+        STOP = {
+            "the", "a", "an", "is", "are", "was", "were", "be", "been",
+            "have", "has", "had", "do", "does", "did", "will", "would",
+            "to", "of", "in", "for", "on", "with", "at", "by", "from",
+            "and", "but", "or", "not", "so", "if", "this", "that", "it",
+            "i", "me", "my", "we", "our", "you", "your", "he", "she",
+            "what", "which", "who", "when", "where", "why", "how",
+            "just", "about", "like", "all", "can", "get", "one", "really",
+        }
 
-        if len(words_lists[0]) > min_len:
-            segments.append("{var}")
+        bigram_counts: Counter = Counter()
+        for title in titles:
+            words = [w.lower().strip(".,!?:;\"'()[]") for w in title.split()]
+            words = [w for w in words if w and w not in STOP and len(w) > 2]
+            for i in range(len(words) - 1):
+                bg = f"{words[i]} {words[i+1]}"
+                bigram_counts[bg] += 1
 
-        return " ".join(segments)
+        # Take bigrams that appear in at least 15% of titles, up to 5
+        min_count = max(2, int(len(titles) * 0.15))
+        top_bigrams = [
+            bg for bg, count in bigram_counts.most_common(10)
+            if count >= min_count
+        ][:5]
+
+        return "|".join(top_bigrams)
 
     def _extract_anti_patterns(
         self, non_viral_posts: list[Post], all_posts: list[Post]

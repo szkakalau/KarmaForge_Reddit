@@ -1,5 +1,7 @@
 """Shared statistical and NLP utilities for all KarmaForge analyzers."""
 
+import json
+import logging
 import math
 import re
 from collections import Counter
@@ -7,6 +9,8 @@ from typing import Callable, Optional, Union
 
 import numpy as np
 from scipy import stats as scipy_stats
+
+logger = logging.getLogger(__name__)
 
 
 def compute_distribution(
@@ -303,12 +307,42 @@ def batch_classify_heuristic(
     results = []
     for text in texts:
         text_lower = text.lower()
+
+        # Structural features first (more reliable than keywords)
+        has_question = "?" in text
+        has_number = any(c.isdigit() for c in text)
+        has_dollar = "$" in text
+        has_how_to = text_lower.startswith("how to") or "how to" in text_lower[:30]
+        has_i_word = bool(re.search(r"\bi\b", text_lower)) and len(text_lower) > 50
+        has_vs = " vs " in text_lower or " versus " in text_lower
+
+        # Structural classification
+        if has_question and not has_number:
+            results.append("curious_question")
+            continue
+        if has_vs:
+            results.append("comparison_analysis")
+            continue
+        if has_how_to:
+            results.append("tutorial_howto")
+            continue
+
+        # Keyword scoring
         scored = []
         for cat in categories:
             score = sum(1 for kw in keywords.get(cat, []) if kw in text_lower)
             scored.append((cat, score))
         best = max(scored, key=lambda x: x[1])
-        results.append(best[0] if best[1] > 0 else categories[0])
+
+        if best[1] > 0:
+            results.append(best[0])
+        elif has_number or has_dollar:
+            results.append("number_shock")
+        elif has_i_word:
+            results.append("story_opener")
+        else:
+            results.append("curious_question")
+
     return results
 
 
@@ -324,3 +358,140 @@ HOOK_KEYWORDS = {
     "comparison_analysis": [" vs ", " versus ", "compared to", "difference between", "better than"],
     "curious_question": ["why does", "how does", "what is", "eli5", "can someone", "anyone know", "has anyone"],
 }
+
+HOOK_CATEGORIES = [
+    "counterintuitive_discovery",
+    "suspense_mystery",
+    "pain_point",
+    "identity_label",
+    "number_shock",
+    "story_opener",
+    "resource_share",
+    "controversial_opinion",
+    "comparison_analysis",
+    "curious_question",
+]
+
+HOOK_DESCRIPTIONS = {
+    "counterintuitive_discovery": '"I just discovered X...", "X changed everything", unexpected findings',
+    "suspense_mystery": 'Cliffhangers, "you won\'t believe what happened", unresolved tension',
+    "pain_point": "Addresses a common frustration, problem, or annoyance",
+    "identity_label": 'Appeals to a specific identity/group ("as a developer...", "if you\'re a parent...")',
+    "number_shock": 'Uses specific numbers to grab attention ("10 things...", "$50,000 in 3 months")',
+    "story_opener": 'Begins a personal narrative ("My journey...", "After 5 years of...")',
+    "resource_share": 'Offers a tool, guide, or resource ("[Resource] I built...", "Free template for...")',
+    "controversial_opinion": '"Unpopular opinion:", "Hot take:", deliberately provocative',
+    "comparison_analysis": '"X vs Y", side-by-side comparisons',
+    "curious_question": '"ELI5:", "Why does X?", "Has anyone else...", genuine curiosity',
+}
+
+
+# Module-level cache to avoid re-classifying the same texts across pipeline phases
+_classification_cache: dict[str, str] = {}
+
+
+def clear_classification_cache() -> None:
+    """Clear the in-memory classification cache (useful for testing)."""
+    _classification_cache.clear()
+
+
+def batch_classify_llm(
+    texts: list[str],
+    categories: list[str],
+    category_descriptions: dict[str, str],
+    llm_client,
+    batch_size: int = 20,
+    task_name: str = "title",
+) -> list[str]:
+    """Classify texts using LLM in batches, falling back to heuristic on failure.
+
+    Batches texts into groups of batch_size, sends a single numbered prompt per batch,
+    and parses the "N: category" response format. Uses a module-level cache to avoid
+    re-classifying the same text across pipeline phases.
+    """
+    if not llm_client or not texts:
+        return batch_classify_heuristic(texts, categories, HOOK_KEYWORDS)
+
+    results: list[Optional[str]] = [None] * len(texts)
+    uncached_indices: list[int] = []
+
+    for i, text in enumerate(texts):
+        if text in _classification_cache:
+            results[i] = _classification_cache[text]
+        else:
+            uncached_indices.append(i)
+
+    if not uncached_indices:
+        return [r for r in results if r is not None]
+
+    cat_desc = "\n".join(
+        f"- {cat}: {category_descriptions.get(cat, cat)}"
+        for cat in categories
+    )
+
+    # Batch only the uncached texts
+    batch_groups = [
+        uncached_indices[i : i + batch_size]
+        for i in range(0, len(uncached_indices), batch_size)
+    ]
+
+    for batch_indices in batch_groups:
+        # Build numbered prompt
+        items = "\n".join(
+            f'{i+1}. "{texts[idx]}"'
+            for i, idx in enumerate(batch_indices)
+        )
+        prompt = (
+            f"Classify each of the following Reddit post {task_name}s into exactly one category.\n\n"
+            f"Categories:\n{cat_desc}\n\n"
+            f"For each {task_name}, respond with just the number and category on one line, like:\n"
+            f"1: category_name\n"
+            f"2: category_name\n\n"
+            f"{task_name.capitalize()}s:\n{items}\n\n"
+            f"Respond with exactly {len(batch_indices)} lines, one per {task_name}."
+        )
+
+        try:
+            response = llm_client.complete(prompt)
+            parsed = _parse_numbered_classifications(response, categories)
+            for i, idx in enumerate(batch_indices):
+                if i < len(parsed) and parsed[i] in categories:
+                    results[idx] = parsed[i]
+                    _classification_cache[texts[idx]] = parsed[i]
+        except Exception:
+            logger.warning(
+                "LLM classification failed for batch starting at %d, using heuristic fallback",
+                batch_indices[0] if batch_indices else 0,
+            )
+
+    # Fall back to heuristic for any still-unclassified texts
+    missing_indices = [i for i, r in enumerate(results) if r is None]
+    if missing_indices:
+        missing_texts = [texts[i] for i in missing_indices]
+        fallback = batch_classify_heuristic(missing_texts, categories, HOOK_KEYWORDS)
+        for j, idx in enumerate(missing_indices):
+            results[idx] = fallback[j]
+            _classification_cache[texts[idx]] = fallback[j]
+
+    return [r for r in results if r is not None]
+
+
+def _parse_numbered_classifications(response: str, categories: list[str]) -> list[str]:
+    """Parse LLM response in 'N: category_name' format."""
+    parsed = []
+    cat_set = set(categories)
+    for line in response.strip().split("\n"):
+        line = line.strip()
+        match = re.match(r"(\d+)[:.)]\s*(\S+)", line)
+        if match:
+            cat = match.group(2).lower().strip(".,;:!?\"'")
+            # Try to find the category (may have extra chars)
+            for valid_cat in cat_set:
+                if valid_cat.lower() in cat or cat in valid_cat.lower():
+                    cat = valid_cat
+                    break
+            if cat in cat_set:
+                parsed.append(cat)
+            else:
+                parsed.append(categories[0])  # Default to first category
+    return parsed
