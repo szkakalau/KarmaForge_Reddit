@@ -1,3 +1,8 @@
-"""KarmaForge v1 - Reddit Viral Engine Research Phase."""
+"""KarmaForge — Reddit Growth Co-pilot for Indie Developers."""
 
-__version__ = "0.1.0"
+from importlib.metadata import version, PackageNotFoundError
+
+try:
+    __version__ = version("karmaforge")
+except PackageNotFoundError:
+    __version__ = "3.0.0"

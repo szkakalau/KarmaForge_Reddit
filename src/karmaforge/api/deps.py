@@ -1,15 +1,19 @@
 """FastAPI application factory and dependency injection."""
 
+import logging
 import os
 from typing import Generator
 
-from fastapi import FastAPI, Request
+import jwt
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import Engine
 from sqlalchemy.orm import Session
 
-from .models import Base, create_engine_from_url, get_session
+from .models import Base, User, create_engine_from_url, get_session
 from ..llm import LLMClient, LLMConfig, LLMProvider
+
+logger = logging.getLogger(__name__)
 
 
 def _engine(db_url: str) -> Engine:
@@ -72,6 +76,18 @@ def get_llm_client(request: Request) -> LLMClient:
         api_key=state.llm_api_key,
         model=state.llm_model,
     ))
+
+
+def get_current_user(request: Request, session: Session = Depends(get_db)) -> User | None:
+    state: AppState = request.app.state.app_state
+    auth = request.headers.get("Authorization", "")
+    if not auth.startswith("Bearer "):
+        return None
+    try:
+        payload = jwt.decode(auth[7:], state.jwt_secret, algorithms=["HS256"])
+        return session.query(User).filter(User.id == payload["sub"]).first()
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+        return None
 
 
 def create_app(state: AppState | None = None) -> FastAPI:
