@@ -46,3 +46,5 @@ Thumbs.db
 
 # MyPy
 .mypy_cache/
+.gstack/
+.gstack/
