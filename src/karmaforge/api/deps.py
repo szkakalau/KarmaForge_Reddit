@@ -7,6 +7,7 @@ from typing import Generator
 import jwt
 from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import Engine
 from sqlalchemy.orm import Session
 
@@ -111,6 +112,10 @@ def create_app(state: AppState | None = None) -> FastAPI:
     app.include_router(auth_router)
     app.include_router(generate_router)
     app.include_router(track_router)
+
+    static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "static")
+    if os.path.isdir(static_dir):
+        app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
     @app.get("/api/health")
     async def health():
