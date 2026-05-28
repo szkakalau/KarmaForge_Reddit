@@ -24,4 +24,4 @@ RUN mkdir -p data/processed data/tracking data/generations
 
 EXPOSE 8001
 
-CMD ["uvicorn", "karmaforge.api.main:app", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["sh", "-c", "uvicorn karmaforge.api.main:app --host 0.0.0.0 --port ${PORT:-8001}"]
