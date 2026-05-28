@@ -1,0 +1,17 @@
+__pycache__
+*.pyc
+.pytest_cache
+.git
+.gitignore
+node_modules
+frontend/node_modules
+frontend/dist
+data/
+.env
+*.db
+.gstack
+.claude
+.playwright-mcp
+.superpowers
+*.png
+*.yml
