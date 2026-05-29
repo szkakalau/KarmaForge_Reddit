@@ -506,53 +506,59 @@ def _build_generate_tab(shared: dict) -> None:
     selected_title_trigger = gr.Textbox(visible=True, show_label=False, elem_id="kf-title-trigger", elem_classes=["kf-trigger-input"])
 
     def on_generate_titles(topic_val: str, sub_val: str, n_val: int):
-        if not topic_val.strip():
-            yield (gr.update(visible=False), None, "请输入帖子主题",
-                   "", "", "", None, None, "")
-            return
+        try:
+            if not topic_val.strip():
+                yield (gr.update(visible=False), None, "请输入帖子主题",
+                       "", "", "", None, None, "")
+                return
 
-        yield (gr.update(visible=True), None,
-               "> 分析主题 + 生成标题中...",
-               "", "", "", None, None, "")
-
-        from ..generator.orchestrator import GeneratorOrchestrator
-
-        target = None if sub_val == "Auto-detect" else sub_val
-        orch = GeneratorOrchestrator(
-            db_path=shared["db_path"],
-            patterns_path=shared["patterns_path"],
-            anti_patterns_path=shared["anti_patterns_path"],
-            llm_client=shared.get("llm"),
-        )
-
-        result = orch.generate_titles(topic_val, target, n_val)
-
-        if not result.candidate_titles:
-            matched_str = ", ".join(f"r/{s}" for s, _ in result.matched_subreddits)
             yield (gr.update(visible=True), None,
-                   f"[失败] 未找到匹配模式。\n\n匹配到的 Subreddit: {matched_str}",
-                   f"**匹配:** {matched_str}", "", "", None, None, "")
-            return
+                   "> 分析主题 + 生成标题中...",
+                   "", "", "", None, None, "")
 
-        subs_text = " | ".join(f"r/{s} ({sc:.0%})" for s, sc in result.matched_subreddits)
-        titles_data = [
-            {"title": t.title, "score": t.score, "hook_type": t.hook_type, "pattern_id": t.pattern_id}
-            for t in result.candidate_titles
-        ]
-        primary_sub = result.matched_subreddits[0][0]
-        tier = orch._get_tier(primary_sub)
-        patterns_map = {p.get("pattern_id"): p for p in result.selected_patterns}
+            from ..generator.orchestrator import GeneratorOrchestrator
 
-        yield (gr.update(visible=True),
-               {"titles": titles_data, "topic": topic_val, "subreddit": primary_sub,
-                "tier": tier, "patterns": patterns_map},
-               f"[完成] {len(titles_data)} 个标题已生成 — {subs_text}\n\n点击标题选中，然后点击 **生成完整帖子** 生成正文。",
-               f"**Matched Subreddits:** {subs_text}",
-               _render_titles_html(titles_data),
-               "",
-               None,
-               result.metadata if result.metadata else None,
-               "")
+            target = None if sub_val == "Auto-detect" else sub_val
+            orch = GeneratorOrchestrator(
+                db_path=shared["db_path"],
+                patterns_path=shared["patterns_path"],
+                anti_patterns_path=shared["anti_patterns_path"],
+                llm_client=shared.get("llm"),
+            )
+
+            result = orch.generate_titles(topic_val, target, n_val)
+
+            if not result.candidate_titles:
+                matched_str = ", ".join(f"r/{s}" for s, _ in result.matched_subreddits)
+                yield (gr.update(visible=True), None,
+                       f"[失败] 未找到匹配模式。\n\n匹配到的 Subreddit: {matched_str}",
+                       f"**匹配:** {matched_str}", "", "", None, None, "")
+                return
+
+            subs_text = " | ".join(f"r/{s} ({sc:.0%})" for s, sc in result.matched_subreddits)
+            titles_data = [
+                {"title": t.title, "score": t.score, "hook_type": t.hook_type, "pattern_id": t.pattern_id}
+                for t in result.candidate_titles
+            ]
+            primary_sub = result.matched_subreddits[0][0]
+            tier = orch._get_tier(primary_sub)
+            patterns_map = {p.get("pattern_id"): p for p in result.selected_patterns}
+
+            yield (gr.update(visible=True),
+                   {"titles": titles_data, "topic": topic_val, "subreddit": primary_sub,
+                    "tier": tier, "patterns": patterns_map},
+                   f"[完成] {len(titles_data)} 个标题已生成 — {subs_text}\n\n点击标题选中，然后点击 **生成完整帖子** 生成正文。",
+                   f"**Matched Subreddits:** {subs_text}",
+                   _render_titles_html(titles_data),
+                   "",
+                   None,
+                   result.metadata if result.metadata else None,
+                   "")
+        except Exception as e:
+            logger.exception("Generate titles failed in Gradio handler")
+            yield (gr.update(visible=False), None,
+                   f"[500] {type(e).__name__}: {e}",
+                   "", "", "", None, None, "")
 
     generate_btn.click(
         fn=on_generate_titles,
@@ -563,150 +569,156 @@ def _build_generate_tab(shared: dict) -> None:
 
     def on_generate_full(topic_val: str, sub_val: str, n_val: int, gen_state: dict,
                          trigger_val: str):
-        if not topic_val.strip():
-            yield (gr.update(visible=False), None, "请输入帖子主题",
-                   "", "", "", None, None, "")
-            return
+        try:
+            if not topic_val.strip():
+                yield (gr.update(visible=False), None, "请输入帖子主题",
+                       "", "", "", None, None, "")
+                return
 
-        # ── Path A: reuse titles from gen_state (user clicked "生成标题" first) ──
-        if gen_state and gen_state.get("titles"):
-            titles = gen_state["titles"]
-            # Resolve selected title: use trigger_val (from JS card click), else first
-            selected = titles[0]
-            if trigger_val:
-                for t in titles:
-                    if t["title"] == trigger_val:
-                        selected = t
-                        break
-            selected_title_text = selected["title"]
-            topic_val = gen_state.get("topic", topic_val)
-            subreddit = gen_state.get("subreddit", "unknown")
-            tier = gen_state.get("tier", "t2")
-            patterns_map = gen_state.get("patterns", {})
-            pattern = patterns_map.get(
-                selected["pattern_id"],
-                {"pattern_id": selected["pattern_id"], "hook_type": selected["hook_type"]},
+            # ── Path A: reuse titles from gen_state (user clicked "生成标题" first) ──
+            if gen_state and gen_state.get("titles"):
+                titles = gen_state["titles"]
+                # Resolve selected title: use trigger_val (from JS card click), else first
+                selected = titles[0]
+                if trigger_val:
+                    for t in titles:
+                        if t["title"] == trigger_val:
+                            selected = t
+                            break
+                selected_title_text = selected["title"]
+                topic_val = gen_state.get("topic", topic_val)
+                subreddit = gen_state.get("subreddit", "unknown")
+                tier = gen_state.get("tier", "t2")
+                patterns_map = gen_state.get("patterns", {})
+                pattern = patterns_map.get(
+                    selected["pattern_id"],
+                    {"pattern_id": selected["pattern_id"], "hook_type": selected["hook_type"]},
+                )
+                subs_text = f"r/{subreddit}"
+
+                yield (gr.update(visible=True),
+                       gen_state,
+                       "> generating post body + quality check...",
+                       f"**Matched Subreddits:** {subs_text}",
+                       _render_titles_html(titles, selected_title_text),
+                       _render_body_html(""),
+                       None,
+                       None,
+                       "")
+
+                from ..generator.body_generator import BodyGenerator
+                bg = BodyGenerator(shared.get("llm"))
+                body, _body_metrics = bg.generate(selected_title_text, pattern, topic_val, subreddit, tier)
+
+                from ..generator.self_checker import SelfChecker
+                checker = SelfChecker(shared["anti_patterns_path"])
+                sc = checker.check(selected_title_text, body, pattern, subreddit)
+                sc_data = None
+                if sc:
+                    sc_data = {"是否通过": sc.passed, "各维度": sc.dimensions, "改进建议": sc.suggestions}
+
+                passed = sc.passed if sc else True
+                check_tag = "[完成]" if passed else "[警告]"
+                check_note = "质量检查通过。" if passed else f"质量检查: {len(sc.suggestions)} 条建议。"
+
+                from ..generator.metadata_suggester import MetadataSuggester
+                meta = MetadataSuggester()
+                metadata = meta.suggest(subreddit, tier, topic_val)
+
+                yield (gr.update(visible=True),
+                       {**gen_state, "body_text": body, "body_title": selected_title_text,
+                        "body_sc": sc_data, "body_meta": metadata, "selected_title": selected},
+                       f"{check_tag} — {check_note}",
+                       f"**Matched Subreddits:** {subs_text}",
+                       _render_titles_html(titles, selected_title_text),
+                       _render_body_html(body),
+                       sc_data,
+                       metadata,
+                       "")
+                return
+
+            # ── Path B: full pipeline (titles + body from scratch) ──
+            from ..generator.orchestrator import GeneratorOrchestrator
+
+            target = None if sub_val == "Auto-detect" else sub_val
+            orch = GeneratorOrchestrator(
+                db_path=shared["db_path"],
+                patterns_path=shared["patterns_path"],
+                anti_patterns_path=shared["anti_patterns_path"],
+                llm_client=shared.get("llm"),
             )
-            subs_text = f"r/{subreddit}"
 
-            yield (gr.update(visible=True),
-                   gen_state,
-                   "> generating post body + quality check...",
-                   f"**Matched Subreddits:** {subs_text}",
-                   _render_titles_html(titles, selected_title_text),
-                   _render_body_html(""),
-                   None,
-                   None,
-                   "")
+            yield (gr.update(visible=True), None,
+                   "> 分析主题 + 生成标题及正文中...",
+                   "", "", "", None, None, "")
 
-            from ..generator.body_generator import BodyGenerator
-            bg = BodyGenerator(shared.get("llm"))
-            body, _body_metrics = bg.generate(selected_title_text, pattern, topic_val, subreddit, tier)
+            result = orch.generate_titles(topic_val, target, n_titles=n_val)
 
-            from ..generator.self_checker import SelfChecker
-            checker = SelfChecker(shared["anti_patterns_path"])
-            sc = checker.check(selected_title_text, body, pattern, subreddit)
+            if not result.candidate_titles:
+                matched_str = ", ".join(f"r/{s}" for s, _ in result.matched_subreddits)
+                yield (gr.update(visible=True), None,
+                       f"[失败] 未找到匹配模式。\n\n匹配到的 Subreddit: {matched_str}",
+                       f"**匹配:** {matched_str}", "", "", None, None, "")
+                return
+
+            primary_sub = result.matched_subreddits[0][0]
+            tier = orch._get_tier(primary_sub)
+            patterns_map = {p.get("pattern_id"): p for p in result.selected_patterns}
+
+            subs_text = " | ".join(f"r/{s} ({sc:.0%})" for s, sc in result.matched_subreddits)
+            titles_data = [
+                {"title": t.title, "score": t.score, "hook_type": t.hook_type, "pattern_id": t.pattern_id}
+                for t in result.candidate_titles
+            ]
+            selected = result.candidate_titles[0]
+            selected_title_text = selected.title
+            result.selected_title = selected
+            selected_data = {"title": selected.title, "score": selected.score,
+                             "hook_type": selected.hook_type, "pattern_id": selected.pattern_id}
+
+            base_state = {"titles": titles_data, "topic": topic_val, "subreddit": primary_sub,
+                          "tier": tier, "patterns": patterns_map, "selected_title": selected_data}
+
+            # Generate body + self-check
+            orch._init_components()
+            pattern = next(
+                (p for p in result.selected_patterns if p.get("pattern_id") == selected.pattern_id),
+                result.selected_patterns[0] if result.selected_patterns else {},
+            )
+
+            body, _body_metrics = orch._body_gen.generate(
+                selected.title, pattern, topic_val, primary_sub, tier
+            )
+            result.body = body
+
+            sc = orch._checker.check(selected.title, body, pattern, primary_sub)
+            result.self_check = sc
+
             sc_data = None
             if sc:
                 sc_data = {"是否通过": sc.passed, "各维度": sc.dimensions, "改进建议": sc.suggestions}
+
+            orch.save_generation(result)
 
             passed = sc.passed if sc else True
             check_tag = "[完成]" if passed else "[警告]"
             check_note = "质量检查通过。" if passed else f"质量检查: {len(sc.suggestions)} 条建议。"
 
-            from ..generator.metadata_suggester import MetadataSuggester
-            meta = MetadataSuggester()
-            metadata = meta.suggest(subreddit, tier, topic_val)
-
             yield (gr.update(visible=True),
-                   {**gen_state, "body_text": body, "body_title": selected_title_text,
-                    "body_sc": sc_data, "body_meta": metadata, "selected_title": selected},
-                   f"{check_tag} — {check_note}",
+                   {**base_state, "body_text": body, "body_title": selected_title_text,
+                    "body_sc": sc_data, "body_meta": result.metadata if result.metadata else None},
+                   f"{check_tag} — {check_note}\n\n{subs_text}",
                    f"**Matched Subreddits:** {subs_text}",
-                   _render_titles_html(titles, selected_title_text),
+                   _render_titles_html(titles_data, selected_title_text),
                    _render_body_html(body),
                    sc_data,
-                   metadata,
+                   result.metadata if result.metadata else None,
                    "")
-            return
-
-        # ── Path B: full pipeline (titles + body from scratch) ──
-        from ..generator.orchestrator import GeneratorOrchestrator
-
-        target = None if sub_val == "Auto-detect" else sub_val
-        orch = GeneratorOrchestrator(
-            db_path=shared["db_path"],
-            patterns_path=shared["patterns_path"],
-            anti_patterns_path=shared["anti_patterns_path"],
-            llm_client=shared.get("llm"),
-        )
-
-        yield (gr.update(visible=True), None,
-               "> 分析主题 + 生成标题及正文中...",
-               "", "", "", None, None, "")
-
-        result = orch.generate_titles(topic_val, target, n_titles=n_val)
-
-        if not result.candidate_titles:
-            matched_str = ", ".join(f"r/{s}" for s, _ in result.matched_subreddits)
-            yield (gr.update(visible=True), None,
-                   f"[失败] 未找到匹配模式。\n\n匹配到的 Subreddit: {matched_str}",
-                   f"**匹配:** {matched_str}", "", "", None, None, "")
-            return
-
-        primary_sub = result.matched_subreddits[0][0]
-        tier = orch._get_tier(primary_sub)
-        patterns_map = {p.get("pattern_id"): p for p in result.selected_patterns}
-
-        subs_text = " | ".join(f"r/{s} ({sc:.0%})" for s, sc in result.matched_subreddits)
-        titles_data = [
-            {"title": t.title, "score": t.score, "hook_type": t.hook_type, "pattern_id": t.pattern_id}
-            for t in result.candidate_titles
-        ]
-        selected = result.candidate_titles[0]
-        selected_title_text = selected.title
-        result.selected_title = selected
-        selected_data = {"title": selected.title, "score": selected.score,
-                         "hook_type": selected.hook_type, "pattern_id": selected.pattern_id}
-
-        base_state = {"titles": titles_data, "topic": topic_val, "subreddit": primary_sub,
-                      "tier": tier, "patterns": patterns_map, "selected_title": selected_data}
-
-        # Generate body + self-check
-        orch._init_components()
-        pattern = next(
-            (p for p in result.selected_patterns if p.get("pattern_id") == selected.pattern_id),
-            result.selected_patterns[0] if result.selected_patterns else {},
-        )
-
-        body, _body_metrics = orch._body_gen.generate(
-            selected.title, pattern, topic_val, primary_sub, tier
-        )
-        result.body = body
-
-        sc = orch._checker.check(selected.title, body, pattern, primary_sub)
-        result.self_check = sc
-
-        sc_data = None
-        if sc:
-            sc_data = {"是否通过": sc.passed, "各维度": sc.dimensions, "改进建议": sc.suggestions}
-
-        orch.save_generation(result)
-
-        passed = sc.passed if sc else True
-        check_tag = "[完成]" if passed else "[警告]"
-        check_note = "质量检查通过。" if passed else f"质量检查: {len(sc.suggestions)} 条建议。"
-
-        yield (gr.update(visible=True),
-               {**base_state, "body_text": body, "body_title": selected_title_text,
-                "body_sc": sc_data, "body_meta": result.metadata if result.metadata else None},
-               f"{check_tag} — {check_note}\n\n{subs_text}",
-               f"**Matched Subreddits:** {subs_text}",
-               _render_titles_html(titles_data, selected_title_text),
-               _render_body_html(body),
-               sc_data,
-               result.metadata if result.metadata else None,
-               "")
+        except Exception as e:
+            logger.exception("Generate full post failed in Gradio handler")
+            yield (gr.update(visible=False), None,
+                   f"[500] {type(e).__name__}: {e}",
+                   "", "", "", None, None, "")
 
     full_btn.click(
         fn=on_generate_full,
@@ -819,92 +831,103 @@ def _build_track_tab(shared: dict) -> None:
     )
 
     def on_track(upvotes, num_comments, ratio_pct, gen_label):
-        gen_data = gen_map.get(gen_label, {})
-        generation_id = gen_data.get("generation_id", "manual")
-        title = ""
-        st = gen_data.get("selected_title")
-        if st:
-            title = st.get("title", "")
-        candidates = gen_data.get("candidate_titles", [])
-        if not title and candidates:
-            title = candidates[0].get("title", "")
-        body_text = gen_data.get("body", "")
-        pid = ""
-        patterns = gen_data.get("selected_patterns", [])
-        if patterns:
-            pid = patterns[0].get("pattern_id", "")
+        try:
+            gen_data = gen_map.get(gen_label, {})
+            generation_id = gen_data.get("generation_id", "manual")
+            title = ""
+            st = gen_data.get("selected_title")
+            if st:
+                title = st.get("title", "")
+            candidates = gen_data.get("candidate_titles", [])
+            if not title and candidates:
+                title = candidates[0].get("title", "")
+            body_text = gen_data.get("body", "")
+            pid = ""
+            patterns = gen_data.get("selected_patterns", [])
+            if patterns:
+                pid = patterns[0].get("pattern_id", "")
 
-        matched = gen_data.get("matched_subreddits", [])
-        subreddit = matched[0].get("subreddit", "") if matched else ""
+            matched = gen_data.get("matched_subreddits", [])
+            subreddit = matched[0].get("subreddit", "") if matched else ""
 
-        if not generation_id or generation_id == "manual":
-            return (
-                gr.update(visible=True), "", "", gr.update(visible=False),
-                gr.update(value=None), None,
+            if not generation_id or generation_id == "manual":
+                return (
+                    gr.update(visible=True), "", "", gr.update(visible=False),
+                    gr.update(value=None), None,
+                )
+
+            if upvotes is None or upvotes < 0:
+                return (
+                    gr.update(visible=False), "", "", gr.update(visible=False),
+                    gr.update(value=None), None,
+                )
+
+            from ..tracker.post_tracker import PostTracker
+
+            tracker = PostTracker(
+                db_path=shared["db_path"],
+                feedback_path=shared["feedback_path"],
             )
 
-        if upvotes is None or upvotes < 0:
-            return (
-                gr.update(visible=False), "", "", gr.update(visible=False),
-                gr.update(value=None), None,
+            entry = tracker.track(
+                generation_id=generation_id,
+                subreddit=subreddit,
+                title=title,
+                body=body_text,
+                pattern_id=pid,
+                upvotes=int(upvotes),
+                num_comments=int(num_comments),
+                upvote_ratio=ratio_pct / 100.0,
             )
 
-        from ..tracker.post_tracker import PostTracker
+            perf = entry.performance
+            perf_display = {
+                "super_viral": "超级爆款 (upvotes > median × 10)",
+                "viral": "爆款 (upvotes > median × 3)",
+                "passing": "及格 (upvotes > median × 1.5)",
+                "failed": "失败 (upvotes < median × 1.5)",
+            }.get(perf, perf)
 
-        tracker = PostTracker(
-            db_path=shared["db_path"],
-            feedback_path=shared["feedback_path"],
-        )
+            stats = (
+                f"**r/{subreddit}** | "
+                f"**Upvotes:** {entry.actual_upvotes} | "
+                f"**Comments:** {entry.num_comments} | "
+                f"**Ratio:** {entry.upvote_ratio:.0%} | "
+                f"**Median:** {entry.subreddit_median:.0f}"
+            )
 
-        entry = tracker.track(
-            generation_id=generation_id,
-            subreddit=subreddit,
-            title=title,
-            body=body_text,
-            pattern_id=pid,
-            upvotes=int(upvotes),
-            num_comments=int(num_comments),
-            upvote_ratio=ratio_pct / 100.0,
-        )
+            is_failed = perf == "failed"
 
-        perf = entry.performance
-        perf_display = {
-            "super_viral": "超级爆款 (upvotes > median × 10)",
-            "viral": "爆款 (upvotes > median × 3)",
-            "passing": "及格 (upvotes > median × 1.5)",
-            "failed": "失败 (upvotes < median × 1.5)",
-        }.get(perf, perf)
-
-        stats = (
-            f"**r/{subreddit}** | "
-            f"**Upvotes:** {entry.actual_upvotes} | "
-            f"**Comments:** {entry.num_comments} | "
-            f"**Ratio:** {entry.upvote_ratio:.0%} | "
-            f"**Median:** {entry.subreddit_median:.0f}"
-        )
-
-        is_failed = perf == "failed"
-
-        return (
-            gr.update(visible=True),
-            stats,
-            f"**[{perf}]** {perf_display}",
-            gr.update(visible=is_failed),
-            gr.update(value=None),
-            {
-                "generation_id": generation_id,
-                "subreddit": subreddit,
-                "title": title,
-                "body": body_text,
-                "pattern_id": pid,
-                "actual_upvotes": entry.actual_upvotes,
-                "num_comments": entry.num_comments,
-                "upvote_ratio": entry.upvote_ratio,
-                "performance": perf,
-                "subreddit_median": entry.subreddit_median,
-                "patterns": patterns,
-            },
-        )
+            return (
+                gr.update(visible=True),
+                stats,
+                f"**[{perf}]** {perf_display}",
+                gr.update(visible=is_failed),
+                gr.update(value=None),
+                {
+                    "generation_id": generation_id,
+                    "subreddit": subreddit,
+                    "title": title,
+                    "body": body_text,
+                    "pattern_id": pid,
+                    "actual_upvotes": entry.actual_upvotes,
+                    "num_comments": entry.num_comments,
+                    "upvote_ratio": entry.upvote_ratio,
+                    "performance": perf,
+                    "subreddit_median": entry.subreddit_median,
+                    "patterns": patterns,
+                },
+            )
+        except Exception as e:
+            logger.exception("Track failed in Gradio handler")
+            return (
+                gr.update(visible=True),
+                f"[500] {type(e).__name__}: {e}",
+                "",
+                gr.update(visible=False),
+                gr.update(value=None),
+                None,
+            )
 
     track_btn.click(
         fn=on_track,
@@ -916,23 +939,29 @@ def _build_track_tab(shared: dict) -> None:
     )
 
     def on_attr(last_entry):
-        if not last_entry:
-            return gr.update(value=None)
+        try:
+            if not last_entry:
+                return gr.update(value=None)
 
-        from ..evolution.failure_attributor import FailureAttributor
+            from ..evolution.failure_attributor import FailureAttributor
 
-        attributor = FailureAttributor(llm_client=shared.get("llm"))
-        pattern = last_entry.get("patterns", [{}])[0] if last_entry.get("patterns") else None
+            attributor = FailureAttributor(llm_client=shared.get("llm"))
+            pattern = last_entry.get("patterns", [{}])[0] if last_entry.get("patterns") else None
 
-        attribution = attributor.attribute(last_entry, pattern)
-        attr_data = {
-            "主要失败原因": attribution.primary_reason,
-            "次要因素": attribution.secondary_reasons,
-            "改进建议": attribution.action_items,
-            "诊断信心度": attribution.confidence,
-            "各维度分析": attribution.dimensions,
-        }
-        return gr.update(value=attr_data)
+            attribution = attributor.attribute(last_entry, pattern)
+            attr_data = {
+                "主要失败原因": attribution.primary_reason,
+                "次要因素": attribution.secondary_reasons,
+                "改进建议": attribution.action_items,
+                "诊断信心度": attribution.confidence,
+                "各维度分析": attribution.dimensions,
+            }
+            return gr.update(value=attr_data)
+        except Exception as e:
+            logger.exception("Attribution failed in Gradio handler")
+            return gr.update(value={
+                "错误": f"{type(e).__name__}: {e}",
+            })
 
     attr_btn.click(
         fn=on_attr,
@@ -1178,37 +1207,45 @@ def _build_evolve_tab(shared: dict) -> None:
         gr.Markdown(log_text or "暂无进化记录。")
 
     def on_evolve(force: bool):
-        from ..evolution.evolution_engine import EvolutionEngine
+        try:
+            from ..evolution.evolution_engine import EvolutionEngine
 
-        engine = EvolutionEngine(
-            llm_client=shared.get("llm"),
-            evolution_log_path=shared["evolution_log_path"],
-        )
-        result = engine.evolve(
-            feedback_path=shared["feedback_path"],
-            patterns_path=shared["patterns_path"],
-            output_path=shared["patterns_path"],
-        )
+            engine = EvolutionEngine(
+                llm_client=shared.get("llm"),
+                evolution_log_path=shared["evolution_log_path"],
+            )
+            result = engine.evolve(
+                feedback_path=shared["feedback_path"],
+                patterns_path=shared["patterns_path"],
+                output_path=shared["patterns_path"],
+            )
 
-        if result is None:
-            cnt = engine._count_entries(shared["feedback_path"])
-            if cnt < threshold:
-                return f"**未执行进化。** 当前 {cnt} 条记录，需要 {threshold} 条。勾选「强制执行」可无视阈值。", gr.update(value=cnt), gr.update(value=min(cnt, threshold))
-            return "**未找到 feedback 文件或 patterns 文件。**", gr.update(value=0), gr.update(value=0)
+            if result is None:
+                cnt = engine._count_entries(shared["feedback_path"])
+                if cnt < threshold:
+                    return f"**未执行进化。** 当前 {cnt} 条记录，需要 {threshold} 条。勾选「强制执行」可无视阈值。", gr.update(value=cnt), gr.update(value=min(cnt, threshold))
+                return "**未找到 feedback 文件或 patterns 文件。**", gr.update(value=0), gr.update(value=0)
 
-        new_cnt = engine._count_entries(shared["feedback_path"])
-        summary = (
-            f"### 进化完成\n"
-            f"- 处理了 **{result.feedback_count}** 条反馈\n"
-            f"- 更新了 **{result.patterns_updated}** 个模式\n"
-            f"- 标记了 **{result.patterns_marked_inactive}** 个 inactive 模式\n\n"
-            f"{result.summary}"
-        )
-        return (
-            summary,
-            gr.update(value=new_cnt),
-            gr.update(value=min(new_cnt, threshold)),
-        )
+            new_cnt = engine._count_entries(shared["feedback_path"])
+            summary = (
+                f"### 进化完成\n"
+                f"- 处理了 **{result.feedback_count}** 条反馈\n"
+                f"- 更新了 **{result.patterns_updated}** 个模式\n"
+                f"- 标记了 **{result.patterns_marked_inactive}** 个 inactive 模式\n\n"
+                f"{result.summary}"
+            )
+            return (
+                summary,
+                gr.update(value=new_cnt),
+                gr.update(value=min(new_cnt, threshold)),
+            )
+        except Exception as e:
+            logger.exception("Evolution failed in Gradio handler")
+            return (
+                f"[500] {type(e).__name__}: {e}",
+                gr.update(value=count),
+                gr.update(value=min(count, threshold)),
+            )
 
     evolve_btn.click(
         fn=on_evolve,

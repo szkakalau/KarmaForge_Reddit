@@ -53,29 +53,42 @@ def _create_token(user_id: str, email: str, secret: str) -> str:
 
 @router.post("/register", response_model=AuthResponse, status_code=201)
 def register(req: RegisterRequest, request: Request, session: Session = Depends(get_db)):
-    state = request.app.state.app_state
-    existing = session.query(User).filter(User.email == req.email).first()
-    if existing:
-        raise HTTPException(status_code=409, detail="Email already registered")
+    try:
+        state = request.app.state.app_state
+        existing = session.query(User).filter(User.email == req.email).first()
+        if existing:
+            raise HTTPException(status_code=409, detail="Email already registered")
 
-    user = User(
-        email=req.email,
-        password_hash=_hash_password(req.password),
-        display_name=req.display_name or req.email.split("@")[0],
-    )
-    session.add(user)
-    session.commit()
+        user = User(
+            email=req.email,
+            password_hash=_hash_password(req.password),
+            display_name=req.display_name or req.email.split("@")[0],
+        )
+        session.add(user)
+        session.commit()
 
-    token = _create_token(user.id, user.email, state.jwt_secret)
-    return AuthResponse(token=token, user={"id": user.id, "email": user.email, "display_name": user.display_name})
+        token = _create_token(user.id, user.email, state.jwt_secret)
+        return AuthResponse(token=token, user={"id": user.id, "email": user.email, "display_name": user.display_name})
+    except HTTPException:
+        raise
+    except Exception as e:
+        session.rollback()
+        logger.exception("Registration failed")
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
 
 
 @router.post("/login", response_model=AuthResponse)
 def login(req: LoginRequest, request: Request, session: Session = Depends(get_db)):
-    state = request.app.state.app_state
-    user = session.query(User).filter(User.email == req.email).first()
-    if not user or not bcrypt.checkpw(req.password.encode(), user.password_hash.encode()):
-        raise HTTPException(status_code=401, detail="Invalid email or password")
+    try:
+        state = request.app.state.app_state
+        user = session.query(User).filter(User.email == req.email).first()
+        if not user or not bcrypt.checkpw(req.password.encode(), user.password_hash.encode()):
+            raise HTTPException(status_code=401, detail="Invalid email or password")
 
-    token = _create_token(user.id, user.email, state.jwt_secret)
-    return AuthResponse(token=token, user={"id": user.id, "email": user.email, "display_name": user.display_name})
+        token = _create_token(user.id, user.email, state.jwt_secret)
+        return AuthResponse(token=token, user={"id": user.id, "email": user.email, "display_name": user.display_name})
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Login failed")
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")

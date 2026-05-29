@@ -40,18 +40,25 @@ class LLMConfig:
 class LLMClient:
     def __init__(self, config: LLMConfig) -> None:
         self.config = config
-        self._client = OpenAI(
-            api_key=config.api_key,
-            base_url=config.api_base_url,
-            timeout=config.request_timeout,
-            max_retries=0,
-        )
+        self._openai_client: OpenAI | None = None
         self._cache: dict[str, str] = {}
         self._total_tokens = 0
         self._total_cost_estimate = 0.0
         if config.cache_dir:
             config.cache_dir.mkdir(parents=True, exist_ok=True)
             self._load_cache()
+
+    def _get_client(self) -> OpenAI:
+        """Lazily create the OpenAI client so that missing credentials
+        are surfaced only when an API call is actually made, not at import time."""
+        if self._openai_client is None:
+            self._openai_client = OpenAI(
+                api_key=self.config.api_key,
+                base_url=self.config.api_base_url,
+                timeout=self.config.request_timeout,
+                max_retries=0,
+            )
+        return self._openai_client
 
     def complete(self, prompt: str, system_prompt: str = "") -> str:
         cache_key = self._cache_key(prompt, system_prompt)
@@ -60,8 +67,14 @@ class LLMClient:
 
         messages = []
         if system_prompt:
-            messages.append({"role": "system", "content": system_prompt})
-        messages.append({"role": "user", "content": prompt})
+            if self.config.provider == LLMProvider.DEEPSEEK:
+                # DeepSeek does not support "system" role; merge into user message
+                messages.append({"role": "user", "content": f"{system_prompt}\n\n{prompt}"})
+            else:
+                messages.append({"role": "system", "content": system_prompt})
+                messages.append({"role": "user", "content": prompt})
+        else:
+            messages.append({"role": "user", "content": prompt})
 
         response = self._call_with_retry(messages)
         result = response.choices[0].message.content or ""
@@ -132,7 +145,7 @@ class LLMClient:
         last_error = None
         for attempt in range(self.config.max_retries):
             try:
-                response = self._client.chat.completions.create(
+                response = self._get_client().chat.completions.create(
                     model=self.config.model,
                     messages=messages,
                     max_tokens=self.config.max_tokens,
@@ -145,10 +158,10 @@ class LLMClient:
                         usage.prompt_tokens, usage.completion_tokens
                     )
                 return response
-            except RateLimitError:
+            except RateLimitError as e:
                 wait = 2 ** attempt
                 time.sleep(wait)
-                last_error = RateLimitError("Rate limited")
+                last_error = e
             except APIError as e:
                 if e.status_code and e.status_code >= 500:
                     wait = 2 ** attempt
