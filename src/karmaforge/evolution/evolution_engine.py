@@ -2,6 +2,8 @@
 
 import json
 import logging
+import os
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -13,6 +15,7 @@ logger = logging.getLogger(__name__)
 EVOLUTION_THRESHOLD = 50
 MAX_CONSECUTIVE_FAILURES = 10
 EVOLUTION_LOG_PATH_DEFAULT = Path("data/tracking/evolution_log.md")
+LOCK_TIMEOUT_SECONDS = 120  # stale lock cleanup after 2 minutes
 
 
 class EvolutionEngine:
@@ -42,11 +45,29 @@ class EvolutionEngine:
         """Run one evolution cycle: analyze feedback, update patterns.
 
         Returns EvolutionLog if changes were made, None otherwise.
+        Uses a lock file to prevent concurrent evolution runs.
         """
         fb_path = Path(feedback_path)
         pat_path = Path(patterns_path)
         out_path = Path(output_path) if output_path else pat_path
 
+        lock_path = fb_path.parent / ".evolution.lock"
+        if not self._acquire_lock(lock_path):
+            logger.warning("Evolution already in progress (lock held at %s). Skipping.", lock_path)
+            return None
+
+        try:
+            return self._evolve_impl(fb_path, pat_path, out_path)
+        finally:
+            self._release_lock(lock_path)
+
+    def _evolve_impl(
+        self,
+        fb_path: Path,
+        pat_path: Path,
+        out_path: Path,
+    ) -> EvolutionLog | None:
+        """Internal evolve implementation — caller must hold the lock."""
         if not fb_path.exists():
             logger.warning("No feedback file at %s", fb_path)
             return None
@@ -202,6 +223,40 @@ class EvolutionEngine:
         with open(path, "w", encoding="utf-8") as f:
             for entry in entries:
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+    @staticmethod
+    def _acquire_lock(lock_path: Path) -> bool:
+        """Acquire a file lock to prevent concurrent evolution runs.
+
+        Returns True if lock was acquired, False if another process holds it.
+        Cleans up stale locks older than LOCK_TIMEOUT_SECONDS.
+        """
+        if lock_path.exists():
+            try:
+                lock_age = time.time() - lock_path.stat().st_mtime
+                if lock_age > LOCK_TIMEOUT_SECONDS:
+                    logger.warning("Removing stale evolution lock (%.0fs old)", lock_age)
+                    lock_path.unlink(missing_ok=True)
+                else:
+                    return False
+            except FileNotFoundError:
+                pass  # race between exists() and stat(), retry acquire
+
+        try:
+            # Use O_CREAT | O_EXCL for atomic lock creation
+            fd = os.open(str(lock_path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.close(fd)
+            return True
+        except FileExistsError:
+            return False
+
+    @staticmethod
+    def _release_lock(lock_path: Path) -> None:
+        """Release the evolution lock file."""
+        try:
+            lock_path.unlink(missing_ok=True)
+        except OSError:
+            pass
 
     def _write_evolution_log(self, log: EvolutionLog) -> None:
         """Append to evolution_log.md."""

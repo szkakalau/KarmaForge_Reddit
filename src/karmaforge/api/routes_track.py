@@ -38,8 +38,8 @@ class TrackResponse(BaseModel):
 
 @router.post("/", response_model=TrackResponse)
 def track_post(req: TrackRequest, session: Session = Depends(get_db), current_user: User | None = Depends(get_current_user)):
-    tracker = PostTracker(db_path="data/processed/karmaforge.db")
     try:
+        tracker = PostTracker(db_path="data/processed/karmaforge.db")
         entry = tracker.track(
             generation_id=req.generation_id,
             subreddit=req.subreddit,
@@ -51,34 +51,37 @@ def track_post(req: TrackRequest, session: Session = Depends(get_db), current_us
             upvote_ratio=req.upvote_ratio,
             url=req.url,
         )
+
+        feedback = Feedback(
+            user_id=current_user.id if current_user else "_anonymous",
+            generation_id=req.generation_id,
+            url=req.url,
+            subreddit=req.subreddit,
+            title=req.title,
+            body=req.body,
+            pattern_id=req.pattern_id,
+            actual_upvotes=req.upvotes,
+            num_comments=req.num_comments,
+            upvote_ratio=req.upvote_ratio,
+            performance=entry.performance,
+            subreddit_median=entry.subreddit_median,
+        )
+        session.add(feedback)
+        session.commit()
+
+        return TrackResponse(
+            generation_id=req.generation_id,
+            performance=entry.performance,
+            subreddit_median=entry.subreddit_median,
+            upvotes=req.upvotes,
+            num_comments=req.num_comments,
+        )
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.exception("Tracking failed")
-        raise HTTPException(status_code=500, detail=f"Tracking failed: {e}")
-
-    feedback = Feedback(
-        user_id=current_user.id if current_user else "_anonymous",
-        generation_id=req.generation_id,
-        url=req.url,
-        subreddit=req.subreddit,
-        title=req.title,
-        body=req.body,
-        pattern_id=req.pattern_id,
-        actual_upvotes=req.upvotes,
-        num_comments=req.num_comments,
-        upvote_ratio=req.upvote_ratio,
-        performance=entry.performance,
-        subreddit_median=entry.subreddit_median,
-    )
-    session.add(feedback)
-    session.commit()
-
-    return TrackResponse(
-        generation_id=req.generation_id,
-        performance=entry.performance,
-        subreddit_median=entry.subreddit_median,
-        upvotes=req.upvotes,
-        num_comments=req.num_comments,
-    )
+        session.rollback()
+        logger.exception("Track post failed")
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
 
 
 @router.get("/history")
