@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Send, Copy, Check, Sparkles } from 'lucide-react'
+import { Send, Copy, Check, Sparkles, FileText, AlertTriangle } from 'lucide-react'
 import { api } from '../api'
-import type { TitleItem } from '../api'
+import type { TitleItem, FullGenerationResponse } from '../api'
 
 export default function Dashboard() {
   const [input, setInput] = useState('')
@@ -11,6 +11,10 @@ export default function Dashboard() {
   const [genId, setGenId] = useState('')
   const [error, setError] = useState('')
   const [copied, setCopied] = useState<string | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [body, setBody] = useState('')
+  const [selfCheck, setSelfCheck] = useState<FullGenerationResponse['self_check']>(null)
+  const [generatingFull, setGeneratingFull] = useState(false)
 
   async function generate() {
     if (!input.trim()) return
@@ -32,6 +36,23 @@ export default function Dashboard() {
     navigator.clipboard.writeText(title)
     setCopied(title)
     setTimeout(() => setCopied(null), 2000)
+  }
+
+  async function generateFull() {
+    if (!input.trim()) return
+    setGeneratingFull(true)
+    setError('')
+    setBody('')
+    setSelfCheck(null)
+    try {
+      const res = await api.generateFull(input, subreddit || undefined, 3, selectedIndex)
+      setBody(res.body || '')
+      setSelfCheck(res.self_check)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Full generation failed')
+    } finally {
+      setGeneratingFull(false)
+    }
   }
 
   return (
@@ -111,7 +132,15 @@ export default function Dashboard() {
           </div>
           <div className="grid grid-cols-3 gap-4">
             {titles.map((t, i) => (
-              <div key={i} className="bg-surface-1 border border-border rounded-lg p-5 group hover:border-border-hover transition-colors">
+              <div
+                key={i}
+                onClick={() => setSelectedIndex(i)}
+                className={`bg-surface-1 border rounded-lg p-5 cursor-pointer transition-colors ${
+                  i === selectedIndex
+                    ? 'border-accent ring-1 ring-accent/20'
+                    : 'border-border hover:border-border-hover'
+                }`}
+              >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[11px] text-text-muted uppercase tracking-wide">{t.hook_type}</span>
                   <span className="text-xs font-mono font-semibold text-accent">{Math.round(t.score)}%</span>
@@ -127,6 +156,81 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
+
+          {/* Full post generation button */}
+          <div className="mt-6 flex items-center gap-4">
+            <button
+              onClick={generateFull}
+              disabled={generatingFull}
+              className="flex items-center gap-2 bg-surface-1 border border-accent text-accent font-semibold px-5 py-2.5 rounded-md text-sm hover:bg-accent hover:text-base transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {generatingFull ? (
+                <span className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
+              ) : (
+                <FileText size={16} />
+              )}
+              Generate Full Post
+            </button>
+            <span className="text-xs text-text-muted truncate max-w-[300px]">
+              Using: {titles[selectedIndex]?.title?.slice(0, 60)}...
+            </span>
+          </div>
+
+          {/* Body result */}
+          {body && (
+            <div className="mt-6">
+              <h2 className="text-[16px] font-semibold mb-4">Post Body</h2>
+              <div className="bg-surface-1 border border-border rounded-lg p-6 relative group">
+                <button
+                  onClick={() => copyTitle(body)}
+                  className="absolute top-3 right-3 flex items-center gap-1.5 text-xs text-text-muted hover:text-accent transition-colors bg-surface-2 px-2 py-1 rounded"
+                >
+                  {copied === body ? <Check size={14} /> : <Copy size={14} />}
+                  {copied === body ? 'Copied' : 'Copy Body'}
+                </button>
+                <p className="text-sm text-text-primary leading-relaxed whitespace-pre-wrap pr-20">{body}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Self-check */}
+          {selfCheck && (
+            <div className="mt-4 bg-surface-1 border border-border rounded-lg p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <div className={`w-2 h-2 rounded-full ${selfCheck.passed ? 'bg-green-500' : 'bg-orange-500'}`} />
+                <span className="text-sm font-semibold">
+                  {selfCheck.passed ? 'Quality Check Passed' : 'Quality Check: Issues Found'}
+                </span>
+              </div>
+              {selfCheck.dimensions && (
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  {Object.entries(selfCheck.dimensions).map(([dim, info]: [string, any]) => (
+                    <div key={dim} className="flex justify-between items-center bg-surface-2 rounded px-3 py-2">
+                      <span className="text-xs text-text-secondary">{dim}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-mono font-semibold">{info.得分 ?? info.score ?? '-'}</span>
+                        <span className={`text-[11px] px-1.5 py-0.5 rounded ${
+                          (info.状态 ?? info.status) === '正常' || (info.状态 ?? info.status) === 'ok' ? 'bg-green-500/10 text-green-600' :
+                          (info.状态 ?? info.status) === '警告' || (info.状态 ?? info.status) === 'warn' ? 'bg-orange-500/10 text-orange-600' :
+                          'bg-red-500/10 text-red-600'
+                        }`}>{info.状态 ?? info.status ?? '-'}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {selfCheck.suggestions && selfCheck.suggestions.length > 0 && (
+                <div className="bg-surface-2 rounded p-3">
+                  <p className="text-xs text-text-secondary mb-2 flex items-center gap-1">
+                    <AlertTriangle size={12} /> Suggestions:
+                  </p>
+                  <ul className="list-disc list-inside text-xs text-text-secondary space-y-1">
+                    {selfCheck.suggestions.map((s: string, i: number) => <li key={i}>{s}</li>)}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
         </>
       )}
 

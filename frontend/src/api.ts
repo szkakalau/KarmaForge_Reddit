@@ -73,9 +73,9 @@ export const api = {
     }) as Promise<GenerationResponse>,
 
   generateFull: (user_input: string, target_subreddit?: string, n_titles = 3, title_index = 0) =>
-    request('/generate/full', {
+    request(`/generate/full?title_index=${title_index}`, {
       method: 'POST',
-      body: JSON.stringify({ user_input, target_subreddit: target_subreddit || null, n_titles, title_index }),
+      body: JSON.stringify({ user_input, target_subreddit: target_subreddit || null, n_titles }),
     }) as Promise<FullGenerationResponse>,
 
   predict: (user_input: string, target_subreddit: string, n_titles = 3) =>
