@@ -72,6 +72,9 @@ def _load_dotenv() -> None:
                 key, value = key.strip(), value.strip()
                 if key not in os.environ or not os.environ[key]:
                     os.environ[key] = value.strip('"').strip("'")
+                elif not os.environ[key] and value.strip('"').strip("'"):
+                    # Override empty env var with .env value
+                    os.environ[key] = value.strip('"').strip("'")
         # Mirror LLM_API_KEY → OPENAI_API_KEY for OpenAI SDK compatibility
         if os.environ.get("LLM_API_KEY") and not os.environ.get("OPENAI_API_KEY"):
             os.environ["OPENAI_API_KEY"] = os.environ["LLM_API_KEY"]
