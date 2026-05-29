@@ -79,21 +79,17 @@ def generate_titles(
     session: Session = Depends(get_db),
     current_user: User | None = Depends(get_current_user),
 ):
-    orch = _new_orchestrator()
-    orch._llm = llm
-
     try:
+        orch = _new_orchestrator()
+        orch._llm = llm
+
         result = orch.generate_titles(req.user_input, req.target_subreddit, req.n_titles)
-    except Exception as e:
-        logger.exception("Generation failed")
-        raise HTTPException(status_code=500, detail=f"Generation failed: {e}")
 
-    titles = [
-        TitleItem(title=t.title, score=t.score, hook_type=t.hook_type, pattern_id=t.pattern_id)
-        for t in result.candidate_titles
-    ]
+        titles = [
+            TitleItem(title=t.title, score=t.score, hook_type=t.hook_type, pattern_id=t.pattern_id)
+            for t in result.candidate_titles
+        ]
 
-    try:
         gen_record = Generation(
             user_id=current_user.id if current_user else "_anonymous",
             generation_id=result.generation_id,
@@ -103,17 +99,19 @@ def generate_titles(
         )
         session.add(gen_record)
         session.commit()
+
+        return GenerationResponse(
+            generation_id=result.generation_id,
+            matched_subreddits=[{"subreddit": s, "score": sc} for s, sc in result.matched_subreddits],
+            titles=titles,
+            metadata=result.metadata,
+        )
+    except HTTPException:
+        raise
     except Exception as e:
         session.rollback()
-        logger.exception("Failed to save generation record")
-        raise HTTPException(status_code=500, detail=f"Database error: {e}")
-
-    return GenerationResponse(
-        generation_id=result.generation_id,
-        matched_subreddits=[{"subreddit": s, "score": sc} for s, sc in result.matched_subreddits],
-        titles=titles,
-        metadata=result.metadata,
-    )
+        logger.exception("Generate titles failed")
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
 
 
 @router.post("/full", response_model=FullGenerationResponse)
@@ -124,21 +122,17 @@ def generate_full(
     session: Session = Depends(get_db),
     current_user: User | None = Depends(get_current_user),
 ):
-    orch = _new_orchestrator()
-    orch._llm = llm
-
     try:
+        orch = _new_orchestrator()
+        orch._llm = llm
+
         result = orch.generate_full(req.user_input, req.target_subreddit, title_index, req.n_titles)
-    except Exception as e:
-        logger.exception("Full generation failed")
-        raise HTTPException(status_code=500, detail=f"Generation failed: {e}")
 
-    titles = [
-        TitleItem(title=t.title, score=t.score, hook_type=t.hook_type, pattern_id=t.pattern_id)
-        for t in result.candidate_titles
-    ]
+        titles = [
+            TitleItem(title=t.title, score=t.score, hook_type=t.hook_type, pattern_id=t.pattern_id)
+            for t in result.candidate_titles
+        ]
 
-    try:
         gen_record = Generation(
             user_id=current_user.id if current_user else "_anonymous",
             generation_id=result.generation_id,
@@ -157,24 +151,26 @@ def generate_full(
         )
         session.add(gen_record)
         session.commit()
+
+        return FullGenerationResponse(
+            generation_id=result.generation_id,
+            matched_subreddits=[{"subreddit": s, "score": sc} for s, sc in result.matched_subreddits],
+            titles=titles,
+            metadata=result.metadata,
+            selected_title=result.selected_title.title if result.selected_title else None,
+            body=result.body,
+            self_check={
+                "passed": result.self_check.passed,
+                "dimensions": result.self_check.dimensions,
+                "suggestions": result.self_check.suggestions,
+            } if result.self_check else None,
+        )
+    except HTTPException:
+        raise
     except Exception as e:
         session.rollback()
-        logger.exception("Failed to save full generation record")
-        raise HTTPException(status_code=500, detail=f"Database error: {e}")
-
-    return FullGenerationResponse(
-        generation_id=result.generation_id,
-        matched_subreddits=[{"subreddit": s, "score": sc} for s, sc in result.matched_subreddits],
-        titles=titles,
-        metadata=result.metadata,
-        selected_title=result.selected_title.title if result.selected_title else None,
-        body=result.body,
-        self_check={
-            "passed": result.self_check.passed,
-            "dimensions": result.self_check.dimensions,
-            "suggestions": result.self_check.suggestions,
-        } if result.self_check else None,
-    )
+        logger.exception("Generate full failed")
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
 
 
 @router.post("/predict", response_model=PredictResponse)
@@ -185,26 +181,22 @@ def predict(
     current_user: User | None = Depends(get_current_user),
 ):
     """Generate titles AND rank them with historical performance predictions."""
-    orch = _new_orchestrator()
-    orch._llm = llm
-
     try:
+        orch = _new_orchestrator()
+        orch._llm = llm
+
         result = orch.generate_titles(req.user_input, req.target_subreddit, req.n_titles)
-    except Exception as e:
-        logger.exception("Prediction generation failed")
-        raise HTTPException(status_code=500, detail=f"Generation failed: {e}")
 
-    titles_dicts = [
-        {"title": t.title, "score": t.score, "hook_type": t.hook_type, "pattern_id": t.pattern_id}
-        for t in result.candidate_titles
-    ]
+        titles_dicts = [
+            {"title": t.title, "score": t.score, "hook_type": t.hook_type, "pattern_id": t.pattern_id}
+            for t in result.candidate_titles
+        ]
 
-    user_id = current_user.id if current_user else "_anonymous"
-    predictions = predict_titles(
-        session, user_id, req.target_subreddit, titles_dicts
-    )
+        user_id = current_user.id if current_user else "_anonymous"
+        predictions = predict_titles(
+            session, user_id, req.target_subreddit, titles_dicts
+        )
 
-    try:
         gen_record = Generation(
             user_id=user_id,
             generation_id=result.generation_id,
@@ -214,24 +206,26 @@ def predict(
         )
         session.add(gen_record)
         session.commit()
+
+        return PredictResponse(
+            generation_id=result.generation_id,
+            subreddit=req.target_subreddit,
+            predictions=[
+                PredictionItem(
+                    title=p.title,
+                    score=p.score,
+                    hook_type=p.hook_type,
+                    pattern_id=p.pattern_id,
+                    predicted_range=p.predicted_range,
+                    confidence=p.confidence,
+                    reasoning=p.reasoning,
+                )
+                for p in predictions
+            ],
+        )
+    except HTTPException:
+        raise
     except Exception as e:
         session.rollback()
-        logger.exception("Failed to save predict generation record")
-        raise HTTPException(status_code=500, detail=f"Database error: {e}")
-
-    return PredictResponse(
-        generation_id=result.generation_id,
-        subreddit=req.target_subreddit,
-        predictions=[
-            PredictionItem(
-                title=p.title,
-                score=p.score,
-                hook_type=p.hook_type,
-                pattern_id=p.pattern_id,
-                predicted_range=p.predicted_range,
-                confidence=p.confidence,
-                reasoning=p.reasoning,
-            )
-            for p in predictions
-        ],
-    )
+        logger.exception("Predict generation failed")
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
