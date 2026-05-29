@@ -19,6 +19,9 @@ if _env_path.exists():
             _key, _value = _key.strip(), _value.strip()
             if _key not in os.environ or not os.environ[_key]:
                 os.environ[_key] = _value.strip('"').strip("'")
+    # Mirror LLM_API_KEY → OPENAI_API_KEY for OpenAI SDK compatibility
+    if os.environ.get("LLM_API_KEY") and not os.environ.get("OPENAI_API_KEY"):
+        os.environ["OPENAI_API_KEY"] = os.environ["LLM_API_KEY"]
 
 from .deps import create_app
 
