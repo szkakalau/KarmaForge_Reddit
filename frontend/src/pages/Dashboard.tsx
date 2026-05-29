@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Send, Copy, Check, Sparkles, FileText, AlertTriangle } from 'lucide-react'
+import { Send, Copy, Check, Sparkles, FileText, AlertTriangle, RefreshCw, Wand2 } from 'lucide-react'
 import { api } from '../api'
 import type { TitleItem, FullGenerationResponse } from '../api'
 
@@ -13,8 +13,12 @@ export default function Dashboard() {
   const [copied, setCopied] = useState<string | null>(null)
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [body, setBody] = useState('')
+  const [selectedPatternId, setSelectedPatternId] = useState('')
+  const [editedBody, setEditedBody] = useState('')
   const [selfCheck, setSelfCheck] = useState<FullGenerationResponse['self_check']>(null)
   const [generatingFull, setGeneratingFull] = useState(false)
+  const [revising, setRevising] = useState(false)
+  const [revisionCount, setRevisionCount] = useState(0)
 
   async function generate() {
     if (!input.trim()) return
@@ -43,15 +47,57 @@ export default function Dashboard() {
     setGeneratingFull(true)
     setError('')
     setBody('')
+    setEditedBody('')
     setSelfCheck(null)
+    setRevisionCount(0)
     try {
       const res = await api.generateFull(input, subreddit || undefined, 3, selectedIndex)
       setBody(res.body || '')
+      setEditedBody(res.body || '')
+      setSelectedPatternId(res.selected_pattern_id || '')
       setSelfCheck(res.self_check)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Full generation failed')
     } finally {
       setGeneratingFull(false)
+    }
+  }
+
+  async function recheck() {
+    if (!selectedPatternId || !editedBody) return
+    setError('')
+    try {
+      const result = await api.recheck(
+        titles[selectedIndex]?.title || '', editedBody, selectedPatternId, subreddit
+      )
+      setSelfCheck(result)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Recheck failed')
+    }
+  }
+
+  async function revise() {
+    if (!selfCheck?.suggestions?.length || !editedBody) return
+    setRevising(true)
+    setError('')
+    try {
+      const res = await api.revise(
+        titles[selectedIndex]?.title || '', editedBody, selfCheck.suggestions, subreddit
+      )
+      setEditedBody(res.revised_body)
+      setBody(res.revised_body)
+      setRevisionCount(c => c + 1)
+      // Auto recheck after revision
+      if (selectedPatternId) {
+        const check = await api.recheck(
+          titles[selectedIndex]?.title || '', res.revised_body, selectedPatternId, subreddit
+        )
+        setSelfCheck(check)
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Revise failed')
+    } finally {
+      setRevising(false)
     }
   }
 
@@ -176,20 +222,33 @@ export default function Dashboard() {
             </span>
           </div>
 
-          {/* Body result */}
+          {/* Body result — editable */}
           {body && (
             <div className="mt-6">
-              <h2 className="text-[16px] font-semibold mb-4">Post Body</h2>
-              <div className="bg-surface-1 border border-border rounded-lg p-6 relative group">
-                <button
-                  onClick={() => copyTitle(body)}
-                  className="absolute top-3 right-3 flex items-center gap-1.5 text-xs text-text-muted hover:text-accent transition-colors bg-surface-2 px-2 py-1 rounded"
-                >
-                  {copied === body ? <Check size={14} /> : <Copy size={14} />}
-                  {copied === body ? 'Copied' : 'Copy Body'}
-                </button>
-                <p className="text-sm text-text-primary leading-relaxed whitespace-pre-wrap pr-20">{body}</p>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-[16px] font-semibold">Post Body</h2>
+                <div className="flex items-center gap-2">
+                  {revisionCount > 0 && (
+                    <span className="text-xs text-text-muted bg-surface-2 px-2 py-0.5 rounded">
+                      Revision {revisionCount}
+                    </span>
+                  )}
+                  <button
+                    onClick={() => copyTitle(editedBody || body)}
+                    className="flex items-center gap-1.5 text-xs text-text-muted hover:text-accent transition-colors bg-surface-2 px-2 py-1 rounded"
+                  >
+                    {copied === (editedBody || body) ? <Check size={14} /> : <Copy size={14} />}
+                    {copied === (editedBody || body) ? 'Copied' : 'Copy'}
+                  </button>
+                </div>
               </div>
+              <textarea
+                value={editedBody}
+                onChange={e => setEditedBody(e.target.value)}
+                rows={12}
+                className="w-full bg-surface-1 border border-border rounded-lg p-5 text-sm text-text-primary leading-relaxed resize-y outline-none focus:border-accent transition-colors"
+                placeholder="Edit the body text, then re-check quality..."
+              />
             </div>
           )}
 
@@ -220,7 +279,7 @@ export default function Dashboard() {
                 </div>
               )}
               {selfCheck.suggestions && selfCheck.suggestions.length > 0 && (
-                <div className="bg-surface-2 rounded p-3">
+                <div className="bg-surface-2 rounded p-3 mb-4">
                   <p className="text-xs text-text-secondary mb-2 flex items-center gap-1">
                     <AlertTriangle size={12} /> Suggestions:
                   </p>
@@ -229,6 +288,32 @@ export default function Dashboard() {
                   </ul>
                 </div>
               )}
+              {/* Action buttons */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={recheck}
+                  disabled={!editedBody}
+                  className="flex items-center gap-1.5 bg-surface-2 border border-border text-text-secondary text-xs font-medium px-3 py-1.5 rounded hover:border-accent hover:text-accent transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <RefreshCw size={13} />
+                  Re-check
+                </button>
+                <button
+                  onClick={revise}
+                  disabled={revising || !selfCheck.suggestions?.length || !editedBody}
+                  className="flex items-center gap-1.5 bg-accent text-base text-xs font-semibold px-3 py-1.5 rounded hover:bg-accent-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {revising ? (
+                    <span className="animate-spin w-3 h-3 border-2 border-base border-t-transparent rounded-full" />
+                  ) : (
+                    <Wand2 size={13} />
+                  )}
+                  {revising ? 'Revising...' : 'AI Revise'}
+                </button>
+                <span className="text-[11px] text-text-muted">
+                  Edit body → Re-check, or let AI fix suggestions automatically
+                </span>
+              </div>
             </div>
           )}
         </>

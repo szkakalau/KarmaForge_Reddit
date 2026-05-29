@@ -40,8 +40,19 @@ export interface GenerationResponse {
 
 export interface FullGenerationResponse extends GenerationResponse {
   selected_title: string | null;
+  selected_pattern_id: string | null;
   body: string | null;
   self_check: { passed: boolean; dimensions: Record<string, unknown>; suggestions: string[] } | null;
+}
+
+export interface SelfCheckResult {
+  passed: boolean;
+  dimensions: Record<string, { 得分?: number; score?: number; 状态?: string; status?: string; 触发的反模式?: string[] }>;
+  suggestions: string[];
+}
+
+export interface ReviseResult {
+  revised_body: string;
 }
 
 export interface TrackResponse {
@@ -91,6 +102,18 @@ export const api = {
   }) => request('/track/', { method: 'POST', body: JSON.stringify(data) }) as Promise<TrackResponse>,
 
   getHistory: (limit = 20) => request(`/track/history?limit=${limit}`) as Promise<HistoryItem[]>,
+
+  recheck: (title: string, body: string, pattern_id: string, subreddit = '') =>
+    request('/generate/recheck', {
+      method: 'POST',
+      body: JSON.stringify({ title, body, pattern_id, subreddit }),
+    }) as Promise<SelfCheckResult>,
+
+  revise: (title: string, body: string, suggestions: string[], subreddit = '') =>
+    request('/generate/revise', {
+      method: 'POST',
+      body: JSON.stringify({ title, body, suggestions, subreddit }),
+    }) as Promise<ReviseResult>,
 
   login: (email: string, password: string) =>
     request('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }) as Promise<{ token: string; user: Record<string, unknown> }>,
