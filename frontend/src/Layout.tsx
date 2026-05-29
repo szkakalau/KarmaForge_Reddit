@@ -1,10 +1,16 @@
+import { useEffect } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, History, BarChart3, LogOut } from 'lucide-react'
 
 export default function Layout() {
   const navigate = useNavigate()
   const token = localStorage.getItem('kf_token')
-  if (!token) { navigate('/login'); return null }
+
+  useEffect(() => {
+    if (!token) navigate('/login')
+  }, [token, navigate])
+
+  if (!token) return null
 
   return (
     <div className="flex h-screen">

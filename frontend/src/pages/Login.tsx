@@ -1,10 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api'
 
 export default function Login() {
   const navigate = useNavigate()
-  if (localStorage.getItem('kf_token')) { navigate('/'); return null }
+  const hasToken = !!localStorage.getItem('kf_token')
+
+  useEffect(() => {
+    if (hasToken) navigate('/')
+  }, [hasToken, navigate])
+
+  if (hasToken) return null
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isRegister, setIsRegister] = useState(false)
