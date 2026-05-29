@@ -18,7 +18,7 @@ router = APIRouter(prefix="/api/generate", tags=["generate"])
 
 
 class GenerateRequest(BaseModel):
-    user_input: str = Field(..., min_length=10, max_length=2000, description="Product description or topic")
+    user_input: str = Field(..., min_length=2, max_length=2000, description="Product description or topic")
     target_subreddit: str | None = Field(None, min_length=3, max_length=64)
     n_titles: int = Field(3, ge=1, le=8)
 
@@ -44,7 +44,7 @@ class FullGenerationResponse(GenerationResponse):
 
 
 class PredictRequest(BaseModel):
-    user_input: str = Field(..., min_length=10, max_length=2000)
+    user_input: str = Field(..., min_length=2, max_length=2000)
     target_subreddit: str = Field(..., min_length=3, max_length=64)
     n_titles: int = Field(3, ge=1, le=8)
 
