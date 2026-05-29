@@ -52,6 +52,14 @@ class LLMClient:
         """Lazily create the OpenAI client so that missing credentials
         are surfaced only when an API call is actually made, not at import time."""
         if self._openai_client is None:
+            # Guard: ensure api_key is non-empty before passing to OpenAI SDK.
+            # OpenAI SDK v2.x validates credentials at constructor time and
+            # will fall back to the OPENAI_API_KEY env var if api_key is empty.
+            if not self.config.api_key:
+                raise RuntimeError(
+                    "LLM_API_KEY is empty — please set it in .env or environment. "
+                    "The OpenAI SDK (used as DeepSeek client) requires a non-empty api_key."
+                )
             self._openai_client = OpenAI(
                 api_key=self.config.api_key,
                 base_url=self.config.api_base_url,
