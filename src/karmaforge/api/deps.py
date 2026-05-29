@@ -102,9 +102,11 @@ def create_app(state: AppState | None = None) -> FastAPI:
         version="3.0.0",
     )
     app.state.app_state = state or get_state()
+    allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000")
+    allowed_origins = [o.strip() for o in allowed_origins_raw.split(",") if o.strip()]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:5173", "http://localhost:3000"],
+        allow_origins=allowed_origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
