@@ -1,0 +1,30 @@
+# KarmaForge Render Blueprint
+# 使用方式: 在 Render Dashboard → Blueprints → New → 连接此仓库
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: karmaforge
+    runtime: docker
+    region: oregon
+    plan: free
+    healthCheckPath: /api/health
+    # 环境变量 — 敏感值通过 Render Dashboard 设置，不要提交到代码仓库
+    envVars:
+      - key: PORT
+        value: 8001
+      - key: LLM_API_KEY
+        sync: false          # 手动在 Dashboard 设置，防止泄露
+      - key: LLM_MODEL
+        value: deepseek-chat
+      - key: JWT_SECRET
+        sync: false          # 手动设置，建议 64+ 字符随机串
+      - key: ALLOWED_ORIGINS
+        value: "https://karmaforge.onrender.com"
+      - key: DATABASE_URL
+        value: "sqlite:///data/processed/karmaforge.db"
+    # 如需持久化数据（SQLite），取消下面注释 ($0.25/GB/月):
+    # disk:
+    #   name: data
+    #   mountPath: /app/data
+    #   sizeGB: 1
