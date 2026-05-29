@@ -189,6 +189,26 @@ Return a JSON object with these exact keys:
 
 Return only valid JSON, nothing else."""
 
+BODY_REVISE = """Revise the following Reddit post body to fix the identified quality issues.
+
+Title: {title}
+Current body:
+{body}
+
+Issues that MUST be fixed:
+{suggestions}
+
+Target subreddit: r/{subreddit}
+
+Guidelines:
+- Fix ONLY the identified issues — keep everything else intact
+- Keep the same overall topic and voice
+- Be authentic and personal, not AI-sounding
+- Maintain natural paragraph breaks
+- Do NOT add markdown headers or TL;DR sections unless the original had them
+
+Return only the revised body text, nothing else. No quotes, no prefixes, no explanations."""
+
 FAILURE_ATTRIBUTE_V2 = """Analyze why this Reddit post underperformed. Reply in Chinese (中文).
 
 Post details:
