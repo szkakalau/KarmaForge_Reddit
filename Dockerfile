@@ -26,6 +26,7 @@ RUN pip install --no-cache-dir \
     openai scipy scikit-learn pandas numpy nltk textstat pyyaml tqdm click
 
 COPY src/ src/
+COPY data/patterns/ data/patterns/
 COPY config.yaml .
 COPY --from=frontend-build /frontend/dist/ src/static/
 
