@@ -115,12 +115,14 @@ def create_app(state: AppState | None = None) -> FastAPI:
     app.include_router(generate_router)
     app.include_router(track_router)
 
-    static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "static")
-    if os.path.isdir(static_dir):
-        app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
-
+    # Health check MUST be registered before the static mount,
+    # otherwise the catch-all mount at "/" intercepts it → 404.
     @app.get("/api/health")
     async def health():
         return {"status": "ok", "service": "karmaforge-api", "version": "3.0.0"}
+
+    static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "static")
+    if os.path.isdir(static_dir):
+        app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
     return app
