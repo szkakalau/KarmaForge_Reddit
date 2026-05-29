@@ -11,7 +11,15 @@ async function request(path: string, options: RequestInit = {}) {
   const res = await fetch(`${BASE}${path}`, { ...options, headers });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
-    throw new Error(body.detail || `${res.status} ${res.statusText}`);
+    let message = `${res.status} ${res.statusText}`;
+    if (typeof body.detail === 'string') {
+      message = body.detail;
+    } else if (Array.isArray(body.detail)) {
+      message = body.detail.map((e: { msg?: string }) => e.msg || JSON.stringify(e)).join('; ');
+    } else if (body.detail) {
+      message = JSON.stringify(body.detail);
+    }
+    throw new Error(message);
   }
   return res.json();
 }
