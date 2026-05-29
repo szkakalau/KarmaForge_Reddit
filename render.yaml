@@ -11,8 +11,6 @@ services:
     healthCheckPath: /api/health
     # 环境变量 — 敏感值通过 Render Dashboard 设置，不要提交到代码仓库
     envVars:
-      - key: PORT
-        value: 8001
       - key: LLM_API_KEY
         sync: false          # 手动在 Dashboard 设置，防止泄露
       - key: LLM_MODEL
