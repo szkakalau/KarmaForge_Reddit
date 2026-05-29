@@ -11,6 +11,12 @@ RUN npm run build
 FROM python:3.12-slim
 WORKDIR /app
 
+# System deps: libgomp1 for scipy, ca-certificates for HTTPS
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgomp1 \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY pyproject.toml .
 RUN pip install --no-cache-dir \
     fastapi uvicorn[standard] sqlalchemy pyjwt pydantic bcrypt python-dotenv \
@@ -24,4 +30,4 @@ RUN mkdir -p data/processed data/tracking data/generations
 
 EXPOSE 8001
 
-CMD ["sh", "-c", "uvicorn karmaforge.api.main:app --host 0.0.0.0 --port ${PORT:-8001}"]
+CMD ["sh", "-c", "echo 'Starting KarmaForge on port' ${PORT:-8001} && uvicorn karmaforge.api.main:app --host 0.0.0.0 --port ${PORT:-8001} --log-level info"]
