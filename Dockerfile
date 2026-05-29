@@ -11,6 +11,9 @@ RUN npm run build
 FROM python:3.12-slim
 WORKDIR /app
 
+# REQUIRED: karmaforge 包在 src/ 下，pip install 的依赖不包含包自身
+ENV PYTHONPATH=/app/src
+
 # System deps: libgomp1 for scipy, ca-certificates for HTTPS
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgomp1 \
