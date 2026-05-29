@@ -93,15 +93,20 @@ def generate_titles(
         for t in result.candidate_titles
     ]
 
-    gen_record = Generation(
-        user_id=current_user.id if current_user else "_anonymous",
-        generation_id=result.generation_id,
-        user_input=req.user_input,
-        target_subreddit=req.target_subreddit,
-        titles_json=[t.model_dump() for t in titles],
-    )
-    session.add(gen_record)
-    session.commit()
+    try:
+        gen_record = Generation(
+            user_id=current_user.id if current_user else "_anonymous",
+            generation_id=result.generation_id,
+            user_input=req.user_input,
+            target_subreddit=req.target_subreddit,
+            titles_json=[t.model_dump() for t in titles],
+        )
+        session.add(gen_record)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        logger.exception("Failed to save generation record")
+        raise HTTPException(status_code=500, detail=f"Database error: {e}")
 
     return GenerationResponse(
         generation_id=result.generation_id,
@@ -133,24 +138,29 @@ def generate_full(
         for t in result.candidate_titles
     ]
 
-    gen_record = Generation(
-        user_id=current_user.id if current_user else "_anonymous",
-        generation_id=result.generation_id,
-        user_input=req.user_input,
-        target_subreddit=req.target_subreddit,
-        titles_json=[t.model_dump() for t in titles],
-        selected_title=result.selected_title.title if result.selected_title else None,
-        body=result.body,
-        pattern_id=result.selected_title.pattern_id if result.selected_title else None,
-        metadata_json=result.metadata,
-        self_check_json={
-            "passed": result.self_check.passed,
-            "dimensions": result.self_check.dimensions,
-            "suggestions": result.self_check.suggestions,
-        } if result.self_check else {},
-    )
-    session.add(gen_record)
-    session.commit()
+    try:
+        gen_record = Generation(
+            user_id=current_user.id if current_user else "_anonymous",
+            generation_id=result.generation_id,
+            user_input=req.user_input,
+            target_subreddit=req.target_subreddit,
+            titles_json=[t.model_dump() for t in titles],
+            selected_title=result.selected_title.title if result.selected_title else None,
+            body=result.body,
+            pattern_id=result.selected_title.pattern_id if result.selected_title else None,
+            metadata_json=result.metadata,
+            self_check_json={
+                "passed": result.self_check.passed,
+                "dimensions": result.self_check.dimensions,
+                "suggestions": result.self_check.suggestions,
+            } if result.self_check else {},
+        )
+        session.add(gen_record)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        logger.exception("Failed to save full generation record")
+        raise HTTPException(status_code=500, detail=f"Database error: {e}")
 
     return FullGenerationResponse(
         generation_id=result.generation_id,
@@ -194,15 +204,20 @@ def predict(
         session, user_id, req.target_subreddit, titles_dicts
     )
 
-    gen_record = Generation(
-        user_id=user_id,
-        generation_id=result.generation_id,
-        user_input=req.user_input,
-        target_subreddit=req.target_subreddit,
-        titles_json=titles_dicts,
-    )
-    session.add(gen_record)
-    session.commit()
+    try:
+        gen_record = Generation(
+            user_id=user_id,
+            generation_id=result.generation_id,
+            user_input=req.user_input,
+            target_subreddit=req.target_subreddit,
+            titles_json=titles_dicts,
+        )
+        session.add(gen_record)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        logger.exception("Failed to save predict generation record")
+        raise HTTPException(status_code=500, detail=f"Database error: {e}")
 
     return PredictResponse(
         generation_id=result.generation_id,
