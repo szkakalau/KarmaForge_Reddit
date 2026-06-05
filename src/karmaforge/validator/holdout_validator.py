@@ -210,7 +210,7 @@ def _post_matches_pattern(
             score += 0.20
 
     if pattern.narrative_mode:
-        if post_narrative == pattern.narrative_mode:
+        if _narrative_matches(post_narrative, pattern.narrative_mode):
             score += 0.20
 
     if pattern.title_template:
@@ -271,17 +271,24 @@ def _title_match(title: str, template: str) -> float:
 
 
 def _classify_narrative(body: str) -> str:
+    """Classify body narrative mode, collapsing to has_body/no_body."""
     if not body or len(body) < 20:
         return "no_body"
-    b_lower = body.lower()
-    if any(kw in b_lower for kw in ["step 1", "how to", "tutorial", "guide", "here's how"]):
-        return "tutorial_howto"
-    if any(kw in b_lower for kw in ["i think", "in my opinion", "unpopular", "should be"]):
-        return "opinion_argument"
-    if any(kw in b_lower for kw in ["i built", "i made", "i created", "check out my", "github.com"]):
-        return "resource_showcase"
-    if body.strip().endswith("?") or "anyone else" in b_lower:
-        return "question_discussion"
-    if any(kw in b_lower for kw in ["i ", "my ", "me ", "we "]) and len(b_lower) > 200:
-        return "story_personal"
-    return "opinion_argument"
+    return "has_body"
+
+
+_HAS_BODY_MODES = {
+    "story_personal", "tutorial_howto", "opinion_argument",
+    "question_discussion", "resource_showcase", "news_event",
+    "humor_satire", "review_critique", "has_body",
+}
+
+
+def _narrative_matches(post_narrative: str, pattern_narrative: str) -> bool:
+    if not pattern_narrative:
+        return True
+    if pattern_narrative == "has_body":
+        return post_narrative in _HAS_BODY_MODES
+    if pattern_narrative == "no_body":
+        return post_narrative == "no_body"
+    return post_narrative == pattern_narrative

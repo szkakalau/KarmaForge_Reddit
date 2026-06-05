@@ -183,7 +183,24 @@ class PatternExtractor:
             hook_types = batch_classify_heuristic(titles, list(HOOK_KEYWORDS.keys()), HOOK_KEYWORDS)
 
         bodies = [p.body or "" for p in posts]
-        narrative_modes = [self._heuristic_narrative_mode(b) for b in bodies]
+        raw_narrative_modes = [self._heuristic_narrative_mode(b) for b in bodies]
+
+        # Collapse 8 body-text narrative modes into "has_body" to prevent
+        # fragmentation. With 5+ distinct body modes × 11 hook types = 55+
+        # combinations, body-text posts were spread too thin to reach
+        # min_cluster_size.  Collapsing to has_body/no_body yields ~11
+        # combinations each, allowing body-text patterns to emerge.
+        # This directly fixes the recall ceiling (~27%) caused by all
+        # patterns being locked to "no_body".
+        _BODY_MODES = {
+            "story_personal", "tutorial_howto", "opinion_argument",
+            "question_discussion", "resource_showcase", "news_event",
+            "humor_satire", "review_critique",
+        }
+        narrative_modes = [
+            "has_body" if m in _BODY_MODES else m
+            for m in raw_narrative_modes
+        ]
 
         clusters: dict[tuple, dict] = {}
         for i, p in enumerate(posts):
@@ -191,16 +208,24 @@ class PatternExtractor:
             hook_type = hook_types[i]
             narrative_mode = narrative_modes[i]
             content_type = p.content_type.value if p.content_type else "text"
-            key = (tier, hook_type, narrative_mode, content_type)
+            # Drop content_type from cluster key: fragmenting 3×11×2=66 combos
+            # across 4 content_types → 264 buckets was preventing body-text
+            # patterns from reaching min_cluster_size.  Content type is still
+            # tracked per cluster as the dominant type.
+            key = (tier, hook_type, narrative_mode)
 
             clusters.setdefault(key, {
                 "viral": 0, "total": 0, "total_upvotes": 0, "posts": [],
                 "tier": tier, "hook_type": hook_type,
-                "narrative_mode": narrative_mode, "content_type": content_type,
+                "narrative_mode": narrative_mode,
+                "content_types": {},
             })
             clusters[key]["total"] += 1
             clusters[key]["total_upvotes"] += p.upvotes
             clusters[key]["posts"].append(p)
+            # Track dominant content type per cluster
+            ct = clusters[key]["content_types"]
+            ct[content_type] = ct.get(content_type, 0) + 1
 
         viral_ids = {p.post_id for p in viral_posts}
         for key, stats in clusters.items():
@@ -210,11 +235,13 @@ class PatternExtractor:
 
         result = []
         for key, stats in clusters.items():
+            # Use dominant content type for the cluster description
+            dominant_ct = max(stats["content_types"], key=stats["content_types"].get) if stats["content_types"] else "text"
             result.append({
                 "tier": stats["tier"],
                 "hook_type": stats["hook_type"],
                 "narrative_mode": stats["narrative_mode"],
-                "content_type": stats["content_type"],
+                "content_type": dominant_ct,
                 "viral_count": stats["viral"],
                 "total": stats["total"],
                 "viral_rate": stats["viral"] / max(stats["total"], 1),
