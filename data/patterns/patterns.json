@@ -1,161 +1,36 @@
 [
   {
-    "pattern_id": "pattern_30",
-    "name": "Pattern 31: tutorial_howto + no_body",
-    "description": "tutorial_howto × no_body in t2/image",
-    "applicable_subreddits": [
-      "lifehacks"
-    ],
-    "title_template": "",
-    "body_structure_template": "",
-    "historical_viral_rate": 0.733,
-    "confidence_interval": [
-      0.0,
-      0.2667
-    ],
-    "avg_upvotes": 1465.1,
-    "p_value": 0.0,
-    "exemplar_posts": [
-      "t3_6u0nnn",
-      "t3_6u8r3q",
-      "t3_6srvzm",
-      "t3_6vj5s9",
-      "t3_6ux0yx"
-    ],
-    "hook_type": "tutorial_howto",
-    "narrative_mode": "no_body",
-    "recommended_metrics": {
-      "title_words": [
-        8,
-        11
-      ],
-      "body_words": [
-        1,
-        1
-      ]
-    },
-    "tier_effectiveness": {
-      "t2": 0.7333333333333333
-    },
-    "sample_size": 15
-  },
-  {
-    "pattern_id": "pattern_23",
-    "name": "Pattern 24: curious_question + no_body",
-    "description": "curious_question × no_body in t2/image",
-    "applicable_subreddits": [
-      "LifeProTips",
-      "lifehacks",
-      "GetMotivated",
-      "philosophy",
-      "travel",
-      "personalfinance",
-      "programming",
-      "books",
-      "history"
-    ],
-    "title_template": "",
-    "body_structure_template": "",
-    "historical_viral_rate": 0.322,
-    "confidence_interval": [
-      0.0667,
-      0.1403
-    ],
-    "avg_upvotes": 734.3,
-    "p_value": 0.0,
-    "exemplar_posts": [
-      "t3_7vipi",
-      "t3_6ukwqm",
-      "t3_6vhlyc",
-      "t3_6uw1tu",
-      "t3_6sg12d"
-    ],
-    "hook_type": "curious_question",
-    "narrative_mode": "no_body",
-    "recommended_metrics": {
-      "title_words": [
-        5,
-        13
-      ],
-      "body_words": [
-        1,
-        1
-      ]
-    },
-    "tier_effectiveness": {
-      "t2": 0.32217573221757323
-    },
-    "sample_size": 239
-  },
-  {
-    "pattern_id": "pattern_54",
-    "name": "Pattern 55: identity_label + no_body",
-    "description": "identity_label × no_body in t1/link",
-    "applicable_subreddits": [
-      "todayilearned"
-    ],
-    "title_template": "today learned|new york",
-    "body_structure_template": "",
-    "historical_viral_rate": 0.308,
-    "confidence_interval": [
-      0.0256,
-      0.1795
-    ],
-    "avg_upvotes": 29.6,
-    "p_value": 6.1e-05,
-    "exemplar_posts": [
-      "t3_8vzek",
-      "t3_8n5jm",
-      "t3_8s33p",
-      "t3_8mz7a",
-      "t3_8vus4"
-    ],
-    "hook_type": "identity_label",
-    "narrative_mode": "no_body",
-    "recommended_metrics": {
-      "title_words": [
-        14,
-        23
-      ],
-      "body_words": [
-        1,
-        1
-      ]
-    },
-    "tier_effectiveness": {
-      "t1": 0.3076923076923077
-    },
-    "sample_size": 39
-  },
-  {
-    "pattern_id": "pattern_47",
-    "name": "Pattern 48: story_opener + no_body",
+    "pattern_id": "pattern_05",
+    "name": "Pattern 6: story_opener + no_body",
     "description": "story_opener × no_body in t1/link",
     "applicable_subreddits": [
-      "todayilearned"
+      "worldnews",
+      "todayilearned",
+      "Showerthoughts",
+      "AskReddit"
     ],
-    "title_template": "today learned",
+    "title_template": "donald trump",
     "body_structure_template": "",
-    "historical_viral_rate": 0.196,
+    "historical_viral_rate": 0.546,
     "confidence_interval": [
-      0.0669,
-      0.1309
+      0.4938,
+      0.596
     ],
-    "avg_upvotes": 25.7,
+    "avg_upvotes": 62871.7,
     "p_value": 0.0,
     "exemplar_posts": [
-      "t3_8ux7m",
-      "t3_8ujir",
-      "t3_8tiss",
-      "t3_8p8n7",
-      "t3_8omcq"
+      "t3_jpfqtc",
+      "t3_jg4rw0",
+      "t3_9whjzx",
+      "t3_gdz9mt",
+      "t3_5e69gj"
     ],
     "hook_type": "story_opener",
     "narrative_mode": "no_body",
     "recommended_metrics": {
       "title_words": [
-        12,
-        20
+        13,
+        45
       ],
       "body_words": [
         1,
@@ -163,80 +38,85 @@
       ]
     },
     "tier_effectiveness": {
-      "t1": 0.19607843137254902
+      "t1": 0.5461346633416458
     },
-    "sample_size": 306
+    "sample_size": 401
   },
   {
-    "pattern_id": "pattern_67",
-    "name": "Pattern 68: curious_question + no_body",
+    "pattern_id": "pattern_01",
+    "name": "Pattern 2: pain_point + no_body",
+    "description": "pain_point × no_body in t1/text",
+    "applicable_subreddits": [
+      "worldnews",
+      "todayilearned",
+      "Showerthoughts",
+      "AskReddit"
+    ],
+    "title_template": "united airlines",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.337,
+    "confidence_interval": [
+      0.2727,
+      0.4118
+    ],
+    "avg_upvotes": 42527.8,
+    "p_value": 0.0,
+    "exemplar_posts": [
+      "t3_ablzuq",
+      "t3_kr8op6",
+      "t3_9gx68l",
+      "t3_kkmgzr",
+      "t3_j7mglx"
+    ],
+    "hook_type": "pain_point",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        20,
+        33
+      ],
+      "body_words": [
+        1,
+        1
+      ]
+    },
+    "tier_effectiveness": {
+      "t1": 0.33689839572192515
+    },
+    "sample_size": 187
+  },
+  {
+    "pattern_id": "pattern_00",
+    "name": "Pattern 1: curious_question + no_body",
     "description": "curious_question × no_body in t1/text",
     "applicable_subreddits": [
+      "worldnews",
+      "todayilearned",
       "Showerthoughts",
-      "todayilearned"
+      "AskReddit"
     ],
     "title_template": "",
     "body_structure_template": "",
-    "historical_viral_rate": 0.194,
+    "historical_viral_rate": 0.305,
     "confidence_interval": [
-      0.0654,
-      0.141
+      0.25,
+      0.3641
     ],
-    "avg_upvotes": 58.6,
-    "p_value": 1e-06,
+    "avg_upvotes": 43922.4,
+    "p_value": 0.0,
     "exemplar_posts": [
-      "t3_89c35",
-      "t3_19mshn",
-      "t3_19zhta",
-      "t3_18yyyo",
-      "t3_19kust"
+      "t3_l7530r",
+      "t3_iwedc5",
+      "t3_draola",
+      "t3_f08dxb",
+      "t3_78qifg"
     ],
     "hook_type": "curious_question",
     "narrative_mode": "no_body",
     "recommended_metrics": {
       "title_words": [
-        9,
-        14
-      ],
-      "body_words": [
-        3,
-        3
-      ]
-    },
-    "tier_effectiveness": {
-      "t1": 0.19444444444444445
-    },
-    "sample_size": 252
-  },
-  {
-    "pattern_id": "pattern_50",
-    "name": "Pattern 51: number_shock + no_body",
-    "description": "number_shock × no_body in t1/link",
-    "applicable_subreddits": [
-      "todayilearned"
-    ],
-    "title_template": "today learned",
-    "body_structure_template": "",
-    "historical_viral_rate": 0.179,
-    "confidence_interval": [
-      0.0517,
-      0.1604
-    ],
-    "avg_upvotes": 27.9,
-    "p_value": 0.012112,
-    "exemplar_posts": [
-      "t3_8yaev",
-      "t3_8vmge",
-      "t3_8njdm",
-      "t3_8nwno",
-      "t3_8ucy0"
-    ],
-    "hook_type": "number_shock",
-    "narrative_mode": "no_body",
-    "recommended_metrics": {
-      "title_words": [
-        15,
-        18
+        17,
+        34
       ],
       "body_words": [
         1,
@@ -244,81 +124,81 @@
       ]
     },
     "tier_effectiveness": {
-      "t1": 0.1792452830188679
+      "t1": 0.30514705882352944
     },
-    "sample_size": 106
+    "sample_size": 272
   },
   {
-    "pattern_id": "pattern_29",
-    "name": "Pattern 30: number_shock + no_body",
-    "description": "number_shock × no_body in t2/image",
+    "pattern_id": "pattern_17",
+    "name": "Pattern 18: number_shock + no_body",
+    "description": "number_shock × no_body in t1/link",
     "applicable_subreddits": [
-      "LifeProTips",
-      "lifehacks",
-      "GetMotivated",
-      "travel",
-      "programming",
-      "books"
+      "worldnews",
+      "todayilearned",
+      "Showerthoughts",
+      "AskReddit"
+    ],
+    "title_template": "buy rights|world record|breaking news",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.347,
+    "confidence_interval": [
+      0.2526,
+      0.4421
+    ],
+    "avg_upvotes": 42018.3,
+    "p_value": 0.0,
+    "exemplar_posts": [
+      "t3_ad1ppe",
+      "t3_8rm5jz",
+      "t3_5xu13j",
+      "t3_i7irad",
+      "t3_ejwxed"
+    ],
+    "hook_type": "number_shock",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        14,
+        38
+      ]
+    },
+    "tier_effectiveness": {
+      "t1": 0.3473684210526316
+    },
+    "sample_size": 95
+  },
+  {
+    "pattern_id": "pattern_16",
+    "name": "Pattern 17: counterintuitive_discovery + no_body",
+    "description": "counterintuitive_discovery × no_body in t1/link",
+    "applicable_subreddits": [
+      "worldnews",
+      "todayilearned",
+      "Showerthoughts",
+      "AskReddit"
     ],
     "title_template": "",
     "body_structure_template": "",
-    "historical_viral_rate": 0.235,
+    "historical_viral_rate": 0.262,
     "confidence_interval": [
-      0.0294,
-      0.2059
+      0.2145,
+      0.3064
     ],
-    "avg_upvotes": 220.6,
-    "p_value": 0.021106,
+    "avg_upvotes": 28715.8,
+    "p_value": 0.0,
     "exemplar_posts": [
-      "t3_6uflux",
-      "t3_6t8xqc",
-      "t3_4412s5",
-      "t3_46iu48",
-      "t3_47cmk4"
+      "t3_ek33p5",
+      "t3_8okexh",
+      "t3_e0omqn",
+      "t3_g4d0ij",
+      "t3_d4yxtq"
     ],
-    "hook_type": "number_shock",
+    "hook_type": "counterintuitive_discovery",
     "narrative_mode": "no_body",
     "recommended_metrics": {
       "title_words": [
-        9,
-        18
-      ]
-    },
-    "tier_effectiveness": {
-      "t2": 0.23529411764705882
-    },
-    "sample_size": 34
-  },
-  {
-    "pattern_id": "pattern_53",
-    "name": "Pattern 54: number_shock + no_body",
-    "description": "number_shock × no_body in t1/text",
-    "applicable_subreddits": [
-      "Showerthoughts",
-      "todayilearned"
-    ],
-    "title_template": "today learned",
-    "body_structure_template": "",
-    "historical_viral_rate": 0.214,
-    "confidence_interval": [
-      0.0238,
-      0.1792
-    ],
-    "avg_upvotes": 47.0,
-    "p_value": 0.029819,
-    "exemplar_posts": [
-      "t3_8ty7k",
-      "t3_8htj7",
-      "t3_8aqn4",
-      "t3_89b0s",
-      "t3_19ikee"
-    ],
-    "hook_type": "number_shock",
-    "narrative_mode": "no_body",
-    "recommended_metrics": {
-      "title_words": [
-        17,
-        21
+        19,
+        36
       ],
       "body_words": [
         1,
@@ -326,8 +206,136 @@
       ]
     },
     "tier_effectiveness": {
-      "t1": 0.21428571428571427
+      "t1": 0.2618384401114206
     },
-    "sample_size": 42
+    "sample_size": 359
+  },
+  {
+    "pattern_id": "pattern_06",
+    "name": "Pattern 7: controversial_opinion + no_body",
+    "description": "controversial_opinion × no_body in t1/link",
+    "applicable_subreddits": [
+      "worldnews",
+      "todayilearned",
+      "Showerthoughts",
+      "AskReddit"
+    ],
+    "title_template": "their own|paid according hard|supreme court|take non-platonically|paid according|according hard",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.275,
+    "confidence_interval": [
+      0.2,
+      0.35
+    ],
+    "avg_upvotes": 35599.3,
+    "p_value": 0.0,
+    "exemplar_posts": [
+      "t3_70k2ya",
+      "t3_yiazab",
+      "t3_ah48kq",
+      "t3_hlsi7u",
+      "t3_i7a5vn"
+    ],
+    "hook_type": "controversial_opinion",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        16,
+        34
+      ],
+      "body_words": [
+        1,
+        1
+      ]
+    },
+    "tier_effectiveness": {
+      "t1": 0.275
+    },
+    "sample_size": 120
+  },
+  {
+    "pattern_id": "pattern_10",
+    "name": "Pattern 11: suspense_mystery + no_body",
+    "description": "suspense_mystery × no_body in t1/link",
+    "applicable_subreddits": [
+      "worldnews",
+      "todayilearned",
+      "Showerthoughts",
+      "AskReddit"
+    ],
+    "title_template": "child porn|they found|his death",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.306,
+    "confidence_interval": [
+      0.2083,
+      0.4167
+    ],
+    "avg_upvotes": 34608.7,
+    "p_value": 0.0,
+    "exemplar_posts": [
+      "t3_9401u1",
+      "t3_axflww",
+      "t3_akeq6q",
+      "t3_7ntt7r",
+      "t3_iwonl6"
+    ],
+    "hook_type": "suspense_mystery",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        12,
+        47
+      ],
+      "body_words": [
+        1,
+        1
+      ]
+    },
+    "tier_effectiveness": {
+      "t1": 0.3055555555555556
+    },
+    "sample_size": 72
+  },
+  {
+    "pattern_id": "pattern_19",
+    "name": "Pattern 20: comparison_analysis + no_body",
+    "description": "comparison_analysis × no_body in t1/text",
+    "applicable_subreddits": [
+      "worldnews",
+      "todayilearned",
+      "Showerthoughts"
+    ],
+    "title_template": "video game|getting offended someone|designed people|getting offended|offended someone",
+    "body_structure_template": "",
+    "historical_viral_rate": 0.375,
+    "confidence_interval": [
+      0.2188,
+      0.5312
+    ],
+    "avg_upvotes": 51694.5,
+    "p_value": 1e-06,
+    "exemplar_posts": [
+      "t3_7mhv6a",
+      "t3_7ox9b3",
+      "t3_7259vm",
+      "t3_bawsok",
+      "t3_irzfkr"
+    ],
+    "hook_type": "comparison_analysis",
+    "narrative_mode": "no_body",
+    "recommended_metrics": {
+      "title_words": [
+        18,
+        29
+      ],
+      "body_words": [
+        1,
+        1
+      ]
+    },
+    "tier_effectiveness": {
+      "t1": 0.375
+    },
+    "sample_size": 32
   }
 ]

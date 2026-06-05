@@ -1,54 +1,67 @@
 [
   {
-    "pattern_id": "anti_generic_low_engagement",
-    "name": "通用低互动",
-    "description": "通用低互动帖子持续表现不佳",
-    "failure_rate": 0.545,
+    "pattern_id": "anti_no_body_text",
+    "name": "No Body Text",
+    "description": "Posts with no body text consistently underperform",
+    "failure_rate": 0.555,
     "exemplar_posts": [
-      "t3_43wo5e",
-      "t3_43vs49",
-      "t3_43unoz"
+      "t3_6t1ntr",
+      "t3_6o7zay",
+      "t3_6up8z6"
     ],
-    "why_it_fails": "缺少明确钩子类型、叙事模式或结构模式的帖子难以竞争注意力",
-    "sample_size": 2248
+    "why_it_fails": "Posts with no body text (link/image-only with no context) generate less discussion",
+    "sample_size": 4501
   },
   {
-    "pattern_id": "anti_very_short_title",
-    "name": "标题过短",
-    "description": "标题过短的帖子持续表现不佳",
-    "failure_rate": 0.654,
+    "pattern_id": "anti_generic_low_engagement",
+    "name": "Generic Low Engagement",
+    "description": "Posts with generic low engagement consistently underperform",
+    "failure_rate": 0.631,
     "exemplar_posts": [
-      "t3_43zezm",
-      "t3_43wcz7",
-      "t3_43wf2i"
+      "t3_5bzjgp",
+      "t3_6os0e1",
+      "t3_6ayxj8"
     ],
-    "why_it_fails": "标题少于5个词无法提供足够信息吸引点击",
-    "sample_size": 947
+    "why_it_fails": "Posts without a clear hook type, narrative mode, or structural pattern fail to compete for attention",
+    "sample_size": 2230
   },
   {
     "pattern_id": "anti_very_long_title",
-    "name": "标题过长",
-    "description": "标题过长的帖子持续表现不佳",
-    "failure_rate": 0.345,
+    "name": "Very Long Title",
+    "description": "Posts with very long title consistently underperform",
+    "failure_rate": 0.31,
     "exemplar_posts": [
-      "t3_43vnwh",
-      "t3_7x56q",
-      "t3_7sb0w"
+      "t3_6klt5o",
+      "t3_65tesl",
+      "t3_5ipinn"
     ],
-    "why_it_fails": "标题超过30个词会让读者不知所措；多数 subreddit 偏好简洁钩子（12-22词）",
-    "sample_size": 142
+    "why_it_fails": "Titles over 30 words overwhelm readers; most subreddits prefer concise hooks (12-22 words)",
+    "sample_size": 1078
   },
   {
-    "pattern_id": "anti_no_body_text",
-    "name": "无正文内容",
-    "description": "无正文内容的帖子持续表现不佳",
-    "failure_rate": 0.466,
+    "pattern_id": "anti_very_long_body",
+    "name": "Very Long Body",
+    "description": "Posts with very long body consistently underperform",
+    "failure_rate": 0.594,
     "exemplar_posts": [
-      "t3_80aug",
-      "t3_89xdr",
-      "t3_81b1y"
+      "t3_uou6z",
+      "t3_ak2b8",
+      "t3_ag96s"
     ],
-    "why_it_fails": "无正文内容（仅链接/图片）的帖子产生的讨论更少",
-    "sample_size": 4048
+    "why_it_fails": "Bodies over 1000 words lose reader attention; break into sections or add a TL;DR",
+    "sample_size": 187
+  },
+  {
+    "pattern_id": "anti_very_short_title",
+    "name": "Very Short Title",
+    "description": "Posts with very short title consistently underperform",
+    "failure_rate": 0.702,
+    "exemplar_posts": [
+      "t3_2nbuxe",
+      "t3_ac5fr",
+      "t3_7l82t"
+    ],
+    "why_it_fails": "Titles under 5 words fail to provide enough information to attract clicks",
+    "sample_size": 608
   }
 ]
