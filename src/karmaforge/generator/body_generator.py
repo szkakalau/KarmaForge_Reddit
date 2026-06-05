@@ -6,11 +6,14 @@ from ..llm.prompts import BODY_GENERATE
 
 logger = logging.getLogger(__name__)
 
-# Default body word count targets by tier
+# Default body word count targets by tier.
+# Tightened from original wide ranges (50-800) to Reddit-optimal ranges.
+# Reddit analysis shows body text above 200 words has sharply diminishing
+# engagement; 80-180 words is the sweet spot for non-essay subreddits.
 TIER_BODY_RANGES = {
-    "t1": (50, 400),
-    "t2": (100, 600),
-    "t3": (150, 800),
+    "t1": (60, 200),
+    "t2": (80, 180),
+    "t3": (100, 250),
 }
 
 

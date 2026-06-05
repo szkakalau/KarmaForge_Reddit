@@ -57,11 +57,24 @@ class SelfChecker:
             dimensions["标题长度"] = {"得分": 30, "状态": "失败"}
             suggestions.append(f"标题 {title_words} 词，超出目标范围 {title_range[0]}-{title_range[1]}")
 
-        # 2. Body length check (skip for no-body patterns)
+        # 2. Body length check
         body_words = len(body.split()) if body else 0
-        body_range = pattern.get("recommended_metrics", {}).get("body_words", [50, 600])
-        if body_range[1] <= 1 and body_words <= 1:
-            dimensions["正文长度"] = {"得分": 100, "状态": "正常"}
+        body_range = list(pattern.get("recommended_metrics", {}).get("body_words", [50, 600]))
+        # no_body pattern fallback: when pattern expects no body ([1,1]) but we
+        # generated one anyway, use tier defaults instead of flagging it wrong.
+        if body_range[1] <= 1:
+            if body_words <= 1:
+                dimensions["正文长度"] = {"得分": 100, "状态": "正常"}
+            else:
+                body_range = [80, 180]  # sensible Reddit default
+                if body_range[0] <= body_words <= body_range[1]:
+                    dimensions["正文长度"] = {"得分": 100, "状态": "正常"}
+                elif body_words < body_range[0]:
+                    dimensions["正文长度"] = {"得分": 70, "状态": "警告"}
+                    suggestions.append(f"正文 {body_words} 词，偏短（建议 {body_range[0]}-{body_range[1]}）")
+                else:
+                    dimensions["正文长度"] = {"得分": 70, "状态": "警告"}
+                    suggestions.append(f"正文 {body_words} 词，偏长（建议 {body_range[0]}-{body_range[1]}）")
         elif body_range[0] <= body_words <= body_range[1]:
             dimensions["正文长度"] = {"得分": 100, "状态": "正常"}
         elif body_words < body_range[0] and body_words > 0:

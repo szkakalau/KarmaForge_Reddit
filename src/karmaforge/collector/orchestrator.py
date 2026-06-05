@@ -169,8 +169,7 @@ class CollectionOrchestrator:
         )
         return collector.collect_all(
             posts_per_subreddit=posts_per_sub,
-            sort="top",
-            time_frame="year",
+            sort="desc",
         )
 
     def _run_praw(self, existing_posts: list[Post]) -> tuple[list[Post], list[Comment]]:

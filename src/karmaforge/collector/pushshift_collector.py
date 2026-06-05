@@ -57,15 +57,15 @@ class PushshiftCollector:
     def collect_all(
         self,
         posts_per_subreddit: int = 100,
-        sort: str = "top",
-        time_frame: str = "year",
+        sort: str = "desc",
+        time_frame: str = "",
     ) -> list[Post]:
         """Fetch posts for all configured subreddits.
 
         Args:
             posts_per_subreddit: Target number of posts per subreddit.
-            sort: Sorting method — "top", "hot", "new", "comments".
-            time_frame: Time window — "hour", "day", "week", "month", "year", "all".
+            sort: Sorting — "desc" (top all-time), "asc" (new).
+            time_frame: Ignored (Arctic Shift doesn't support this param).
         """
         all_posts: list[Post] = []
         for sub in self.subreddits:
@@ -88,12 +88,13 @@ class PushshiftCollector:
         self,
         subreddit: str,
         limit: int = 100,
-        sort: str = "top",
-        time_frame: str = "year",
+        sort: str = "desc",
+        time_frame: str = "",
     ) -> list[Post]:
         """Fetch posts from a single subreddit.
 
-        Handles pagination via the `after` cursor.
+        Uses cursor-based pagination via the response `after` field.
+        Arctic Shift API sort values: "desc" (top), "asc" (new).
         """
         sub = subreddit.lower().replace("r/", "")
         posts: list[Post] = []
@@ -105,9 +106,10 @@ class PushshiftCollector:
             params = {
                 "subreddit": sub,
                 "sort": sort,
-                "time_frame": time_frame,
                 "limit": min(self.max_per_request, needed - len(posts)),
             }
+            # Arctic Shift doesn't support time_frame — omit it
+            # (adds 400 error if included)
             if after:
                 params["after"] = after
 
