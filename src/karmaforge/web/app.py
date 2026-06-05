@@ -894,6 +894,7 @@ def _build_track_tab(shared: dict) -> None:
                 num_comments=int(num_comments),
                 upvote_ratio=ratio_pct / 100.0,
                 quality_scores=quality_scores,
+                auto_evolve=True,
             )
 
             perf = entry.performance

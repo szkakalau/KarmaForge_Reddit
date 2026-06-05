@@ -9,6 +9,8 @@ Usage:
 """
 
 import logging
+import os
+from datetime import datetime, timezone
 from pathlib import Path
 
 import click
@@ -553,6 +555,7 @@ def pipeline(config_path: str, no_llm: bool) -> None:
 @click.option("--list", "list_mode", is_flag=True, help="List recent tracking entries")
 @click.option("--history", "-H", "history_sub", default=None, help="Filter tracking by subreddit")
 @click.option("--detail", "-d", "detail_id", default=None, help="Show detail for a generation ID")
+@click.option("--auto-evolve/--no-auto-evolve", default=True, help="Auto-trigger evolution after tracking (default: on)")
 @click.option("--config", "config_path", default="config.yaml")
 def track(
     upvotes: int | None,
@@ -564,6 +567,7 @@ def track(
     list_mode: bool,
     history_sub: str | None,
     detail_id: str | None,
+    auto_evolve: bool,
     config_path: str,
 ) -> None:
     """Record Reddit post performance manually.
@@ -668,6 +672,7 @@ def track(
         upvote_ratio=ratio,
         url=url,
         quality_scores=quality_scores,
+        auto_evolve=auto_evolve,
     )
 
     click.echo(f"\n  Recorded for r/{gen_sub}:")
@@ -811,6 +816,146 @@ def web(port: int, no_browser: bool, share: bool, debug: bool) -> None:
         theme=getattr(app, "theme", None),
         css=getattr(app, "css", None),
     )
+
+
+@main.command("monitor")
+@click.option("--once", is_flag=True, help="Run a single fetch-and-track cycle")
+@click.option("--daemon", is_flag=True, help="Run continuously (loop mode)")
+@click.option("--interval", default=21600, help="Seconds between cycles in daemon mode (default: 21600 = 6h)")
+@click.option("--auto-evolve", is_flag=True, help="Trigger evolution after each fetch cycle")
+@click.option("--dry-run", is_flag=True, help="Fetch but don't write to feedback")
+@click.option("--config", "-c", default="config.yaml", help="Config file path")
+def monitor(once: bool, daemon: bool, interval: int, auto_evolve: bool, dry_run: bool, config: str) -> None:
+    """Auto-fetch Reddit post stats and optionally trigger evolution.
+
+    Examples:
+      karmaforge monitor --once --auto-evolve
+      karmaforge monitor --daemon --interval 21600
+      karmaforge monitor --once --dry-run
+    """
+    _setup_logging()
+    _load_dotenv()
+    cfg = _load_config(config)
+
+    if not once and not daemon:
+        once = True  # default to single cycle
+
+    try:
+        from .monitor.reddit_monitor import RedditMonitor
+        from .monitor.auto_evolve import AutoEvolver
+    except ImportError as e:
+        click.echo(f"Monitor module not available: {e}", err=True)
+        return
+
+    reddit_cfg = cfg.get("credentials", {}).get("reddit", {})
+    monitor_obj = RedditMonitor(
+        client_id=os.environ.get("REDDIT_CLIENT_ID", reddit_cfg.get("client_id", "")),
+        client_secret=os.environ.get("REDDIT_CLIENT_SECRET", reddit_cfg.get("client_secret", "")),
+        user_agent=reddit_cfg.get("user_agent", "karmaforge-v1-monitor/0.1"),
+    )
+
+    if not monitor_obj.authenticate():
+        click.echo(
+            "Reddit API authentication failed. Set REDDIT_CLIENT_ID and "
+            "REDDIT_CLIENT_SECRET environment variables.",
+            err=True,
+        )
+        return
+
+    from .tracker.post_tracker import PostTracker
+
+    db_path = cfg.get("paths", {}).get("data_processed", "data/processed") + "/karmaforge.db"
+    tracker = PostTracker(db_path=db_path)
+
+    evolver = AutoEvolver() if auto_evolve else None
+
+    def _run_cycle() -> dict:
+        result = monitor_obj.fetch_and_update(tracker=tracker, dry_run=dry_run)
+        click.echo(
+            f"  Checked: {result['checked']}  "
+            f"Updated: {result['updated']}  "
+            f"Failed: {result['failed']}  "
+            f"Skipped: {result['skipped']}"
+        )
+        if auto_evolve and not dry_run and evolver is not None:
+            evo_result = evolver.check_and_evolve()
+            if evo_result and evo_result.get("evolved"):
+                click.echo(
+                    f"  Auto-evolved: {evo_result['feedback_processed']} entries → "
+                    f"{evo_result['patterns_updated']} patterns updated"
+                )
+            else:
+                count = evolver.count_unprocessed()
+                click.echo(f"  Evolution skipped (unprocessed: {count}/{evolver.threshold})")
+        return result
+
+    click.echo(f"KarmaForge Monitor — {'daemon' if daemon else 'single cycle'}")
+    click.echo(f"  Feedback: {monitor_obj._feedback_path}")
+
+    if daemon:
+        click.echo(f"  Interval: {interval}s. Press Ctrl+C to stop.")
+        import time as _time
+        try:
+            while True:
+                click.echo(f"\n--- Cycle at {datetime.now(timezone.utc).isoformat()[:19]}Z ---")
+                _run_cycle()
+                _time.sleep(interval)
+        except KeyboardInterrupt:
+            click.echo("\nMonitor stopped.")
+    else:
+        _run_cycle()
+
+
+@main.command("train-ranker")
+@click.option("--feedback", "-f", default="data/tracking/feedback.jsonl", help="Feedback data path")
+@click.option("--patterns", "-p", default="data/patterns/patterns.json", help="Patterns file path")
+@click.option("--output", "-o", default=None, help="Model output path (default: data/models/title_ranker.joblib)")
+def train_ranker(feedback: str, patterns: str, output: str | None) -> None:
+    """Train the ML title ranking model from feedback data.
+
+    Requires at least 20 feedback entries. The trained model is saved to
+    data/models/title_ranker.joblib and automatically loaded by the
+    title generator on subsequent runs.
+    """
+    _setup_logging()
+
+    fb_path = Path(feedback)
+    pat_path = Path(patterns)
+
+    if not fb_path.exists():
+        click.echo(f"Feedback file not found: {fb_path}", err=True)
+        click.echo("Track some posts first: karmaforge track --upvotes N --comments N --ratio R --subreddit S")
+        return
+
+    if not pat_path.exists():
+        click.echo(f"Patterns file not found: {pat_path}", err=True)
+        return
+
+    import json as _json
+    with open(pat_path, "r", encoding="utf-8") as f:
+        pattern_list = _json.load(f)
+
+    try:
+        from .generator.ml_ranker import TitleRanker
+    except ImportError as e:
+        click.echo(f"ML ranker not available (scikit-learn required): {e}", err=True)
+        return
+
+    ranker = TitleRanker()
+    try:
+        metrics = ranker.train(feedback_path=fb_path, patterns=pattern_list)
+    except Exception as e:
+        click.echo(f"Training failed: {e}", err=True)
+        return
+
+    click.echo(f"\n  Title Ranker trained:")
+    click.echo(f"    Samples:   {metrics['n_samples']} ({metrics['n_positive']} positive, {metrics['n_negative']} negative)")
+    click.echo(f"    Pos rate:  {metrics['positive_rate']:.1%}")
+    click.echo(f"    CV AUC:    {metrics['cv_roc_auc_mean']:.3f}")
+
+    save_path = ranker.save(path=output)
+    click.echo(f"\n  Model saved to: {save_path}")
+    click.echo(f"  The title generator will now use ML ranking automatically.")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,8 @@
 """Generate Reddit post titles from viral patterns + LLM."""
 
 import logging
+from pathlib import Path
+from typing import Optional
 
 from ..llm.prompts import TITLE_GENERATE
 from . import CandidateTitle
@@ -18,8 +20,9 @@ TIER_TITLE_RANGES = {
 class TitleGenerator:
     """Generate and score candidate Reddit post titles."""
 
-    def __init__(self, llm_client=None) -> None:
+    def __init__(self, llm_client=None, ml_ranker=None) -> None:
         self._llm = llm_client
+        self._ml_ranker = ml_ranker  # TitleRanker instance (lazy-loaded)
 
     def generate(
         self,
@@ -28,7 +31,14 @@ class TitleGenerator:
         subreddit: str,
         subreddit_tier: str = "t2",
     ) -> list[CandidateTitle]:
-        """Generate one title per pattern, return scored candidates."""
+        """Generate one title per pattern, return scored candidates.
+
+        When an ML ranker is available, the heuristic score is blended
+        with the ML-predicted viral probability (50/50 blend).
+        """
+        # Lazy-load ML ranker if not explicitly provided
+        self._ensure_ml_ranker()
+
         candidates: list[CandidateTitle] = []
 
         for pattern in patterns:
@@ -53,7 +63,37 @@ class TitleGenerator:
             ))
 
         candidates.sort(key=lambda c: c.score, reverse=True)
+
+        # ML re-ranking (if model available)
+        if self._ml_ranker is not None and self._ml_ranker.is_trained:
+            try:
+                # Use the top pattern for ML ranking context
+                top_pattern = patterns[0] if patterns else {}
+                candidates = self._ml_ranker.rank(
+                    candidates=candidates,
+                    subreddit=subreddit,
+                    tier=subreddit_tier,
+                    pattern=top_pattern,
+                    blend_weight=0.5,
+                )
+                logger.debug("ML re-ranked %d candidates", len(candidates))
+            except Exception as e:
+                logger.warning("ML ranking failed, using heuristic scores: %s", e)
+
         return candidates
+
+    def _ensure_ml_ranker(self) -> None:
+        """Lazy-load the ML ranker if model file exists."""
+        if self._ml_ranker is not None:
+            return
+        try:
+            from .ml_ranker import TitleRanker
+            ranker = TitleRanker()
+            if ranker.load():
+                self._ml_ranker = ranker
+                logger.info("ML ranker loaded for title scoring")
+        except Exception as e:
+            logger.debug("ML ranker not available: %s", e)
 
     def _generate_with_llm(
         self, user_topic: str, pattern: dict, subreddit: str, tier: str

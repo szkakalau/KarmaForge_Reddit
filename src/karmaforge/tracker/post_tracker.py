@@ -37,6 +37,7 @@ class PostTracker:
         upvote_ratio: float,
         url: str = "",
         quality_scores: dict | None = None,
+        auto_evolve: bool = False,
     ) -> FeedbackEntry:
         """Classify performance and save feedback entry.
 
@@ -45,6 +46,8 @@ class PostTracker:
                 (title_length, body_length, readability, hook_presence,
                  anti_patterns).  When provided, closes the quality →
                 evolution feedback loop.
+            auto_evolve: If True, check and trigger evolution after saving
+                when enough unprocessed feedback has accumulated.
         """
         median = get_subreddit_median(self._db_path, subreddit)
         performance = classify_performance(upvotes, median)
@@ -66,7 +69,25 @@ class PostTracker:
         )
 
         self._save_feedback(entry)
+
+        if auto_evolve:
+            self._maybe_evolve()
+
         return entry
+
+    def _maybe_evolve(self) -> dict | None:
+        """Check and optionally trigger evolution after tracking.
+
+        Uses lazy import to avoid circular dependency with monitor module.
+        """
+        try:
+            from ..monitor.auto_evolve import AutoEvolver
+        except ImportError:
+            logger.debug("AutoEvolver not available, skipping auto-evolution")
+            return None
+
+        evolver = AutoEvolver(feedback_path=self._feedback_path)
+        return evolver.check_and_evolve()
 
     def load_feedback(self) -> list[dict]:
         """Load all feedback entries from JSONL."""
