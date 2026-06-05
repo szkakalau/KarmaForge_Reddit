@@ -98,7 +98,11 @@ class TitleGenerator:
     def _generate_with_llm(
         self, user_topic: str, pattern: dict, subreddit: str, tier: str
     ) -> str:
-        """Use LLM to generate a title following the pattern."""
+        """Use LLM to generate a title following the pattern.
+
+        Phase 3: Injects successful gene templates into the prompt
+        when available, so the LLM learns from what actually worked.
+        """
         metrics = pattern.get("recommended_metrics", {})
         title_range = metrics.get("title_words") or TIER_TITLE_RANGES.get(tier, (8, 22))
 
@@ -114,6 +118,9 @@ class TitleGenerator:
             min_words=title_range[0],
             max_words=title_range[1],
         )
+
+        # Inject successful gene templates (Phase 3)
+        prompt = self._inject_genes(prompt, pattern)
 
         try:
             result = self._llm.complete(prompt, "")
@@ -190,6 +197,30 @@ class TitleGenerator:
             score -= 15
 
         return max(0.0, min(100.0, score))
+
+    @staticmethod
+    def _inject_genes(prompt: str, pattern: dict, max_examples: int = 2) -> str:
+        """Inject successful gene templates into the generation prompt."""
+        templates = pattern.get("successful_templates", [])
+        if not templates:
+            return prompt
+
+        best = sorted(templates, key=lambda t: t.get("upvotes", 0), reverse=True)
+        best = best[:max_examples]
+
+        lines = [
+            prompt,
+            "",
+            "参考以下已验证成功的标题结构（不要直接复制，借鉴其节奏和模式）：",
+        ]
+        for i, t in enumerate(best, 1):
+            lines.append(
+                f"  {i}. 模板: {t.get('title_template', '')}\n"
+                f"     原文: {t.get('title_original', '')}\n"
+                f"     数据: {t.get('upvotes', '?')} upvotes, r/{t.get('subreddit', '?')}"
+            )
+
+        return "\n".join(lines)
 
     @staticmethod
     def _subreddit_style_notes(subreddit: str, tier: str) -> str:

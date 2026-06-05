@@ -958,5 +958,150 @@ def train_ranker(feedback: str, patterns: str, output: str | None) -> None:
     click.echo(f"  The title generator will now use ML ranking automatically.")
 
 
+@main.command("mine")
+@click.option("--feedback", "-f", default="data/tracking/feedback.jsonl", help="Feedback data path")
+@click.option("--patterns", "-p", default="data/patterns/patterns.json", help="Patterns file path")
+@click.option("--output", "-o", default=None, help="Output path for patterns (default: overwrite)")
+@click.option("--p-threshold", default=0.05, help="P-value threshold (default: 0.05)")
+@click.option("--dry-run", is_flag=True, help="Show discoveries without saving")
+def mine_patterns(feedback: str, patterns: str, output: str | None, p_threshold: float, dry_run: bool) -> None:
+    """Discover new viral patterns from feedback data.
+
+    Uses statistical tests (Fisher's exact) to identify significant
+    (hook_type × narrative_mode × tier) combinations not yet captured
+    by existing patterns.  Candidate patterns start with status='candidate'.
+    """
+    _setup_logging()
+
+    fb_path = Path(feedback)
+    pat_path = Path(patterns)
+
+    if not fb_path.exists():
+        click.echo(f"Feedback file not found: {fb_path}", err=True)
+        return
+    if not pat_path.exists():
+        click.echo(f"Patterns file not found: {pat_path}", err=True)
+        return
+
+    import json as _json
+    from .evolution.pattern_miner import PatternMiner
+
+    with open(pat_path, "r", encoding="utf-8") as f:
+        existing = _json.load(f)
+
+    miner = PatternMiner(p_threshold=p_threshold)
+    candidates = miner.mine(feedback_path=fb_path, existing_patterns=existing)
+
+    if not candidates:
+        click.echo("No new candidate patterns discovered.")
+        click.echo("(Need >= 50 feedback entries with diverse hook/narrative/tier combos)")
+        return
+
+    click.echo(f"\n  Discovered {len(candidates)} candidate patterns:\n")
+    for c in candidates:
+        click.echo(
+            f"  {c['pattern_id']:<45} "
+            f"rate={c['historical_viral_rate']:.2f}  "
+            f"n={c['sample_size']:<4}  "
+            f"p={c['p_value']:.4f}"
+        )
+
+    if dry_run:
+        click.echo("\n  Dry run — not saving.")
+        return
+
+    # Append candidates to existing patterns
+    existing.extend(candidates)
+    out_path = Path(output) if output else pat_path
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    import tempfile as _tempfile
+    tmp_fd, tmp_path = _tempfile.mkstemp(suffix=".json", prefix=".patterns_", dir=str(out_path.parent))
+    try:
+        with os.fdopen(tmp_fd, "w", encoding="utf-8") as f:
+            _json.dump(existing, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_path, str(out_path))
+        click.echo(f"\n  Saved {len(candidates)} candidates to {out_path}")
+    except Exception:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
+
+
+@main.command("extract-genes")
+@click.option("--feedback", "-f", default="data/tracking/feedback.jsonl", help="Feedback data path")
+@click.option("--patterns", "-p", default="data/patterns/patterns.json", help="Patterns file path")
+@click.option("--output", "-o", default=None, help="Output path (default: overwrite patterns)")
+def extract_genes(feedback: str, patterns: str, output: str | None) -> None:
+    """Extract successful content templates from viral posts.
+
+    Analyzes viral/super_viral feedback entries to discover reusable
+    title structures, body openings, and CTA patterns.  These "genes"
+    are stored in each pattern's successful_templates list and
+    automatically injected into generation prompts.
+    """
+    _setup_logging()
+
+    fb_path = Path(feedback)
+    pat_path = Path(patterns)
+
+    if not fb_path.exists():
+        click.echo(f"Feedback file not found: {fb_path}", err=True)
+        return
+    if not pat_path.exists():
+        click.echo(f"Patterns file not found: {pat_path}", err=True)
+        return
+
+    import json as _json
+    from .evolution.gene_extractor import GeneExtractor
+
+    with open(pat_path, "r", encoding="utf-8") as f:
+        pattern_list = _json.load(f)
+
+    extractor = GeneExtractor()
+    updated = extractor.extract_from_feedback(feedback_path=fb_path, patterns=pattern_list)
+
+    total_templates = sum(
+        len(p.get("successful_templates", [])) for p in updated
+    )
+    patterns_with_genes = sum(
+        1 for p in updated if p.get("successful_templates")
+    )
+
+    click.echo(f"\n  Gene extraction complete:")
+    click.echo(f"    Patterns enriched: {patterns_with_genes}")
+    click.echo(f"    Total templates:   {total_templates}")
+
+    if total_templates > 0:
+        click.echo(f"\n  Sample templates:")
+        for p in updated:
+            templates = p.get("successful_templates", [])
+            if templates:
+                best = templates[0]
+                click.echo(f"    [{p.get('name', p.get('pattern_id', '?'))}]")
+                click.echo(f"      {best.get('title_template', '?')}")
+                click.echo(f"      ↑ {best.get('upvotes', '?')} upvotes, r/{best.get('subreddit', '?')}")
+                break
+
+    out_path = Path(output) if output else pat_path
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    import tempfile as _tempfile2
+    tmp_fd, tmp_path = _tempfile2.mkstemp(suffix=".json", prefix=".patterns_", dir=str(out_path.parent))
+    try:
+        with os.fdopen(tmp_fd, "w", encoding="utf-8") as f:
+            _json.dump(updated, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_path, str(out_path))
+        click.echo(f"\n  Saved to {out_path}")
+    except Exception:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
+
+
 if __name__ == "__main__":
     main()
