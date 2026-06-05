@@ -3,7 +3,9 @@
 import json
 import logging
 import os
+import tempfile
 import time
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -15,7 +17,7 @@ logger = logging.getLogger(__name__)
 EVOLUTION_THRESHOLD = 50
 MAX_CONSECUTIVE_FAILURES = 10
 EVOLUTION_LOG_PATH_DEFAULT = Path("data/tracking/evolution_log.md")
-LOCK_TIMEOUT_SECONDS = 120  # stale lock cleanup after 2 minutes
+LOCK_TIMEOUT_SECONDS = 600  # stale lock cleanup after 10 minutes
 
 
 class EvolutionEngine:
@@ -32,8 +34,8 @@ class EvolutionEngine:
         )
 
     def should_evolve(self, feedback_path: str | Path) -> bool:
-        """Check if enough feedback has accumulated for evolution."""
-        count = self._count_entries(feedback_path)
+        """Check if enough unprocessed feedback has accumulated for evolution."""
+        count = self._count_entries(feedback_path, unprocessed_only=True)
         return count >= EVOLUTION_THRESHOLD
 
     def evolve(
@@ -72,10 +74,15 @@ class EvolutionEngine:
             logger.warning("No feedback file at %s", fb_path)
             return None
 
-        entries = self._load_entries(fb_path)
+        # Generate a unique run ID to mark processed entries
+        run_id = uuid.uuid4().hex[:12]
+        evolved_at = datetime.now(timezone.utc).isoformat()
+
+        # Only load unprocessed entries (Fix 1: prevent infinite reprocessing)
+        entries = self._load_entries(fb_path, unprocessed_only=True)
         if len(entries) < EVOLUTION_THRESHOLD:
             logger.info(
-                "Only %d entries (threshold: %d). Not evolving.",
+                "Only %d unprocessed entries (threshold: %d). Not evolving.",
                 len(entries), EVOLUTION_THRESHOLD,
             )
             return None
@@ -103,9 +110,16 @@ class EvolutionEngine:
                 }
                 attributed += 1
 
+        # Mark all entries as processed with this run ID (Fix 1)
+        for entry in entries:
+            entry["evolution_run_id"] = run_id
+            entry["evolved_at"] = evolved_at
+
+        # Always rewrite feedback to persist run_id marks + attributions
+        self._rewrite_feedback(fb_path, entries)
         if attributed:
-            self._rewrite_feedback(fb_path, entries)
             logger.info("Attributed %d failed posts", attributed)
+        logger.info("Marked %d entries with evolution_run_id=%s", len(entries), run_id)
 
         # Group by pattern_id
         by_pattern: dict[str, list[dict]] = {}
@@ -165,14 +179,27 @@ class EvolutionEngine:
                 )
                 inactivations += 1
 
-        # Save updated patterns
+        # Atomic write: temp file → rename (Fix 2: prevent write-write corruption)
         out_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(out_path, "w", encoding="utf-8") as f:
-            json.dump(patterns, f, ensure_ascii=False, indent=2)
+        tmp_fd, tmp_path = tempfile.mkstemp(
+            suffix=".json", prefix=".patterns_", dir=str(out_path.parent)
+        )
+        try:
+            with os.fdopen(tmp_fd, "w", encoding="utf-8") as f:
+                json.dump(patterns, f, ensure_ascii=False, indent=2)
+            os.replace(tmp_path, str(out_path))  # atomic on Windows & POSIX
+        except Exception:
+            # Clean up temp file on failure
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
+
         logger.info("Saved updated patterns to %s (%d updated, %d inactivated)", out_path, updates, inactivations)
 
         # Write evolution log
-        summary = f"Processed {len(entries)} feedback entries.\n"
+        summary = f"Processed {len(entries)} feedback entries (run_id={run_id}).\n"
         summary += f"Updated {updates} patterns, marked {inactivations} inactive.\n"
         if changes_log:
             summary += "\nChanges:\n" + "\n".join(changes_log)
@@ -189,27 +216,53 @@ class EvolutionEngine:
         return log
 
     @staticmethod
-    def _load_entries(path: Path) -> list[dict]:
+    def _load_entries(path: Path, unprocessed_only: bool = False) -> list[dict]:
+        """Load feedback entries from JSONL.
+
+        Args:
+            path: Path to feedback.jsonl.
+            unprocessed_only: If True, skip entries already marked with
+                ``evolution_run_id`` (prevents reprocessing the same data).
+        """
         entries = []
         with open(path, "r", encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line:
                     try:
-                        entries.append(json.loads(line))
+                        entry = json.loads(line)
                     except json.JSONDecodeError:
                         continue
+                    if unprocessed_only and entry.get("evolution_run_id"):
+                        continue
+                    entries.append(entry)
         return entries
 
     @staticmethod
-    def _count_entries(path: str | Path) -> int:
+    def _count_entries(path: str | Path, unprocessed_only: bool = False) -> int:
+        """Count entries in feedback file.
+
+        Args:
+            path: Path to feedback.jsonl.
+            unprocessed_only: If True, only count entries not yet processed
+                by an evolution run.
+        """
         if not Path(path).exists():
             return 0
         count = 0
         with open(path, "r", encoding="utf-8") as f:
             for line in f:
-                if line.strip():
-                    count += 1
+                line = line.strip()
+                if not line:
+                    continue
+                if unprocessed_only:
+                    try:
+                        entry = json.loads(line)
+                        if entry.get("evolution_run_id"):
+                            continue
+                    except json.JSONDecodeError:
+                        continue
+                count += 1
         return count
 
     @staticmethod

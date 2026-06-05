@@ -26,5 +26,8 @@ class FeedbackEntry:
     performance: str  # "super_viral" | "viral" | "passing" | "failed"
     subreddit_median: float
 
+    # Quality scores from SelfChecker (Fix 3: close the feedback loop)
+    quality_scores: Optional[dict] = None
+
     # Attribution (populated for failed posts)
     attribution: Optional[dict] = None

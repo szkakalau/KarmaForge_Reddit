@@ -856,6 +856,15 @@ def _build_track_tab(shared: dict) -> None:
             matched = gen_data.get("matched_subreddits", [])
             subreddit = matched[0].get("subreddit", "") if matched else ""
 
+            # Extract self_check dimensions for quality feedback loop (Fix 3)
+            quality_scores = None
+            self_check = gen_data.get("self_check")
+            if self_check and self_check.get("dimensions"):
+                quality_scores = {
+                    k: v.get("得分", v.get("score", None))
+                    for k, v in self_check["dimensions"].items()
+                }
+
             if not generation_id or generation_id == "manual":
                 return (
                     gr.update(visible=True), "", "", gr.update(visible=False),
@@ -884,6 +893,7 @@ def _build_track_tab(shared: dict) -> None:
                 upvotes=int(upvotes),
                 num_comments=int(num_comments),
                 upvote_ratio=ratio_pct / 100.0,
+                quality_scores=quality_scores,
             )
 
             perf = entry.performance

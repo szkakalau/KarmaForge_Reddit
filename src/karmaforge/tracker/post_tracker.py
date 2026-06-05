@@ -36,8 +36,16 @@ class PostTracker:
         num_comments: int,
         upvote_ratio: float,
         url: str = "",
+        quality_scores: dict | None = None,
     ) -> FeedbackEntry:
-        """Classify performance and save feedback entry."""
+        """Classify performance and save feedback entry.
+
+        Args:
+            quality_scores: Optional SelfChecker dimension scores
+                (title_length, body_length, readability, hook_presence,
+                 anti_patterns).  When provided, closes the quality →
+                evolution feedback loop.
+        """
         median = get_subreddit_median(self._db_path, subreddit)
         performance = classify_performance(upvotes, median)
 
@@ -54,6 +62,7 @@ class PostTracker:
             upvote_ratio=upvote_ratio,
             performance=performance,
             subreddit_median=median,
+            quality_scores=quality_scores,
         )
 
         self._save_feedback(entry)
@@ -99,6 +108,7 @@ class PostTracker:
             "upvote_ratio": entry.upvote_ratio,
             "performance": entry.performance,
             "subreddit_median": entry.subreddit_median,
+            "quality_scores": entry.quality_scores,
             "attribution": entry.attribution,
         }
         with open(self._feedback_path, "a", encoding="utf-8") as f:

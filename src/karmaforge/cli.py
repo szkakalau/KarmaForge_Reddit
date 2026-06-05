@@ -635,6 +635,7 @@ def track(
     gen_body = ""
     gen_pattern_id = ""
     gen_sub = subreddit.lower()
+    quality_scores = None
 
     if generation_id:
         gen_path = Path("data/generations") / f"{generation_id}.json"
@@ -646,6 +647,13 @@ def track(
             gen_body = gen_data.get("body", "")
             if gen_data.get("selected_patterns"):
                 gen_pattern_id = gen_data["selected_patterns"][0].get("pattern_id", "")
+            # Extract self_check dimensions for quality feedback loop (Fix 3)
+            self_check = gen_data.get("self_check")
+            if self_check and self_check.get("dimensions"):
+                quality_scores = {
+                    k: v.get("得分", v.get("score", None))
+                    for k, v in self_check["dimensions"].items()
+                }
         else:
             click.echo(f"Generation '{generation_id}' not found. Proceeding without context.")
 
@@ -659,6 +667,7 @@ def track(
         num_comments=comments,
         upvote_ratio=ratio,
         url=url,
+        quality_scores=quality_scores,
     )
 
     click.echo(f"\n  Recorded for r/{gen_sub}:")
