@@ -13,6 +13,7 @@ from .analysis_utils import (
     find_optimal_range,
     text_length_metrics,
     readability_scores,
+    batch_classify_llm,
 )
 
 
@@ -115,10 +116,23 @@ class ContentAnalyzer:
     def _classify_narrative_modes(self, bodies: list[str], upvotes: list[float]) -> dict:
         modes = ["story_personal", "tutorial_howto", "opinion_argument", "question_discussion",
                   "resource_showcase", "news_event", "humor_satire", "review_critique"]
+        mode_descriptions = {
+            "story_personal": "Personal experience story, first-person narrative",
+            "tutorial_howto": "Step-by-step guide, how-to, tutorial, instructional",
+            "opinion_argument": "Argument, opinion piece, debate, persuasive writing",
+            "question_discussion": "Question to the community, discussion prompt",
+            "resource_showcase": "Sharing a tool, resource, project, or creation",
+            "news_event": "Reporting news, current events, announcements",
+            "humor_satire": "Joke, satire, humorous post, meme-style writing",
+            "review_critique": "Review, critique, analysis of a product/book/idea",
+        }
 
-        if self.use_llm and len(bodies) <= 200:
+        if self.use_llm:
             excerpts = [b[:500] for b in bodies]
-            results = self.llm.classify(excerpts, modes)
+            results = batch_classify_llm(
+                excerpts, modes, mode_descriptions, self.llm,
+                batch_size=30, task_name="narrative mode",
+            )
         else:
             results = self._heuristic_narrative_mode(bodies)
 
@@ -138,10 +152,22 @@ class ContentAnalyzer:
     def _classify_opening_patterns(self, bodies: list[str], upvotes: list[float]) -> dict:
         patterns = ["hook_first", "background_first", "conflict_first", "personal_intro",
                      "direct_answer", "rhetorical_question", "quote_reference"]
+        pattern_descriptions = {
+            "hook_first": "Opens with a hook, surprising fact, or provocative statement",
+            "background_first": "Opens with background context or setup information",
+            "conflict_first": "Opens with a problem, struggle, or conflict",
+            "personal_intro": "Opens with personal introduction or self-description",
+            "direct_answer": "Opens by directly answering the title question",
+            "rhetorical_question": "Opens with a rhetorical question to the reader",
+            "quote_reference": "Opens with a quote or reference to another source",
+        }
 
-        if self.use_llm and len(bodies) <= 200:
+        if self.use_llm:
             openings = [b[:200] for b in bodies]
-            results = self.llm.classify(openings, patterns)
+            results = batch_classify_llm(
+                openings, patterns, pattern_descriptions, self.llm,
+                batch_size=30, task_name="opening pattern",
+            )
         else:
             results = [self._heuristic_opening(b[:200]) for b in bodies]
 

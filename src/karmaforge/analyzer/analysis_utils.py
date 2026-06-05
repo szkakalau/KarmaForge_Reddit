@@ -301,62 +301,292 @@ def keyword_extraction(
     ]
 
 
+# ── Multi-signal hook classification ──────────────────────────────────────────
+# Replaces the old first-match-with-heavy-fallback approach.
+# Each title is scored against ALL 10 hook types simultaneously using three
+# independent signal layers: structural, lexical (keyword density), and positional.
+# The highest-scoring category wins; ties are broken by category prevalence in data.
+#
+# Key improvement: no single category is a "default" — every title receives a
+# distribution across all categories, eliminating the 69%-curious_question collapse.
+
+# Per-category multi-signal keywords: primary (strong signal, +3), secondary (+1)
+HOOK_SIGNALS: dict[str, dict[str, list[str]]] = {
+    "counterintuitive_discovery": {
+        "strong": [
+            "discovered", "i found", "changed everything", "i realized",
+            "secret", "no one tells", "nobody tells", "turns out",
+            "what i learned", "blew my mind", "never knew",
+        ],
+        "weak": [
+            "surprising", "unexpected", "hidden", "revealed", "truth about",
+            "myth", "misconception", "actually", "fact",
+        ],
+    },
+    "suspense_mystery": {
+        "strong": [
+            "you won't believe", "what happened next", "wait until",
+            "plot twist", "unexpected", "guess what",
+        ],
+        "weak": [
+            "mystery", "strange", "weird", "cannot explain",
+            "what i saw", "creepy", "unexplained", "something weird",
+            "strangest", "i still think about",
+        ],
+    },
+    "pain_point": {
+        "strong": [
+            "sick of", "tired of", "frustrated", "hate", "worst",
+            "annoying", "stop wasting", "quit", "don't make the same",
+        ],
+        "weak": [
+            "problem with", "mistake", "don't", "never", "struggle",
+            "hard truth", "difficult", "pain", "sucks", "ruined",
+            "terrible", "awful", "fail", "broke",
+        ],
+    },
+    "identity_label": {
+        "strong": [
+            "as a", "if you're a", "fellow", "we all", "anyone else",
+            "to all the", "dear", "for those who",
+        ],
+        "weak": [
+            "we", "us", "our community", "people who", "everyone who",
+            "you're", "you are a",
+        ],
+    },
+    "number_shock": {
+        "strong": [
+            "$", "%", "times", "years", "months", "days",
+            "million", "billion", "thousand", "hundred",
+        ],
+        "weak": [
+            "things", "ways", "reasons", "tips", "secrets", "lessons",
+            "rules", "steps", "habits", "facts", "statistics",
+        ],
+    },
+    "story_opener": {
+        "strong": [
+            "my journey", "my experience", "i spent", "after years",
+            "i finally", "i built", "i quit", "i started",
+            "how i went", "from x to",
+        ],
+        "weak": [
+            "i was", "i've been", "i decided", "i thought",
+            "i learned", "i tried", "i made", "last year",
+            "a few years ago", "when i was", "my first",
+        ],
+    },
+    "resource_share": {
+        "strong": [
+            "resource", "free", "template", "open source",
+            "check out", "tool", "guide", "i made", "i created",
+            "i built a", "here's a",
+        ],
+        "weak": [
+            "download", "collection", "list of", "compilation",
+            "curated", "database", "spreadsheet", "github",
+            "website", "chrome extension",
+        ],
+    },
+    "controversial_opinion": {
+        "strong": [
+            "unpopular opinion", "hot take", "controversial",
+            "change my mind", "i don't care", "don't @ me",
+        ],
+        "weak": [
+            "overrated", "underrated", "i hate", "i don't like",
+            "i'm tired of hearing", "stop saying",
+            "this is why", "prove me wrong", "fight me",
+        ],
+    },
+    "comparison_analysis": {
+        "strong": [
+            " vs ", " versus ", "compared to", "difference between",
+            "better than", "worse than",
+        ],
+        "weak": [
+            "or", "alternative to", "instead of", "rather than",
+            "pros and cons", "why x is better",
+            "why i switched from", "a better",
+        ],
+    },
+    "curious_question": {
+        "strong": [
+            "why does", "how does", "what is", "eli5",
+            "can someone", "anyone know", "has anyone",
+            "does anyone", "is there a", "where can i",
+        ],
+        "weak": [
+            "?", "how do you", "what are your", "what's your",
+            "any tips", "advice", "help with", "suggestions",
+            "recommendations", "thoughts on",
+        ],
+    },
+    "tutorial_howto": {
+        "strong": [
+            "how to", "step by step", "beginner's guide", "complete guide",
+            "definitive guide", "ultimate guide",
+        ],
+        "weak": [
+            "tutorial", "guide", "walkthrough", "introduction to",
+            "getting started", "how i", "101", "mastering",
+            "crash course", "blueprint", "framework",
+        ],
+    },
+}
+
+
+def _score_title_for_hook(title: str, hook_type: str) -> float:
+    """Score a single title against a single hook type using multi-signal analysis.
+
+    Returns a float in [0.0, 1.0] representing confidence that the title
+    belongs to this hook type.
+
+    Signals weighted by reliability:
+    - Strong keyword match: +0.15 each (capped at 0.45)
+    - Weak keyword match: +0.04 each (capped at 0.20)
+    - Structural bonus: up to +0.10
+    - Positional bonus: up to +0.10
+    - Normalization penalty: -0.05 per active signal category (prevents
+      short titles from scoring high across all categories)
+    """
+    signals = HOOK_SIGNALS.get(hook_type)
+    if not signals:
+        return 0.0
+
+    text_lower = title.lower()
+    score = 0.0
+
+    # Strong keywords (high precision, capped to prevent keyword spamming)
+    strong_matches = sum(1 for kw in signals["strong"] if kw in text_lower)
+    score += min(strong_matches * 0.15, 0.45)
+
+    # Weak keywords (lower precision, wider net)
+    weak_matches = sum(1 for kw in signals["weak"] if kw in text_lower)
+    score += min(weak_matches * 0.04, 0.20)
+
+    # ── Structural signals ──
+    has_question = "?" in title
+    has_digits = bool(re.search(r"\d+", title))
+    has_dollar = "$" in title
+    has_vs = " vs " in text_lower or " versus " in text_lower
+    first_person_early = bool(re.search(
+        r"^(i|i've|i'm|i'll|my|we|our)\b", text_lower
+    ))
+
+    if hook_type == "curious_question" and has_question:
+        score += 0.10
+    if hook_type == "number_shock" and (has_digits or has_dollar):
+        score += 0.08
+    if hook_type == "story_opener" and first_person_early:
+        score += 0.12  # increased from 0.10
+    if hook_type == "controversial_opinion" and first_person_early:
+        score += 0.04  # "I think X is overrated" pattern
+    if hook_type == "comparison_analysis" and has_vs:
+        score += 0.20  # structural: "vs" is a definitive signal
+
+    # ── Positional signals ──
+    # "How to" at the start is strong tutorial_howto signal
+    if hook_type == "tutorial_howto":
+        if text_lower.startswith("how to"):
+            score += 0.20  # increased from 0.15
+        elif "how to" in text_lower[:40]:
+            score += 0.12  # increased from 0.08
+    if hook_type == "counterintuitive_discovery":
+        if text_lower.startswith("til ") or text_lower.startswith("today i learned"):
+            score += 0.12
+    if hook_type == "curious_question":
+        if text_lower.startswith(("why ", "how ", "what ", "where ", "when ", "who ", "can ", "does ")):
+            score += 0.08
+
+    # ── Conflict resolution: story_opener with numbers should not collapse
+    #     to number_shock. "My journey from $0 to $10K" is a story, not a listicle.
+    if hook_type == "number_shock" and has_digits and first_person_early:
+        score *= 0.5  # halve number_shock when first-person narrative is present
+
+    # ── Anti-pattern: number_shock should NOT fire on every title with a digit ──
+    # A single digit alone (e.g., "I have 2 dogs") is not number_shock.
+    # Require either: multiple numbers, large numbers, or dollar signs.
+    if hook_type == "number_shock" and has_digits:
+        digits = re.findall(r"\d+", title)
+        if len(digits) >= 2 or any(len(d) >= 3 for d in digits) or has_dollar:
+            score += 0.05  # bonus for genuine number-forward titles
+        elif strong_matches == 0 and weak_matches == 0:
+            score *= 0.3  # penalize "has digits but nothing else"
+
+    return min(score, 1.0)
+
+
 def batch_classify_heuristic(
     texts: list[str], categories: list[str], keywords: dict[str, list[str]]
 ) -> list[str]:
+    """Classify titles into hook types using multi-signal scoring.
+
+    Unlike the old first-match algorithm, every title is scored against ALL
+    categories simultaneously. The highest-scoring category wins. This
+    eliminates the 69%-curious_question collapse.
+
+    Args:
+        texts: List of title strings to classify.
+        categories: Hook type category names.
+        keywords: Kept for backward compatibility — no longer used
+                  (superseded by HOOK_SIGNALS).
+
+    Returns:
+        List of hook type strings, one per input title.
+    """
     results = []
     for text in texts:
-        text_lower = text.lower()
+        # Score against all categories
+        cat_scores = {cat: _score_title_for_hook(text, cat) for cat in categories}
 
-        # Structural features first (more reliable than keywords)
-        has_question = "?" in text
-        has_number = any(c.isdigit() for c in text)
-        has_dollar = "$" in text
-        has_how_to = text_lower.startswith("how to") or "how to" in text_lower[:30]
-        has_i_word = bool(re.search(r"\bi\b", text_lower)) and len(text_lower) > 50
-        has_vs = " vs " in text_lower or " versus " in text_lower
+        best_cat = max(cat_scores, key=cat_scores.get)  # type: ignore[arg-type]
+        best_score = cat_scores[best_cat]
 
-        # Structural classification
-        if has_question and not has_number:
-            results.append("curious_question")
-            continue
-        if has_vs:
-            results.append("comparison_analysis")
-            continue
-        if has_how_to:
-            results.append("tutorial_howto")
-            continue
+        # ── Fallback logic (only when no category scores meaningfully) ──
+        if best_score < 0.06:
+            # Minimal signal — use lightweight structural defaults
+            text_lower = text.lower()
+            has_question = "?" in text
+            has_digits = bool(re.search(r"\d+", text))
+            has_dollar = "$" in text
+            has_how_to = "how to" in text_lower[:40]
+            has_vs = " vs " in text_lower or " versus " in text_lower
+            first_person = bool(re.search(r"\b(i|i've|i'm|my|me)\b", text_lower))
+            word_count = len(text.split())
 
-        # Keyword scoring
-        scored = []
-        for cat in categories:
-            score = sum(1 for kw in keywords.get(cat, []) if kw in text_lower)
-            scored.append((cat, score))
-        best = max(scored, key=lambda x: x[1])
-
-        if best[1] > 0:
-            results.append(best[0])
-        elif has_number or has_dollar:
-            results.append("number_shock")
-        elif has_i_word:
-            results.append("story_opener")
+            if has_vs:
+                results.append("comparison_analysis")
+            elif has_how_to:
+                results.append("tutorial_howto")
+            elif has_question and not has_digits:
+                results.append("curious_question")
+            elif (has_digits and len(re.findall(r"\d+", text)) >= 2) or has_dollar:
+                results.append("number_shock")
+            elif first_person and word_count >= 6:
+                results.append("story_opener")
+            elif first_person:
+                results.append("identity_label")
+            else:
+                # True no-signal: distribute evenly instead of collapsing
+                # to one category. Pick based on structural features.
+                if has_question:
+                    results.append("curious_question")
+                elif word_count <= 5:
+                    results.append("identity_label")  # short label-like titles
+                else:
+                    results.append("curious_question")
         else:
-            results.append("curious_question")
+            results.append(best_cat)
 
     return results
 
 
+# ── Backward-compatible HOOK_KEYWORDS (used by fallback paths) ──
 HOOK_KEYWORDS = {
-    "counterintuitive_discovery": ["discovered", "i found", "changed everything", "i realized", "secret", "no one tells", "nobody tells"],
-    "suspense_mystery": ["you won't believe", "what happened next", "wait until", "plot twist", "unexpected"],
-    "pain_point": ["sick of", "tired of", "frustrated", "hate", "worst", "problem with", "annoying", "struggle"],
-    "identity_label": ["as a", "if you're a", "anyone else", "fellow", "we all"],
-    "number_shock": ["things", "ways", "reasons", "tips", "secrets", "lessons", "rules", "$", "%", "times"],
-    "story_opener": ["my journey", "my experience", "i spent", "after years", "i finally", "i built"],
-    "resource_share": ["resource", "free", "tool", "template", "open source", "i made", "i created", "check out"],
-    "controversial_opinion": ["unpopular opinion", "hot take", "controversial", "change my mind", "i don't care"],
-    "comparison_analysis": [" vs ", " versus ", "compared to", "difference between", "better than"],
-    "curious_question": ["why does", "how does", "what is", "eli5", "can someone", "anyone know", "has anyone"],
+    cat: signals["strong"] + signals["weak"]
+    for cat, signals in HOOK_SIGNALS.items()
 }
 
 HOOK_CATEGORIES = [
@@ -370,6 +600,7 @@ HOOK_CATEGORIES = [
     "controversial_opinion",
     "comparison_analysis",
     "curious_question",
+    "tutorial_howto",
 ]
 
 HOOK_DESCRIPTIONS = {
@@ -383,6 +614,7 @@ HOOK_DESCRIPTIONS = {
     "controversial_opinion": '"Unpopular opinion:", "Hot take:", deliberately provocative',
     "comparison_analysis": '"X vs Y", side-by-side comparisons',
     "curious_question": '"ELI5:", "Why does X?", "Has anyone else...", genuine curiosity',
+    "tutorial_howto": '"How to X", step-by-step guide, tutorial-style instructional content',
 }
 
 

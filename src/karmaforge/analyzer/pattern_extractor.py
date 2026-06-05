@@ -276,10 +276,18 @@ class PatternExtractor:
             titles = [p.title for p in viral_posts_in_cluster if p.title]
             title_template = self._extract_title_template(titles)
 
+            # Bootstrap CI from cluster's own posts (not global population)
+            # FIX: was resampling from all_upvotes, producing CI that
+            # reflected global viral rate instead of cluster-specific rate.
+            cluster_upvotes = [p.upvotes for p in cluster["posts"]]
             viral_rates = []
-            for _ in range(100):
-                sample = np.random.choice(all_upvotes, size=cluster["total"], replace=True)
-                viral_rates.append(sum(1 for s in sample if s >= viral_threshold) / len(sample))
+            rng = np.random.default_rng(42)
+            n_iter = min(1000, len(cluster_upvotes) * 10)  # scale with cluster size
+            for _ in range(n_iter):
+                sample = rng.choice(cluster_upvotes, size=len(cluster_upvotes), replace=True)
+                viral_rates.append(
+                    sum(1 for s in sample if s >= viral_threshold) / len(sample)
+                )
 
             ci_lower = round(float(np.percentile(viral_rates, 2.5)), 4)
             ci_upper = round(float(np.percentile(viral_rates, 97.5)), 4)
@@ -323,10 +331,11 @@ class PatternExtractor:
         return patterns
 
     def _extract_title_template(self, titles: list[str]) -> str:
-        """Extract discriminative bigrams from viral cluster titles.
+        """Extract discriminative n-grams (bigrams + trigrams) from viral cluster titles.
 
-        Returns pipe-separated bigrams that appear across multiple titles.
-        These are used for matching: a post matches if its title contains any bigram.
+        Returns pipe-separated n-grams that appear across multiple titles.
+        Lowered threshold (15% → 5%) and added trigrams to fix the empty-template
+        problem where 5/8 patterns had no title template at all.
         """
         if not titles or len(titles) < 3:
             return ""
@@ -341,24 +350,47 @@ class PatternExtractor:
             "i", "me", "my", "we", "our", "you", "your", "he", "she",
             "what", "which", "who", "when", "where", "why", "how",
             "just", "about", "like", "all", "can", "get", "one", "really",
+            # Reddit-specific noise words
+            "anyone", "else", "know", "think", "need", "help", "please",
+            "does", "don't", "didn't", "won't", "isn't", "aren't",
+            "there", "here", "some", "more", "much", "very", "even",
+            "still", "also", "than", "then", "now", "only", "too",
         }
 
         bigram_counts: Counter = Counter()
+        trigram_counts: Counter = Counter()
+
         for title in titles:
             words = [w.lower().strip(".,!?:;\"'()[]") for w in title.split()]
             words = [w for w in words if w and w not in STOP and len(w) > 2]
+
+            # Bigrams
             for i in range(len(words) - 1):
                 bg = f"{words[i]} {words[i+1]}"
                 bigram_counts[bg] += 1
 
-        # Take bigrams that appear in at least 15% of titles, up to 5
-        min_count = max(2, int(len(titles) * 0.15))
-        top_bigrams = [
-            bg for bg, count in bigram_counts.most_common(10)
-            if count >= min_count
-        ][:5]
+            # Trigrams (higher weight — more discriminative)
+            for i in range(len(words) - 2):
+                tg = f"{words[i]} {words[i+1]} {words[i+2]}"
+                trigram_counts[tg] += 1
 
-        return "|".join(top_bigrams)
+        # Lowered threshold: 5% (was 15%), min 2 occurrences
+        min_count = max(2, int(len(titles) * 0.05))
+
+        # Collect top n-grams — trigrams weighted higher (×1.5)
+        scored: list[tuple[str, float]] = []
+        for bg, count in bigram_counts.most_common(15):
+            if count >= min_count:
+                scored.append((bg, count))
+        for tg, count in trigram_counts.most_common(10):
+            if count >= min_count:
+                scored.append((tg, count * 1.5))  # weight bonus for trigrams
+
+        # Sort by weighted frequency, take top 6
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top_ngrams = [ng for ng, _ in scored[:6]]
+
+        return "|".join(top_ngrams)
 
     def _extract_anti_patterns(
         self, non_viral_posts: list[Post], all_posts: list[Post]

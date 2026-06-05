@@ -14,7 +14,10 @@ from .analysis_utils import (
     compute_percentile_rank,
     text_length_metrics,
     batch_classify_heuristic,
+    batch_classify_llm,
     HOOK_KEYWORDS,
+    HOOK_CATEGORIES,
+    HOOK_DESCRIPTIONS,
 )
 
 
@@ -153,8 +156,14 @@ class TitleAnalyzer:
     def _classify_hooks(self, titles: list[str], upvotes: list[float]) -> dict:
         hook_categories = list(HOOK_KEYWORDS.keys())
 
-        if self.use_llm and len(titles) <= 200:
-            hook_types = self.llm.classify(titles, hook_categories)
+        # LLM classification with batching + caching + heuristic fallback.
+        # No size limit — batch_classify_llm handles any number of titles.
+        # Falls back to heuristic automatically on API errors.
+        if self.use_llm:
+            hook_types = batch_classify_llm(
+                titles, hook_categories, HOOK_DESCRIPTIONS, self.llm,
+                batch_size=50, task_name="title",
+            )
         else:
             hook_types = batch_classify_heuristic(titles, hook_categories, HOOK_KEYWORDS)
 

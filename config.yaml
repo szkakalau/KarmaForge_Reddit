@@ -67,9 +67,18 @@ collection:
 
   sources:
     kaggle_enabled: true
+    pushshift_enabled: true
     praw_enabled: false
     thirdparty_enabled: true
     browser_enabled: false
+
+  pushshift:
+    base_url: https://arctic-shift.photon-reddit.com
+    request_delay: 1.5
+    max_per_request: 100
+    max_pages: 5
+    sort: top
+    time_frame: year
 
   rate_limit:
     requests_per_minute: 60

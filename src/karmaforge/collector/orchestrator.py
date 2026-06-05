@@ -1,7 +1,8 @@
 """Collection orchestrator — priority-based multi-source data collection.
 
-Priority: Kaggle → PRAW → Third-party → Browser
+Priority: Kaggle → Pushshift/Arctic Shift → PRAW → Third-party → Browser
 Each source fills gaps left by higher-priority sources.
+Pushshift runs early because it provides full body/selftext (unlike third-party scrapers).
 """
 
 import logging
@@ -15,6 +16,7 @@ from ..storage import Database, Post, Comment, SubredditMeta, Tier, read_jsonl, 
 from ..llm import LLMClient, LLMConfig, LLMProvider
 from .kaggle_loader import KaggleLoader
 from .praw_collector import PRAWCollector
+from .pushshift_collector import PushshiftCollector
 from .thirdparty_scraper import ThirdPartyScraper
 from .browser_collector import BrowserCollector
 
@@ -56,18 +58,23 @@ class CollectionOrchestrator:
         if self.config["collection"]["sources"]["kaggle_enabled"]:
             posts, crossrefs = self._run_kaggle()
 
-        # Step 2: PRAW (if credentials available)
+        # Step 2: Pushshift/Arctic Shift (free, provides full body text)
+        if self.config["collection"]["sources"].get("pushshift_enabled", True):
+            ps_posts = self._run_pushshift(posts)
+            posts = self._merge_posts(posts, ps_posts)
+
+        # Step 3: PRAW (if credentials available)
         if self.config["collection"]["sources"]["praw_enabled"]:
             praw_posts, praw_comments = self._run_praw(posts)
             posts = self._merge_posts(posts, praw_posts)
             comments.extend(praw_comments)
 
-        # Step 3: Third-party (fill remaining gaps)
+        # Step 4: Third-party (fill remaining gaps)
         if self.config["collection"]["sources"]["thirdparty_enabled"]:
             tp_posts = self._run_thirdparty(posts)
             posts = self._merge_posts(posts, tp_posts)
 
-        # Step 4: Browser (last resort for critical gaps)
+        # Step 5: Browser (last resort for critical gaps)
         if self.config["collection"]["sources"]["browser_enabled"]:
             br_posts = self._run_browser(posts)
             posts = self._merge_posts(posts, br_posts)
@@ -117,6 +124,54 @@ class CollectionOrchestrator:
         posts = loader.load_posts()
         crossrefs = loader.load_crossref_data()
         return posts, crossrefs
+
+    def _run_pushshift(self, existing_posts: list[Post]) -> list[Post]:
+        """Fetch posts from Arctic Shift (Pushshift successor) — free, full body text.
+
+        Focuses on text-heavy subreddits that were undercovered by Kaggle (which
+        skews toward link/image posts with empty selftext).
+        """
+        all_subreddits = self._all_target_subreddits()
+        posts_per_sub = self.config["collection"]["posts_per_subreddit"]
+        existing_counts = self._count_by_subreddit(existing_posts)
+
+        # Priority 1: subreddits with zero coverage (e.g., all T3 subs)
+        zero_subs = [s for s in all_subreddits if existing_counts.get(s.lower(), 0) == 0]
+        # Priority 2: subreddits where >50% of posts have no body text
+        body_counts: dict[str, tuple[int, int]] = {}
+        for p in existing_posts:
+            sub = p.subreddit.lower()
+            if sub not in body_counts:
+                body_counts[sub] = [0, 0]
+            body_counts[sub][0] += 1
+            if p.body and len(p.body) >= 20:
+                body_counts[sub][1] += 1
+        low_body_subs = [
+            s for s, (total, with_body) in body_counts.items()
+            if total >= 50 and with_body / total < 0.3
+        ]
+
+        target_subs = list(dict.fromkeys(zero_subs + low_body_subs))  # deduplicate, preserve order
+        if not target_subs:
+            logger.info("All subreddits have good body coverage, skipping Pushshift")
+            return []
+
+        logger.info(
+            "Pushshift targeting %d subreddits: %d zero-coverage, %d low-body",
+            len(target_subs),
+            len(zero_subs),
+            len(low_body_subs),
+        )
+
+        collector = PushshiftCollector(
+            subreddits=target_subs,
+            request_delay=1.5,
+        )
+        return collector.collect_all(
+            posts_per_subreddit=posts_per_sub,
+            sort="top",
+            time_frame="year",
+        )
 
     def _run_praw(self, existing_posts: list[Post]) -> tuple[list[Post], list[Comment]]:
         creds = self.config["credentials"]["reddit"]
