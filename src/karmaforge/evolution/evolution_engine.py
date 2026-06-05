@@ -1,13 +1,21 @@
-"""Evolution engine — batch feedback processing to update pattern weights."""
+"""Evolution engine — batch feedback processing to update pattern weights.
+
+Phase 2 adds: time-decay weighting, subreddit-level performance tracking,
+pattern drift detection, and auto-calibration of recommended metrics.
+"""
 
 import json
 import logging
+import math
 import os
 import tempfile
 import time
 import uuid
+from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+
+import numpy as np
 
 from . import EvolutionLog
 from .failure_attributor import FailureAttributor
@@ -18,6 +26,14 @@ EVOLUTION_THRESHOLD = 50
 MAX_CONSECUTIVE_FAILURES = 10
 EVOLUTION_LOG_PATH_DEFAULT = Path("data/tracking/evolution_log.md")
 LOCK_TIMEOUT_SECONDS = 600  # stale lock cleanup after 10 minutes
+
+# Time-decay: half-life in days for feedback weight
+HALF_LIFE_DAYS = 90
+# Drift detection: if recent (30d) success_rate < overall * (1 - DRIFT_THRESHOLD), flag declining
+DRIFT_THRESHOLD = 0.3
+DRIFT_WINDOW_DAYS = 30
+# Auto-calibration: min successful posts needed to update recommended_metrics
+CALIBRATION_MIN_SAMPLES = 15
 
 
 class EvolutionEngine:
@@ -127,7 +143,8 @@ class EvolutionEngine:
             pid = entry.get("pattern_id", "unknown")
             by_pattern.setdefault(pid, []).append(entry)
 
-        # Compute per-pattern stats
+        # Compute per-pattern stats (Phase 2: time-decay + subreddit + drift + calibration)
+        now = datetime.now(timezone.utc)
         updates = 0
         inactivations = 0
         changes_log: list[str] = []
@@ -139,23 +156,42 @@ class EvolutionEngine:
                 continue
 
             total = len(entries_for_pat)
-            viral = sum(1 for e in entries_for_pat if e.get("performance") in ("viral", "super_viral"))
-            passing = sum(1 for e in entries_for_pat if e.get("performance") == "passing")
-            failed = total - viral - passing
 
-            new_success_rate = round((viral + passing) / total, 4) if total > 0 else 0
+            # ── Phase 2.1: Time-decayed success rate ──
+            time_decayed_rate = self._compute_time_decayed_rate(entries_for_pat, now)
             old_rate = pattern.get("success_rate", 0)
 
-            pattern["success_rate"] = new_success_rate
-            pattern["feedback_sample_size"] = total
-            pattern["last_evaluated_at"] = datetime.now(timezone.utc).isoformat()
+            # ── Phase 2.2: Subreddit-level performance ──
+            subreddit_perf = self._compute_subreddit_performance(entries_for_pat, now)
+            pattern["subreddit_performance"] = subreddit_perf
 
-            if abs(new_success_rate - old_rate) > 0.05:
-                direction = "up" if new_success_rate > old_rate else "down"
+            # ── Phase 2.3: Pattern drift detection ──
+            drift_status, drift_score = self._detect_drift(entries_for_pat, time_decayed_rate, now)
+            pattern["drift_status"] = drift_status
+            pattern["drift_score"] = round(drift_score, 4)
+
+            # ── Phase 2.4: Auto-calibrate recommended metrics ──
+            self._calibrate_metrics(pattern, entries_for_pat)
+
+            # Update core fields
+            pattern["success_rate"] = round(time_decayed_rate, 4)
+            pattern["feedback_sample_size"] = total
+            pattern["last_evaluated_at"] = now.isoformat()
+
+            # Log significant changes
+            if abs(time_decayed_rate - old_rate) > 0.05:
+                direction = "up" if time_decayed_rate > old_rate else "down"
                 changes_log.append(
                     f"  - `{pattern.get('name', pid)}`: "
-                    f"success_rate {old_rate:.2f}→{new_success_rate:.2f} ({direction})"
+                    f"success_rate {old_rate:.2f}→{time_decayed_rate:.2f} ({direction})"
+                    f"{' [DRIFTING]' if drift_status == 'declining' else ''}"
                 )
+            elif drift_status == "declining":
+                changes_log.append(
+                    f"  - `{pattern.get('name', pid)}`: DRIFT DETECTED "
+                    f"(drift_score={drift_score:.3f}, recent rate below threshold)"
+                )
+
             updates += 1
 
             # Check for consecutive failures
@@ -271,6 +307,201 @@ class EvolutionEngine:
             if p.get("pattern_id") == pattern_id:
                 return p
         return None
+
+    # ── Phase 2.1: Time-decay weighting ─────────────────────────
+
+    @staticmethod
+    def _compute_time_decayed_rate(entries: list[dict], now: datetime) -> float:
+        """Compute success rate with exponential time decay.
+
+        Recent feedback weighs more.  Half-life = HALF_LIFE_DAYS.
+        Weight = exp(-λ * days_ago), where λ = ln(2) / half_life.
+        """
+        if not entries:
+            return 0.0
+
+        decay_lambda = math.log(2) / HALF_LIFE_DAYS
+        weighted_success = 0.0
+        total_weight = 0.0
+
+        for e in entries:
+            tracked_str = e.get("tracked_at", "")
+            if not tracked_str:
+                weight = 1.0
+            else:
+                try:
+                    tracked_dt = datetime.fromisoformat(tracked_str.replace("Z", "+00:00"))
+                    # Ensure timezone-aware comparison
+                    if tracked_dt.tzinfo is None:
+                        tracked_dt = tracked_dt.replace(tzinfo=timezone.utc)
+                    if now.tzinfo is None:
+                        now = now.replace(tzinfo=timezone.utc)
+                    days_ago = (now - tracked_dt).total_seconds() / 86400.0
+                    days_ago = max(0, days_ago)
+                except (ValueError, TypeError):
+                    days_ago = 0
+                weight = math.exp(-decay_lambda * days_ago)
+
+            perf = e.get("performance", "failed")
+            if perf in ("viral", "super_viral", "passing"):
+                weighted_success += weight
+            total_weight += weight
+
+        return round(weighted_success / total_weight, 4) if total_weight > 0 else 0.0
+
+    # ── Phase 2.2: Subreddit-level performance ──────────────────
+
+    @staticmethod
+    def _compute_subreddit_performance(
+        entries: list[dict], now: datetime
+    ) -> dict[str, dict]:
+        """Compute per-subreddit success rates with time decay.
+
+        Returns:
+            {subreddit_name: {success_rate, sample_size, last_updated}}
+        """
+        by_sub: dict[str, list[dict]] = defaultdict(list)
+        for e in entries:
+            sub = e.get("subreddit", "").lower()
+            if sub:
+                by_sub[sub].append(e)
+
+        result = {}
+        for sub, sub_entries in by_sub.items():
+            decay_lambda = math.log(2) / HALF_LIFE_DAYS
+            weighted_success = 0.0
+            total_weight = 0.0
+            for e in sub_entries:
+                tracked_str = e.get("tracked_at", "")
+                try:
+                    tracked_dt = datetime.fromisoformat(tracked_str.replace("Z", "+00:00"))
+                    if tracked_dt.tzinfo is None:
+                        tracked_dt = tracked_dt.replace(tzinfo=timezone.utc)
+                    if now.tzinfo is None:
+                        now = now.replace(tzinfo=timezone.utc)
+                    days_ago = max(0, (now - tracked_dt).total_seconds() / 86400.0)
+                except (ValueError, TypeError):
+                    days_ago = 0
+                weight = math.exp(-decay_lambda * days_ago)
+
+                perf = e.get("performance", "failed")
+                if perf in ("viral", "super_viral", "passing"):
+                    weighted_success += weight
+                total_weight += weight
+
+            rate = round(weighted_success / total_weight, 4) if total_weight > 0 else 0.0
+            result[sub] = {
+                "success_rate": rate,
+                "sample_size": len(sub_entries),
+                "last_updated": now.isoformat(),
+            }
+
+        return result
+
+    # ── Phase 2.3: Pattern drift detection ──────────────────────
+
+    @staticmethod
+    def _detect_drift(
+        entries: list[dict], overall_rate: float, now: datetime
+    ) -> tuple[str, float]:
+        """Detect if a pattern's recent performance is declining.
+
+        Compares recent (DRIFT_WINDOW_DAYS) success rate against overall
+        time-decayed rate.  If recent rate is significantly lower, flags
+        the pattern as 'declining'.
+
+        Returns:
+            (drift_status, drift_score) where status is 'stable', 'declining',
+            or 'insufficient_data', and score is recent_rate / overall_rate
+            (1.0 = no change, < 0.7 = declining).
+        """
+        if not entries or overall_rate <= 0:
+            return "insufficient_data", 1.0
+
+        # Filter to recent entries
+        recent_entries = []
+        for e in entries:
+            tracked_str = e.get("tracked_at", "")
+            if not tracked_str:
+                continue
+            try:
+                tracked_dt = datetime.fromisoformat(tracked_str.replace("Z", "+00:00"))
+                if tracked_dt.tzinfo is None:
+                    tracked_dt = tracked_dt.replace(tzinfo=timezone.utc)
+                if now.tzinfo is None:
+                    now = now.replace(tzinfo=timezone.utc)
+                days_ago = (now - tracked_dt).total_seconds() / 86400.0
+                if days_ago <= DRIFT_WINDOW_DAYS:
+                    recent_entries.append(e)
+            except (ValueError, TypeError):
+                continue
+
+        if len(recent_entries) < 5:
+            return "insufficient_data", 1.0
+
+        recent_success = sum(
+            1 for e in recent_entries
+            if e.get("performance") in ("viral", "super_viral", "passing")
+        )
+        recent_rate = recent_success / len(recent_entries)
+
+        drift_score = recent_rate / overall_rate if overall_rate > 0 else 1.0
+
+        if drift_score < (1.0 - DRIFT_THRESHOLD):
+            return "declining", round(drift_score, 4)
+        return "stable", round(drift_score, 4)
+
+    # ── Phase 2.4: Auto-calibrate recommended metrics ────────────
+
+    @staticmethod
+    def _calibrate_metrics(pattern: dict, entries: list[dict]) -> None:
+        """Update recommended title/body word ranges from successful posts.
+
+        Uses the interquartile range (IQR) of successful posts' actual word
+        counts to set optimal ranges.  Only updates when enough successful
+        samples exist (>= CALIBRATION_MIN_SAMPLES).
+        """
+        successful = [
+            e for e in entries
+            if e.get("performance") in ("viral", "super_viral", "passing")
+        ]
+        if len(successful) < CALIBRATION_MIN_SAMPLES:
+            return
+
+        # Title word count calibration
+        title_wcs = []
+        for e in successful:
+            title = e.get("title", "")
+            if title:
+                title_wcs.append(len(title.split()))
+
+        if len(title_wcs) >= CALIBRATION_MIN_SAMPLES:
+            arr = np.array(title_wcs)
+            q1 = int(np.percentile(arr, 25))
+            q3 = int(np.percentile(arr, 75))
+            # Expand by 10% to avoid overfitting
+            lower = max(3, int(q1 * 0.9))
+            upper = max(lower + 2, int(q3 * 1.1))
+            metrics = pattern.setdefault("recommended_metrics", {})
+            metrics["title_words"] = [lower, upper]
+
+        # Body word count calibration
+        body_wcs = []
+        for e in successful:
+            body = e.get("body", "")
+            if body:
+                body_wcs.append(len(body.split()))
+
+        if len(body_wcs) >= CALIBRATION_MIN_SAMPLES:
+            arr = np.array(body_wcs)
+            q1 = int(np.percentile(arr, 25))
+            q3 = int(np.percentile(arr, 75))
+            lower = max(0, int(q1 * 0.9))
+            upper = max(lower + 10, int(q3 * 1.1))
+            metrics = pattern.setdefault("recommended_metrics", {})
+            metrics["body_words"] = [lower, upper]
+
+    # ── Helpers ─────────────────────────────────────────────────
 
     def _rewrite_feedback(self, path: Path, entries: list[dict]) -> None:
         with open(path, "w", encoding="utf-8") as f:
