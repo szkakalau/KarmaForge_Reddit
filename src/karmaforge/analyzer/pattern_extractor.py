@@ -1,18 +1,21 @@
 """Viral pattern extraction — clusters posts and identifies statistically significant patterns.
 
 Algorithm:
-1. Cluster posts by (hook_type, narrative_mode, content_type, tier)
-2. Compute viral_rate per cluster
+1. Cluster posts by (tier, hook_type, narrative_mode)
+2. Compute time-weighted viral_rate per cluster
 3. Chi-square test for significance
 4. Extract title/body templates from significant clusters
 5. Also extract anti-patterns from bottom-performing posts
+6. Optional: extract per-subreddit patterns + merge across subs
 """
 
 import json
 import logging
+import math
 import re
 from collections import defaultdict
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from itertools import combinations
 from pathlib import Path
 from typing import Optional
@@ -34,6 +37,10 @@ from .visual_analyzer import VisualAnalyzer, VisualAnalysisResult
 from .lifecycle_analyzer import LifecycleAnalyzer, LifecycleAnalysisResult
 
 logger = logging.getLogger(__name__)
+
+# ── Time-decay constants ──
+DEFAULT_HALF_LIFE_DAYS = 180  # 6 months — patterns older than this lose 50% weight
+MIN_POSTS_PER_SUBREDDIT = 100  # Minimum posts for per-subreddit pattern extraction
 
 
 @dataclass
@@ -98,6 +105,9 @@ class PatternExtractor:
         viral_percentile: float = 90.0,
         max_patterns: int = 8,
         title_similarity_threshold: float = 0.6,
+        use_time_decay: bool = True,
+        half_life_days: float = DEFAULT_HALF_LIFE_DAYS,
+        min_posts_per_subreddit: int = MIN_POSTS_PER_SUBREDDIT,
     ) -> None:
         self.llm = llm_client
         self.alpha = significance_level
@@ -105,6 +115,10 @@ class PatternExtractor:
         self.viral_percentile = viral_percentile
         self.max_patterns = max_patterns
         self.title_threshold = title_similarity_threshold
+        self.use_time_decay = use_time_decay
+        self.half_life_days = half_life_days
+        self.min_posts_per_sub = min_posts_per_subreddit
+        self._decay_lambda = math.log(2) / half_life_days if half_life_days > 0 else 0.0
 
     def extract(
         self,
@@ -128,6 +142,8 @@ class PatternExtractor:
         patterns = self._extract_patterns_from_clusters(clusters, posts, title_results)
         anti_patterns = self._extract_anti_patterns(non_viral_posts, posts)
 
+        # Score patterns by (time-weighted viral rate) × log(sample_size)
+        # Recency bonus gives edge to patterns that perform better recently
         patterns.sort(key=lambda p: p.historical_viral_rate * np.log(max(p.sample_size, 1)), reverse=True)
         patterns = patterns[:self.max_patterns]
 
@@ -156,6 +172,152 @@ class PatternExtractor:
                 )
                 results[tier] = patterns
         return results
+
+    def extract_by_subreddit(
+        self,
+        posts: list[Post],
+        title_results: TitleAnalysisResult,
+        content_results: ContentAnalysisResult,
+        meta_results: MetaAnalysisResult,
+        visual_results: VisualAnalysisResult,
+        lifecycle_results: Optional[LifecycleAnalysisResult] = None,
+    ) -> tuple[list[ViralPattern], list[AntiPattern]]:
+        """Extract patterns per subreddit, then merge similar ones across subs.
+
+        Unlike tier-level extraction which produces generic patterns
+        (e.g., "curious_question + no_body in t2"), per-subreddit patterns
+        capture subreddit-specific dynamics (e.g., "story_opener + has_body
+        in r/productivity").
+
+        Subreddits with < min_posts_per_sub are pooled into "other" and
+        extracted together to avoid wasting their signal.
+        """
+        # Group posts by subreddit
+        by_sub: dict[str, list[Post]] = defaultdict(list)
+        for p in posts:
+            by_sub[p.subreddit.lower()].append(p)
+
+        # Split into "has enough" and "too few"
+        solo_subs = {s: ps for s, ps in by_sub.items() if len(ps) >= self.min_posts_per_sub}
+        small_subs_posts = [p for s, ps in by_sub.items() if s not in solo_subs for p in ps]
+
+        logger.info(
+            "Per-subreddit extraction: %d solo subs (≥%d posts), %d pooled subs (%d posts)",
+            len(solo_subs), self.min_posts_per_sub,
+            len(by_sub) - len(solo_subs), len(small_subs_posts),
+        )
+
+        all_patterns: list[ViralPattern] = []
+
+        # Extract patterns per well-covered subreddit
+        for sub, sub_posts in solo_subs.items():
+            if len(sub_posts) < self.min_cluster_size * 3:
+                continue
+            try:
+                patterns, _ = self.extract(
+                    sub_posts, title_results, content_results,
+                    meta_results, visual_results, lifecycle_results,
+                )
+                # Tag with subreddit specificity
+                for p in patterns:
+                    p.applicable_subreddits = [sub]
+                    p.description = f"[r/{sub}] {p.description}"
+                all_patterns.extend(patterns)
+            except Exception:
+                logger.debug("Skipping r/%s — insufficient data for patterns", sub)
+
+        # Extract from the pooled small subreddits
+        if len(small_subs_posts) >= self.min_cluster_size * 3:
+            try:
+                pooled_patterns, _ = self.extract(
+                    small_subs_posts, title_results, content_results,
+                    meta_results, visual_results, lifecycle_results,
+                )
+                all_patterns.extend(pooled_patterns)
+            except Exception:
+                pass
+
+        # Merge similar patterns across subreddits
+        merged = self._merge_similar_patterns(all_patterns)
+
+        # Keep top N by score
+        merged.sort(
+            key=lambda p: p.historical_viral_rate * np.log(max(p.sample_size, 1)),
+            reverse=True,
+        )
+        merged = merged[:self.max_patterns]
+
+        # Anti-patterns still use global extraction
+        _, anti_patterns = self.extract(
+            posts, title_results, content_results,
+            meta_results, visual_results, lifecycle_results,
+        )
+
+        return merged, anti_patterns
+
+    def _merge_similar_patterns(
+        self, patterns: list[ViralPattern]
+    ) -> list[ViralPattern]:
+        """Merge patterns that share (hook_type, narrative_mode) and have
+        overlapping subreddits.  Keeps the highest-scoring pattern as the
+        base and absorbs applicable_subreddits from merged patterns.
+        """
+        if len(patterns) <= self.max_patterns:
+            return patterns
+
+        # Group by (hook_type, narrative_mode)
+        groups: dict[tuple, list[ViralPattern]] = defaultdict(list)
+        for p in patterns:
+            key = (p.hook_type, p.narrative_mode)
+            groups[key].append(p)
+
+        merged = []
+        for key, group in groups.items():
+            if len(group) == 1:
+                merged.append(group[0])
+            else:
+                # Sort by score, keep highest as base
+                group.sort(
+                    key=lambda p: p.historical_viral_rate * np.log(max(p.sample_size, 1)),
+                    reverse=True,
+                )
+                base = group[0]
+                # Absorb subreddits from lower-scoring patterns
+                all_subs = set(base.applicable_subreddits)
+                for other in group[1:]:
+                    all_subs.update(other.applicable_subreddits)
+                    base.sample_size += other.sample_size
+                base.applicable_subreddits = sorted(all_subs)
+                merged.append(base)
+
+        return merged
+
+    # ── Time-decay weighting ──────────────────────────────────────────────
+    def _compute_time_weights(
+        self, posts: list[Post], reference_date: Optional[datetime] = None
+    ) -> np.ndarray:
+        """Compute exponential time-decay weights for a list of posts.
+
+        weight = exp(-λ × days_ago)
+        λ = ln(2) / half_life_days
+
+        A post from 180 days ago gets 0.5× weight; 360 days → 0.25×.
+        Posts without timestamps get the median weight.
+        """
+        if not self.use_time_decay or not posts:
+            return np.ones(len(posts))
+
+        if reference_date is None:
+            timestamps = [p.created_utc for p in posts if p.created_utc is not None]
+            reference_date = max(timestamps) if timestamps else datetime.now(timezone.utc)
+
+        days_ago = np.array([
+            (reference_date - (p.created_utc or reference_date)).days
+            for p in posts
+        ], dtype=float)
+
+        weights = np.exp(-self._decay_lambda * np.maximum(days_ago, 0))
+        return weights
 
     def _split_viral(self, posts: list[Post]) -> tuple[list[Post], list[Post]]:
         viral, non_viral = [], []
@@ -300,16 +462,26 @@ class PatternExtractor:
 
             viral_posts_in_cluster = [p for p in cluster["posts"] if p.upvotes >= viral_threshold]
 
+            # ── Time-weighted viral rate ──
+            cluster_weights = self._compute_time_weights(cluster["posts"])
+            weighted_viral = sum(
+                w for p, w in zip(cluster["posts"], cluster_weights)
+                if p.upvotes >= viral_threshold
+            )
+            weighted_total = sum(cluster_weights)
+            time_weighted_viral_rate = weighted_viral / max(weighted_total, 1e-9)
+            # Blend: 70% time-weighted + 30% raw (avoids over-penalizing
+            # small clusters with one old viral post)
+            blended_rate = 0.7 * time_weighted_viral_rate + 0.3 * cluster["viral_rate"]
+
             titles = [p.title for p in viral_posts_in_cluster if p.title]
             title_template = self._extract_title_template(titles)
 
             # Bootstrap CI from cluster's own posts (not global population)
-            # FIX: was resampling from all_upvotes, producing CI that
-            # reflected global viral rate instead of cluster-specific rate.
             cluster_upvotes = [p.upvotes for p in cluster["posts"]]
             viral_rates = []
             rng = np.random.default_rng(42)
-            n_iter = min(1000, len(cluster_upvotes) * 10)  # scale with cluster size
+            n_iter = min(1000, len(cluster_upvotes) * 10)
             for _ in range(n_iter):
                 sample = rng.choice(cluster_upvotes, size=len(cluster_upvotes), replace=True)
                 viral_rates.append(
@@ -318,6 +490,10 @@ class PatternExtractor:
 
             ci_lower = round(float(np.percentile(viral_rates, 2.5)), 4)
             ci_upper = round(float(np.percentile(viral_rates, 97.5)), 4)
+
+            # ── Recency bonus for scoring ──
+            # Patterns with higher time-weighted rate (vs raw) are more current
+            recency_bonus = max(0.0, time_weighted_viral_rate - cluster["viral_rate"])
 
             pattern_id = f"pattern_{i:02d}"
             exemplar_ids = [p.post_id for p in viral_posts_in_cluster[:5]]
@@ -328,14 +504,14 @@ class PatternExtractor:
                 description=f"{cluster.get('hook_type', '')} × {cluster.get('narrative_mode', '')} in {cluster['tier']}/{cluster.get('content_type', 'any')}",
                 applicable_subreddits=list(set(p.subreddit for p in cluster["posts"])),
                 title_template=title_template,
-                historical_viral_rate=round(cluster["viral_rate"], 3),
+                historical_viral_rate=round(blended_rate, 3),
                 confidence_interval=(ci_lower, ci_upper),
                 avg_upvotes=round(cluster["avg_upvotes"], 1),
                 p_value=p_value,
                 exemplar_posts=exemplar_ids,
                 hook_type=cluster.get("hook_type", ""),
                 narrative_mode=cluster.get("narrative_mode", ""),
-                tier_effectiveness={cluster["tier"]: cluster["viral_rate"]},
+                tier_effectiveness={cluster["tier"]: round(blended_rate, 3)},
                 sample_size=cluster["total"],
             )
 

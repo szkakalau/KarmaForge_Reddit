@@ -118,6 +118,8 @@ analysis:
     viral_percentile: 90
     title_similarity_threshold: 0.6
     min_pattern_significance: 0.05
+    half_life_days: 180
+    min_posts_per_subreddit: 100
 
   subreddit_specificity:
     deviation_threshold: 0.3

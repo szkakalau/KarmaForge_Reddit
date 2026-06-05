@@ -192,10 +192,17 @@ def analyze(config_path: str, no_llm: bool, subreddits: tuple[str, ...]) -> None
         min_cluster_size=pat_cfg.get("min_cluster_size", 30),
         viral_percentile=pat_cfg.get("viral_percentile", 90),
         max_patterns=pat_cfg.get("max_patterns", 8),
+        use_time_decay=not no_time_decay,
+        half_life_days=pat_cfg.get("half_life_days", 180),
     )
-    patterns, anti_patterns = extractor.extract(
-        posts, title_results, content_results, meta_results, visual_results, lifecycle_results
-    )
+    if by_subreddit:
+        patterns, anti_patterns = extractor.extract_by_subreddit(
+            posts, title_results, content_results, meta_results, visual_results, lifecycle_results
+        )
+    else:
+        patterns, anti_patterns = extractor.extract(
+            posts, title_results, content_results, meta_results, visual_results, lifecycle_results
+        )
 
     click.echo(f"  Found {len(patterns)} patterns, {len(anti_patterns)} anti-patterns")
 
@@ -525,7 +532,9 @@ def _print_full_result(result, fmt: str) -> None:
 @main.command()
 @click.option("--config", "config_path", default="config.yaml")
 @click.option("--no-llm", is_flag=True)
-def pipeline(config_path: str, no_llm: bool) -> None:
+@click.option("--by-subreddit", is_flag=True, help="Extract per-subreddit patterns (not just per-tier)")
+@click.option("--no-time-decay", is_flag=True, help="Disable time-decay weighting")
+def pipeline(config_path: str, no_llm: bool, by_subreddit: bool, no_time_decay: bool) -> None:
     """Run full pipeline: collect → analyze → validate."""
     _setup_logging()
 
