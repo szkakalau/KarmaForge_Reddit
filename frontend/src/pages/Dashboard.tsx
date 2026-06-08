@@ -35,7 +35,6 @@ export default function Dashboard() {
   function _handleApiError(e: unknown) {
     const msg = e instanceof Error ? e.message : 'Unknown error'
     if (msg.includes('402') || msg.includes('quota_exceeded')) {
-      setQuotaExhausted(true)
       return t('dash.upgrade_banner_title', { limit: 20 })
     }
     return msg
@@ -45,7 +44,6 @@ export default function Dashboard() {
     if (!input.trim()) return
     setLoading(true)
     setError('')
-    setQuotaExhausted(false)
     setTitles([])
     try {
       const res = await api.generateTitles(input, subreddit || undefined)
