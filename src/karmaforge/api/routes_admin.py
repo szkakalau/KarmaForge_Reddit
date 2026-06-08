@@ -1,6 +1,7 @@
 """Admin endpoints — user stats, cost monitoring."""
 
 import logging
+import os
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -13,15 +14,22 @@ from .models import Generation, Subscription, User
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
-ADMIN_EMAILS = {"admin@karmaforge.local"}  # TODO: make configurable via env var
+
+def _get_admin_emails() -> set[str]:
+    raw = os.getenv("ADMIN_EMAILS", "")
+    if raw:
+        return {e.strip().lower() for e in raw.split(",") if e.strip()}
+    return set()
 
 
 def _require_admin(request: Request, session: Session = Depends(get_db)) -> User:
     user = get_current_user(request, session)
     if user is None:
         raise HTTPException(status_code=401)
-    # Simple admin check — in production, use a proper role system
-    if user.email not in ADMIN_EMAILS and not user.email.endswith("@karmaforge.local"):
+    admin_emails = _get_admin_emails()
+    if not admin_emails:
+        raise HTTPException(status_code=403, detail="ADMIN_EMAILS not configured")
+    if user.email.lower() not in admin_emails:
         raise HTTPException(status_code=403, detail="Admin access required")
     return user
 
