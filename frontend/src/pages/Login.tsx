@@ -47,7 +47,7 @@ export default function Login() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-accent" />
-            <span className="font-semibold text-lg text-text-primary">KarmaForge</span>
+            <span className="font-semibold text-lg text-text-primary">Reddpilot</span>
           </div>
           <LangSwitch />
         </div>

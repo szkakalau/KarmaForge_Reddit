@@ -15,7 +15,7 @@ export default function Landing() {
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-accent" />
             <span className="font-semibold text-base text-text-primary font-mono tracking-wide uppercase text-xs">
-              KarmaForge
+              Reddpilot
             </span>
           </div>
           <LangSwitch />

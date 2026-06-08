@@ -26,7 +26,7 @@ export default function Layout() {
       <nav className="w-[220px] bg-surface-1 border-r border-border flex flex-col flex-shrink-0 p-4">
         <div className="flex items-center gap-2 mb-8 px-1">
           <div className="w-3 h-3 rounded-full bg-accent" />
-          <span className="font-semibold text-base text-text-primary">KarmaForge</span>
+          <span className="font-semibold text-base text-text-primary">Reddpilot</span>
         </div>
 
         <NavLink to="/app" end className={({ isActive }) =>

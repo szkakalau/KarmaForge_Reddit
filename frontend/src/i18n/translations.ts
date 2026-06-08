@@ -1,4 +1,4 @@
-// All user-facing strings for the KarmaForge app.
+// All user-facing strings for the Reddpilot app.
 // Add new strings here — never hardcode text in components.
 
 export type Lang = 'zh' | 'en'
@@ -8,7 +8,7 @@ export const t: Record<Lang, Record<string, string>> = {
     // ── Landing ──
     'landing.hero.title1': 'Reddit 帖子，',
     'landing.hero.title2': '真正能被顶上去',
-    'landing.hero.subtitle': 'KarmaForge 分析每个 subreddit 的爆款模式，用 AI 生成符合社区文化的标题和正文。不是通用模板 — 每个帖子都针对你的目标社区量身定制。',
+    'landing.hero.subtitle': 'Reddpilot 分析每个 subreddit 的爆款模式，用 AI 生成符合社区文化的标题和正文。不是通用模板 — 每个帖子都针对你的目标社区量身定制。',
     'landing.hero.cta': '免费开始',
     'landing.hero.dashboard': '进入 Dashboard',
     'landing.hero.pricing': '查看定价',
@@ -71,7 +71,7 @@ export const t: Record<Lang, Record<string, string>> = {
     'dash.generate': '生成标题',
     'dash.generate_full': '生成完整帖子',
     'dash.empty_title': '准备好在 Reddit 上增长了',
-    'dash.empty_desc': '描述你想推广的内容，选择目标 subreddit，让 KarmaForge 帮你写真正有效的标题。',
+    'dash.empty_desc': '描述你想推广的内容，选择目标 subreddit，让 Reddpilot 帮你写真正有效的标题。',
     'dash.upgrade_banner_title': '你已用完本月 {limit} 次免费生成',
     'dash.upgrade_banner_desc': '升级到 Pro 获得 300 次生成/月 + 无限 AI 修改。',
     'dash.upgrade_button': '升级到 Pro',
@@ -124,7 +124,7 @@ export const t: Record<Lang, Record<string, string>> = {
     'pricing.pro.support': 'Email 支持',
 
     // ── Footer ──
-    'footer.version': 'KarmaForge v3',
+    'footer.version': 'Reddpilot v3',
     'footer.pricing': '定价',
     'footer.login': '登录',
   },
@@ -133,7 +133,7 @@ export const t: Record<Lang, Record<string, string>> = {
     // ── Landing ──
     'landing.hero.title1': 'Reddit posts that',
     'landing.hero.title2': 'actually get upvoted',
-    'landing.hero.subtitle': 'KarmaForge analyzes viral patterns in every subreddit and generates culturally-aligned titles and body text with AI. Not generic templates — every post is tailored to your target community.',
+    'landing.hero.subtitle': 'Reddpilot analyzes viral patterns in every subreddit and generates culturally-aligned titles and body text with AI. Not generic templates — every post is tailored to your target community.',
     'landing.hero.cta': 'Start free',
     'landing.hero.dashboard': 'Go to Dashboard',
     'landing.hero.pricing': 'View pricing',
@@ -196,7 +196,7 @@ export const t: Record<Lang, Record<string, string>> = {
     'dash.generate': 'Generate',
     'dash.generate_full': 'Generate Full Post',
     'dash.empty_title': 'Ready to grow on Reddit',
-    'dash.empty_desc': 'Describe what you\'re promoting, pick a subreddit, and let KarmaForge craft titles that actually work on Reddit.',
+    'dash.empty_desc': 'Describe what you\'re promoting, pick a subreddit, and let Reddpilot craft titles that actually work on Reddit.',
     'dash.upgrade_banner_title': 'You\'ve used all {limit} free generations this month',
     'dash.upgrade_banner_desc': 'Upgrade to Pro for 300 generations/month + unlimited AI revisions.',
     'dash.upgrade_button': 'Upgrade to Pro',
@@ -249,7 +249,7 @@ export const t: Record<Lang, Record<string, string>> = {
     'pricing.pro.support': 'Email support',
 
     // ── Footer ──
-    'footer.version': 'KarmaForge v3',
+    'footer.version': 'Reddpilot v3',
     'footer.pricing': 'Pricing',
     'footer.login': 'Login',
   },
