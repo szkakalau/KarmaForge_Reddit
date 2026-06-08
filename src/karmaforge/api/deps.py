@@ -229,17 +229,20 @@ def create_app(state: AppState | None = None) -> FastAPI:
     # Sentry — only active when SENTRY_DSN is configured
     sentry_dsn = os.getenv("SENTRY_DSN", "")
     if sentry_dsn:
-        import sentry_sdk
-        from sentry_sdk.integrations.fastapi import FastApiIntegration
-        sentry_sdk.init(
-            dsn=sentry_dsn,
-            integrations=[FastApiIntegration()],
-            send_default_pii=True,
-            traces_sample_rate=float(os.getenv("SENTRY_TRACES_RATE", "0.1")),
-            environment=os.getenv("SENTRY_ENV", "production"),
-            release=f"reddpilot@{os.getenv('RENDER_GIT_COMMIT', 'dev')}",
-        )
-        logger.info("Sentry initialized — environment=%s", os.getenv("SENTRY_ENV", "production"))
+        try:
+            import sentry_sdk
+            from sentry_sdk.integrations.fastapi import FastApiIntegration
+            sentry_sdk.init(
+                dsn=sentry_dsn,
+                integrations=[FastApiIntegration()],
+                send_default_pii=True,
+                traces_sample_rate=float(os.getenv("SENTRY_TRACES_RATE", "0.1")),
+                environment=os.getenv("SENTRY_ENV", "production"),
+                release=f"reddpilot@{os.getenv('RENDER_GIT_COMMIT', 'dev')}",
+            )
+            logger.info("Sentry initialized — env=%s", os.getenv("SENTRY_ENV", "production"))
+        except ImportError:
+            logger.warning("sentry-sdk not installed — skipping Sentry init")
 
     allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000")
     allowed_origins = [o.strip() for o in allowed_origins_raw.split(",") if o.strip()]
