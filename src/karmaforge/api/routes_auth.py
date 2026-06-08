@@ -41,6 +41,14 @@ def _hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 
+def _sanitize_name(name: str) -> str:
+    """Strip HTML tags and limit length for display_name."""
+    import re
+    name = re.sub(r"<[^>]*>", "", name)  # strip HTML
+    name = name.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return name.strip()[:128]
+
+
 def _create_token(user_id: str, email: str, secret: str) -> str:
     payload = {
         "sub": user_id,
@@ -62,7 +70,7 @@ def register(req: RegisterRequest, request: Request, session: Session = Depends(
         user = User(
             email=req.email,
             password_hash=_hash_password(req.password),
-            display_name=req.display_name or req.email.split("@")[0],
+            display_name=_sanitize_name(req.display_name or req.email.split("@")[0]),
             tier="free",
         )
         session.add(user)
