@@ -234,9 +234,10 @@ def create_app(state: AppState | None = None) -> FastAPI:
         sentry_sdk.init(
             dsn=sentry_dsn,
             integrations=[FastApiIntegration()],
+            send_default_pii=True,
             traces_sample_rate=float(os.getenv("SENTRY_TRACES_RATE", "0.1")),
             environment=os.getenv("SENTRY_ENV", "production"),
-            release=f"karmaforge@{os.getenv('RENDER_GIT_COMMIT', 'dev')}",
+            release=f"reddpilot@{os.getenv('RENDER_GIT_COMMIT', 'dev')}",
         )
         logger.info("Sentry initialized — environment=%s", os.getenv("SENTRY_ENV", "production"))
 
