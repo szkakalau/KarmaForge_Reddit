@@ -31,11 +31,13 @@ class User(Base):
     oauth_provider = Column(String(32), nullable=True)
     oauth_id = Column(String(255), nullable=True)
     display_name = Column(String(128), nullable=True)
+    tier = Column(String(16), default="free", nullable=False)  # "free" | "pro"
     created_at = Column(DateTime, default=_utcnow)
     updated_at = Column(DateTime, default=_utcnow, onupdate=_utcnow)
 
     generations = relationship("Generation", back_populates="user", order_by="Generation.created_at.desc()")
     feedback = relationship("Feedback", back_populates="user", order_by="Feedback.tracked_at.desc()")
+    subscription = relationship("Subscription", back_populates="user", uselist=False)
 
 
 class Generation(Base):
@@ -89,6 +91,27 @@ class SubredditConfig(Base):
     is_active = Column(Boolean, default=True)
     notes = Column(Text, default="")
     created_at = Column(DateTime, default=_utcnow)
+
+
+class Subscription(Base):
+    """Stripe subscription tracking. One row per user (uselist=False on User side)."""
+
+    __tablename__ = "subscriptions"
+
+    id = Column(String(32), primary_key=True, default=_new_id)
+    user_id = Column(String(32), ForeignKey("users.id"), nullable=False, unique=True, index=True)
+    stripe_customer_id = Column(String(64), nullable=True)
+    stripe_subscription_id = Column(String(64), nullable=True)
+    plan = Column(String(16), default="free", nullable=False)  # "free" | "pro"
+    status = Column(String(16), default="active", nullable=False)  # "active" | "canceled" | "past_due"
+    current_period_start = Column(DateTime, nullable=True)
+    current_period_end = Column(DateTime, nullable=True)
+    cancel_at_period_end = Column(Boolean, default=False)
+    stripe_event_ids = Column(JSON, default=list)  # idempotency: track processed Stripe event IDs
+    created_at = Column(DateTime, default=_utcnow)
+    updated_at = Column(DateTime, default=_utcnow, onupdate=_utcnow)
+
+    user = relationship("User", back_populates="subscription")
 
 
 def create_engine_from_url(db_url: str):

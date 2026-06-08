@@ -88,6 +88,7 @@
 - **Badges:** Semi-transparent 背景 (`rgba(color, 0.15)`) + solid 文字。Round-full 胶囊形。
 - **Data tables:** `--surface-2` header row + 1px `--border` 分隔。数字列用 JetBrains Mono tabular-nums。
 - **Metric cards:** 大号 JetBrains Mono 数字 (28px/700) + Inter 标签。绿色 delta = 正面趋势，红色 = 负面。
+- **Progress bars:** `--surface-2` 轨道 (4px 高, `--radius-sm` 圆角) + `--accent` 填充。无发光、无渐变填充。平滑宽度过渡 `ease-out 400ms`。标签：Inter 12px/400 `--text-secondary`，数值使用 JetBrains Mono tabular-nums。
 
 ## AI Slop Mitigation
 - **禁止：** 紫色渐变、3 列图标网格、全居中布局、泡泡圆角、装饰 blob、emoji 图标、system-ui 字体栈。

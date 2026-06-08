@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api'
+import { useLang } from '../i18n/LanguageContext'
+import LangSwitch from '../components/LangSwitch'
 
 export default function Login() {
+  const { t } = useLang()
   const navigate = useNavigate()
   const hasToken = !!localStorage.getItem('kf_token')
 
@@ -17,6 +20,12 @@ export default function Login() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  function mapError(msg: string): string {
+    if (msg.includes('409') || msg.includes('already registered')) return t('login.error.email_taken')
+    if (msg.includes('401') || msg.includes('Invalid')) return t('login.error.invalid')
+    return msg
+  }
+
   async function submit() {
     setLoading(true)
     setError('')
@@ -26,7 +35,7 @@ export default function Login() {
       localStorage.setItem('kf_token', res.token)
       navigate('/')
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Auth failed')
+      setError(mapError(e instanceof Error ? e.message : 'Auth failed'))
     } finally {
       setLoading(false)
     }
@@ -35,13 +44,16 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="w-full max-w-sm bg-surface-1 border border-border rounded-lg p-8">
-        <div className="flex items-center gap-2 mb-8 justify-center">
-          <div className="w-3 h-3 rounded-full bg-accent" />
-          <span className="font-semibold text-lg text-text-primary">KarmaForge</span>
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-accent" />
+            <span className="font-semibold text-lg text-text-primary">KarmaForge</span>
+          </div>
+          <LangSwitch />
         </div>
 
         <h1 className="text-xl font-semibold text-center mb-6">
-          {isRegister ? 'Create account' : 'Welcome back'}
+          {isRegister ? t('login.register_title') : t('login.title')}
         </h1>
 
         {error && (
@@ -52,7 +64,7 @@ export default function Login() {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-[13px] font-semibold text-text-secondary mb-1.5">Email</label>
+            <label className="block text-[13px] font-semibold text-text-secondary mb-1.5">{t('login.email')}</label>
             <input
               type="email"
               value={email}
@@ -62,7 +74,7 @@ export default function Login() {
             />
           </div>
           <div>
-            <label className="block text-[13px] font-semibold text-text-secondary mb-1.5">Password</label>
+            <label className="block text-[13px] font-semibold text-text-secondary mb-1.5">{t('login.password')}</label>
             <input
               type="password"
               value={password}
@@ -76,14 +88,14 @@ export default function Login() {
             disabled={loading}
             className="w-full bg-accent text-base font-semibold py-2.5 rounded-md text-sm hover:bg-accent-hover transition-colors disabled:opacity-40"
           >
-            {loading ? '...' : isRegister ? 'Create account' : 'Sign in'}
+            {loading ? '...' : isRegister ? t('login.create_account') : t('login.signin')}
           </button>
         </div>
 
         <p className="text-center text-text-muted text-xs mt-6">
-          {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
+          {isRegister ? t('login.has_account') : t('login.no_account')}{' '}
           <button onClick={() => setIsRegister(!isRegister)} className="text-accent hover:underline font-medium">
-            {isRegister ? 'Sign in' : 'Register'}
+            {isRegister ? t('login.signin_link') : t('login.register')}
           </button>
         </p>
       </div>

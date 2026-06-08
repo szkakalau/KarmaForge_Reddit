@@ -63,12 +63,19 @@ def register(req: RegisterRequest, request: Request, session: Session = Depends(
             email=req.email,
             password_hash=_hash_password(req.password),
             display_name=req.display_name or req.email.split("@")[0],
+            tier="free",
         )
         session.add(user)
+        session.flush()  # get user.id before commit
+
+        # Auto-create free subscription
+        from .models import Subscription
+        sub = Subscription(user_id=user.id, plan="free", status="active")
+        session.add(sub)
         session.commit()
 
         token = _create_token(user.id, user.email, state.jwt_secret)
-        return AuthResponse(token=token, user={"id": user.id, "email": user.email, "display_name": user.display_name})
+        return AuthResponse(token=token, user={"id": user.id, "email": user.email, "display_name": user.display_name, "tier": "free"})
     except HTTPException:
         raise
     except Exception as e:

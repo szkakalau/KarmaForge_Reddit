@@ -6,8 +6,10 @@ Claude can be accessed via OpenAI-compatible proxies or the Anthropic SDK as fal
 
 import json
 import hashlib
+import itertools
+import os
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Optional
@@ -23,7 +25,8 @@ class LLMProvider(Enum):
 @dataclass
 class LLMConfig:
     provider: LLMProvider
-    api_key: str
+    api_key: str = ""
+    api_keys: list[str] = field(default_factory=list)  # multi-key rotation (T2)
     model: str = "deepseek-chat"
     api_base_url: str = "https://api.deepseek.com/v1"
     max_tokens: int = 2000
@@ -35,12 +38,19 @@ class LLMConfig:
     def __post_init__(self):
         if isinstance(self.provider, str):
             self.provider = LLMProvider(self.provider)
+        # Populate api_keys from comma-separated env var
+        if not self.api_keys:
+            keys_env = os.getenv("LLM_API_KEYS", "")
+            if keys_env:
+                self.api_keys = [k.strip() for k in keys_env.split(",") if k.strip()]
 
 
 class LLMClient:
     def __init__(self, config: LLMConfig) -> None:
         self.config = config
-        self._openai_client: OpenAI | None = None
+        self._openai_client: OpenAI | None = None  # backward compat for tests
+        self._openai_clients: list[OpenAI] = []
+        self._client_cycle: itertools.cycle | None = None
         self._cache: dict[str, str] = {}
         self._total_tokens = 0
         self._total_cost_estimate = 0.0
@@ -49,24 +59,34 @@ class LLMClient:
             self._load_cache()
 
     def _get_client(self) -> OpenAI:
-        """Lazily create the OpenAI client so that missing credentials
-        are surfaced only when an API call is actually made, not at import time."""
-        if self._openai_client is None:
-            # Guard: ensure api_key is non-empty before passing to OpenAI SDK.
-            # OpenAI SDK v2.x validates credentials at constructor time and
-            # will fall back to the OPENAI_API_KEY env var if api_key is empty.
-            if not self.config.api_key:
+        """Lazily create OpenAI client(s).
+
+        When api_keys is populated, creates one client per key and
+        round-robins between them — one abusive user can't exhaust
+        the rate limit for all users (T2).
+
+        Backward compat: if tests set _openai_client directly, prefer it
+        over the key-rotation pool.
+        """
+        if self._openai_client is not None:
+            return self._openai_client
+        if not self._openai_clients:
+            keys = self.config.api_keys if self.config.api_keys else [self.config.api_key]
+            if not keys or not any(keys):
                 raise RuntimeError(
                     "LLM_API_KEY is empty — please set it in .env or environment. "
                     "The OpenAI SDK (used as DeepSeek client) requires a non-empty api_key."
                 )
-            self._openai_client = OpenAI(
-                api_key=self.config.api_key,
-                base_url=self.config.api_base_url,
-                timeout=self.config.request_timeout,
-                max_retries=0,
-            )
-        return self._openai_client
+            for key in keys:
+                if key:
+                    self._openai_clients.append(OpenAI(
+                        api_key=key,
+                        base_url=self.config.api_base_url,
+                        timeout=self.config.request_timeout,
+                        max_retries=0,
+                    ))
+            self._client_cycle = itertools.cycle(self._openai_clients)
+        return next(self._client_cycle)
 
     def complete(self, prompt: str, system_prompt: str = "") -> str:
         cache_key = self._cache_key(prompt, system_prompt)

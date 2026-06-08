@@ -74,6 +74,61 @@ export interface HistoryItem {
   tracked_at: string;
 }
 
+
+export interface PredictionItem {
+  title: string
+  score: number
+  hook_type: string
+  pattern_id: string
+  predicted_range: string
+  confidence: string
+  reasoning: string
+}
+
+export interface PredictResponse {
+  generation_id: string
+  subreddit: string
+  predictions: PredictionItem[]
+}
+
+// ── Billing & Quota ────────────────────────────────────────────────
+
+export interface QuotaInfo {
+  used: number
+  limit: number
+  tier: string
+  remaining: number
+}
+
+export interface BillingStatus {
+  plan: string
+  status: string
+  cancel_at_period_end: boolean
+  current_period_end: string | null
+  stripe_customer_id: string | null
+}
+
+export interface AsyncJobStatus {
+  generation_id: string
+  status: string  // "pending" | "processing" | "done" | "failed"
+  result: FullGenerationResponse | null
+  error: string | null
+}
+
+export class QuotaExceededError extends Error {
+  used: number
+  limit: number
+  tier: string
+
+  constructor(detail: { used: number; limit: number; tier: string; upgrade_url: string }) {
+    super('Quota exceeded')
+    this.name = 'QuotaExceededError'
+    this.used = detail.used
+    this.limit = detail.limit
+    this.tier = detail.tier
+  }
+}
+
 export const api = {
   get: (path: string) => request(path) as Promise<unknown>,
 
@@ -88,6 +143,30 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ user_input, target_subreddit: target_subreddit || null, n_titles }),
     }) as Promise<FullGenerationResponse>,
+
+  generateAsync: (user_input: string, target_subreddit?: string, n_titles = 3, title_index = 0) =>
+    request(`/generate/async?title_index=${title_index}`, {
+      method: 'POST',
+      body: JSON.stringify({ user_input, target_subreddit: target_subreddit || null, n_titles }),
+    }) as Promise<{ generation_id: string; status: string; message: string }>,
+
+  getJobStatus: (generationId: string) =>
+    request(`/generate/${generationId}/status`) as Promise<AsyncJobStatus>,
+
+  getQuota: () =>
+    request('/usage') as Promise<QuotaInfo>,
+
+  getBillingStatus: () =>
+    request('/billing/status') as Promise<BillingStatus>,
+
+  createCheckout: (successUrl?: string, cancelUrl?: string) =>
+    request('/billing/create-checkout', {
+      method: 'POST',
+      body: JSON.stringify({ success_url: successUrl, cancel_url: cancelUrl }),
+    }) as Promise<{ url: string; session_id: string }>,
+
+  createPortal: () =>
+    request('/billing/portal', { method: 'POST' }) as Promise<{ url: string }>,
 
   predict: (user_input: string, target_subreddit: string, n_titles = 3) =>
     request('/generate/predict', {
@@ -121,19 +200,3 @@ export const api = {
   register: (email: string, password: string, display_name?: string) =>
     request('/auth/register', { method: 'POST', body: JSON.stringify({ email, password, display_name }) }) as Promise<{ token: string; user: Record<string, unknown> }>,
 };
-
-export interface PredictionItem {
-  title: string
-  score: number
-  hook_type: string
-  pattern_id: string
-  predicted_range: string
-  confidence: string
-  reasoning: string
-}
-
-export interface PredictResponse {
-  generation_id: string
-  subreddit: string
-  predictions: PredictionItem[]
-}

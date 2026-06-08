@@ -1,9 +1,14 @@
-import { useState } from 'react'
-import { Send, Copy, Check, Sparkles, FileText, AlertTriangle, RefreshCw, Wand2 } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Send, Copy, Check, Sparkles, FileText, AlertTriangle, RefreshCw, Wand2, ArrowUpRight } from 'lucide-react'
 import { api } from '../api'
+import type { QuotaInfo } from '../api'
 import type { TitleItem, FullGenerationResponse } from '../api'
+import { useLang } from '../i18n/LanguageContext'
 
 export default function Dashboard() {
+  const { t } = useLang()
+  const navigate = useNavigate()
   const [input, setInput] = useState('')
   const [subreddit, setSubreddit] = useState('')
   const [loading, setLoading] = useState(false)
@@ -20,17 +25,35 @@ export default function Dashboard() {
   const [revising, setRevising] = useState(false)
   const [revisionCount, setRevisionCount] = useState(0)
 
+  // Quota state
+  const [quota, setQuota] = useState<QuotaInfo | null>(null)
+  const [quotaExhausted, setQuotaExhausted] = useState(false)
+
+  useEffect(() => {
+    api.getQuota().then(setQuota).catch(() => {})
+  }, [loading, generatingFull])
+
+  function _handleApiError(e: unknown) {
+    const msg = e instanceof Error ? e.message : 'Unknown error'
+    if (msg.includes('402') || msg.includes('quota_exceeded')) {
+      setQuotaExhausted(true)
+      return t('dash.upgrade_banner_title', { limit: 20 })
+    }
+    return msg
+  }
+
   async function generate() {
     if (!input.trim()) return
     setLoading(true)
     setError('')
+    setQuotaExhausted(false)
     setTitles([])
     try {
       const res = await api.generateTitles(input, subreddit || undefined)
       setTitles(res.titles)
       setGenId(res.generation_id)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Generation failed')
+      setError(_handleApiError(e))
     } finally {
       setLoading(false)
     }
@@ -57,7 +80,7 @@ export default function Dashboard() {
       setSelectedPatternId(res.selected_pattern_id || '')
       setSelfCheck(res.self_check)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Full generation failed')
+      setError(_handleApiError(e))
     } finally {
       setGeneratingFull(false)
     }
@@ -103,33 +126,63 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-4xl">
-      <h1 className="text-[22px] font-semibold tracking-[-0.4px] mb-8">Generate</h1>
+      <h1 className="text-[22px] font-semibold tracking-[-0.4px] mb-4">{t('dash.title')}</h1>
+
+      {/* Quota Progress Bar */}
+      {quota && (
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs text-text-muted font-mono uppercase tracking-wide">
+              {t('dash.quota_label')}
+            </span>
+            <span className="text-xs font-mono text-text-secondary">
+              <span className={quota.remaining <= 5 && quota.remaining > 0 ? 'text-warning font-semibold' : 'text-text-primary font-semibold'}>
+                {quota.remaining}
+              </span>
+              <span className="text-text-muted"> / {quota.limit} {t('dash.quota_remaining')}</span>
+            </span>
+          </div>
+          <div className="w-full h-1 bg-surface-2 rounded-sm overflow-hidden">
+            <div
+              className={`h-full rounded-sm transition-all duration-400 ease-out ${
+                quota.remaining === 0 ? 'bg-error' :
+                quota.remaining <= 5 ? 'bg-warning' : 'bg-accent'
+              }`}
+              style={{ width: `${Math.min(100, (quota.used / quota.limit) * 100)}%` }}
+              role="progressbar"
+              aria-valuenow={quota.used}
+              aria-valuemin={0}
+              aria-valuemax={quota.limit}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Generator Card */}
       <div className="bg-surface-1 border border-border rounded-lg p-6 mb-8">
         <div className="flex gap-3 items-end">
           <div className="flex-1">
             <label className="block text-[13px] font-semibold text-text-secondary mb-2">
-              What are you promoting?
+              {t('dash.what_promoting')}
             </label>
             <input
               type="text"
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && generate()}
-              placeholder="Describe your product or topic..."
+              placeholder={t('dash.placeholder')}
               className="w-full bg-surface-2 border border-border rounded-md px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-accent transition-colors"
             />
           </div>
           <div style={{ width: 200 }}>
             <label className="block text-[13px] font-semibold text-text-secondary mb-2">
-              Subreddit
+              {t('dash.subreddit')}
             </label>
             <input
               type="text"
               value={subreddit}
               onChange={e => setSubreddit(e.target.value)}
-              placeholder="r/SaaS"
+              placeholder={t('dash.subreddit_placeholder')}
               className="w-full bg-surface-2 border border-border rounded-md px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-accent transition-colors"
             />
           </div>
@@ -143,14 +196,36 @@ export default function Dashboard() {
             ) : (
               <Sparkles size={16} />
             )}
-            Generate
+            {t('dash.generate')}
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="bg-error/10 border border-error/30 rounded-lg p-4 text-error text-sm mb-8">
+        <div className="bg-error/10 border border-error/30 rounded-lg p-4 text-error text-sm mb-6">
           {error}
+        </div>
+      )}
+
+      {/* Upgrade Banner — shows when quota is low or exhausted */}
+      {quota && quota.remaining === 0 && !error && (
+        <div className="bg-accent/8 border-l-2 border-accent rounded-r-lg p-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold text-text-primary mb-1">
+                {t('dash.upgrade_banner_title', { limit: quota?.limit ?? 20 })}
+              </p>
+              <p className="text-xs text-text-secondary">
+                {t('dash.upgrade_banner_desc')}
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/app/pricing')}
+              className="flex items-center gap-1.5 bg-accent text-base font-semibold px-4 py-2 rounded-md text-xs hover:bg-accent-hover transition-colors shrink-0 ml-4"
+            >
+              {t('dash.upgrade_button')} <ArrowUpRight size={14} />
+            </button>
+          </div>
         </div>
       )}
 
@@ -197,7 +272,7 @@ export default function Dashboard() {
                   className="flex items-center gap-1.5 text-xs text-text-muted hover:text-accent transition-colors"
                 >
                   {copied === t.title ? <Check size={14} /> : <Copy size={14} />}
-                  {copied === t.title ? 'Copied' : 'Copy'}
+                  {copied === t.title ? t('dash.copied') : t('dash.copy')}
                 </button>
               </div>
             ))}
@@ -215,7 +290,7 @@ export default function Dashboard() {
               ) : (
                 <FileText size={16} />
               )}
-              Generate Full Post
+              {t('dash.generate_full')}
             </button>
             <span className="text-xs text-text-muted truncate max-w-[300px]">
               Using: {titles[selectedIndex]?.title?.slice(0, 60)}...
@@ -325,9 +400,9 @@ export default function Dashboard() {
           <div className="w-16 h-16 bg-surface-1 border border-border rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Send size={28} className="text-text-muted" />
           </div>
-          <h2 className="text-lg font-semibold mb-2">Ready to grow on Reddit</h2>
+          <h2 className="text-lg font-semibold mb-2">{t('dash.empty_title')}</h2>
           <p className="text-text-secondary max-w-sm mx-auto">
-            Describe what you're promoting, pick a subreddit, and let KarmaForge craft titles that actually work on Reddit.
+            {t('dash.empty_desc')}
           </p>
         </div>
       )}

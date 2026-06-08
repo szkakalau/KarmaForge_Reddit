@@ -1,4 +1,4 @@
-# KarmaForge Dockerfile — multi-stage build: frontend + backend
+# KarmaForge Dockerfile — multi-stage: frontend + backend
 # Stage 1: Build React frontend
 FROM node:22-alpine AS frontend-build
 WORKDIR /frontend
@@ -11,27 +11,26 @@ RUN npm run build
 FROM python:3.12-slim
 WORKDIR /app
 
-# REQUIRED: karmaforge 包在 src/ 下，pip install 的依赖不包含包自身
 ENV PYTHONPATH=/app/src
 
-# System deps: libgomp1 for scipy, ca-certificates for HTTPS
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgomp1 \
-    ca-certificates \
+    libgomp1 ca-certificates gcc libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY pyproject.toml .
 RUN pip install --no-cache-dir \
-    fastapi uvicorn[standard] sqlalchemy pyjwt pydantic bcrypt python-dotenv \
-    openai scipy scikit-learn pandas numpy nltk textstat pyyaml tqdm click
+    fastapi uvicorn[standard] sqlalchemy pyjwt pydantic bcrypt python-dotenv passlib \
+    openai scipy scikit-learn pandas numpy nltk textstat pyyaml tqdm click httpx \
+    stripe alembic psycopg2-binary
 
 COPY src/ src/
+COPY alembic/ alembic/
+COPY alembic.ini .
 COPY data/patterns/ data/patterns/
-COPY config.yaml .
 COPY --from=frontend-build /frontend/dist/ src/static/
 
 RUN mkdir -p data/processed data/tracking data/generations
 
-EXPOSE 8001
+EXPOSE 8000
 
-CMD ["sh", "-c", "echo 'Starting KarmaForge on port' ${PORT:-8001} && uvicorn karmaforge.api.main:app --host 0.0.0.0 --port ${PORT:-8001} --log-level info"]
+CMD ["sh", "-c", "alembic upgrade head && uvicorn karmaforge.api.main:app --host 0.0.0.0 --port ${PORT:-8000} --log-level info"]

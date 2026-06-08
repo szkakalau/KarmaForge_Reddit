@@ -1,9 +1,13 @@
 """Generate endpoint — wraps generator.orchestrator."""
 
+import asyncio
 import logging
 import os
+import threading
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -11,12 +15,18 @@ from ..generator.orchestrator import GeneratorOrchestrator
 from ..generator.self_checker import SelfChecker
 from ..llm import LLMClient
 from ..llm.prompts import BODY_REVISE
-from .deps import get_current_user, get_db, get_llm_client
+from .deps import check_rate_limit, get_current_user, get_db, get_llm_client, require_quota
 from .models import Generation, User
 from .prediction import predict_titles
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/generate", tags=["generate"])
+
+# ── Async Generation Job Store ─────────────────────────────────────
+
+_executor = ThreadPoolExecutor(max_workers=4)
+_jobs: dict[str, dict] = {}
+_jobs_lock = threading.Lock()
 
 
 class GenerateRequest(BaseModel):
@@ -92,11 +102,14 @@ def _new_orchestrator() -> GeneratorOrchestrator:
 @router.post("/titles", response_model=GenerationResponse)
 def generate_titles(
     req: GenerateRequest,
+    request: Request,
     llm: LLMClient = Depends(get_llm_client),
     session: Session = Depends(get_db),
-    current_user: User | None = Depends(get_current_user),
+    current_user: User = Depends(require_quota),
 ):
     try:
+        check_rate_limit(request, current_user)
+
         orch = _new_orchestrator()
         orch._llm = llm
 
@@ -108,7 +121,7 @@ def generate_titles(
         ]
 
         gen_record = Generation(
-            user_id=current_user.id if current_user else "_anonymous",
+            user_id=current_user.id,
             generation_id=result.generation_id,
             user_input=req.user_input,
             target_subreddit=req.target_subreddit,
@@ -134,12 +147,15 @@ def generate_titles(
 @router.post("/full", response_model=FullGenerationResponse)
 def generate_full(
     req: GenerateRequest,
+    request: Request,
     title_index: int = 0,
     llm: LLMClient = Depends(get_llm_client),
     session: Session = Depends(get_db),
-    current_user: User | None = Depends(get_current_user),
+    current_user: User = Depends(require_quota),
 ):
     try:
+        check_rate_limit(request, current_user)
+
         orch = _new_orchestrator()
         orch._llm = llm
 
@@ -151,7 +167,7 @@ def generate_full(
         ]
 
         gen_record = Generation(
-            user_id=current_user.id if current_user else "_anonymous",
+            user_id=current_user.id,
             generation_id=result.generation_id,
             user_input=req.user_input,
             target_subreddit=req.target_subreddit,
@@ -259,15 +275,201 @@ def revise(req: ReviseRequest, llm: LLMClient = Depends(get_llm_client)):
         raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
 
 
+# ── Async Generation ───────────────────────────────────────────────
+
+
+class AsyncJobStatus(BaseModel):
+    generation_id: str
+    status: str  # "pending" | "processing" | "done" | "failed"
+    result: dict | None = None
+    error: str | None = None
+
+
+def _run_full_generation(
+    job_id: str,
+    user_input: str,
+    target_subreddit: str | None,
+    n_titles: int,
+    title_index: int,
+    user_id: str,
+    db_path: str,
+) -> None:
+    """Run the full generation pipeline in a background thread."""
+    with _jobs_lock:
+        _jobs[job_id]["status"] = "processing"
+
+    try:
+        orch = GeneratorOrchestrator(db_path=db_path)
+        result = orch.generate_full(user_input, target_subreddit, title_index, n_titles)
+
+        titles = [
+            {
+                "title": t.title,
+                "score": t.score,
+                "hook_type": t.hook_type,
+                "pattern_id": t.pattern_id,
+            }
+            for t in result.candidate_titles
+        ]
+
+        output = {
+            "generation_id": result.generation_id,
+            "matched_subreddits": [
+                {"subreddit": s, "score": sc}
+                for s, sc in result.matched_subreddits
+            ],
+            "titles": titles,
+            "metadata": result.metadata,
+            "selected_title": result.selected_title.title if result.selected_title else None,
+            "selected_pattern_id": result.selected_title.pattern_id if result.selected_title else None,
+            "body": result.body,
+            "self_check": {
+                "passed": result.self_check.passed,
+                "dimensions": result.self_check.dimensions,
+                "suggestions": result.self_check.suggestions,
+            } if result.self_check else None,
+        }
+
+        with _jobs_lock:
+            _jobs[job_id]["status"] = "done"
+            _jobs[job_id]["result"] = output
+
+    except Exception as e:
+        logger.exception("Async generation failed for job %s", job_id)
+        with _jobs_lock:
+            _jobs[job_id]["status"] = "failed"
+            _jobs[job_id]["error"] = f"{type(e).__name__}: {e}"
+
+
+@router.post("/async", status_code=202)
+def generate_async(
+    req: GenerateRequest,
+    request: Request,
+    title_index: int = 0,
+    llm: LLMClient = Depends(get_llm_client),
+    session: Session = Depends(get_db),
+    current_user: User = Depends(require_quota),
+):
+    """Start async full generation. Returns 202 with generation_id immediately.
+
+    Poll GET /api/generate/{generation_id}/status for results.
+    Free users: max 1 concurrent job. Pro users: max 3.
+    """
+    check_rate_limit(request, current_user)
+
+    max_jobs = 3 if current_user.tier == "pro" else 1
+    user_jobs = sum(
+        1 for j in _jobs.values()
+        if j.get("user_id") == current_user.id and j["status"] in ("pending", "processing")
+    )
+    if user_jobs >= max_jobs:
+        raise HTTPException(
+            status_code=429,
+            detail={
+                "error": "too_many_jobs",
+                "max_concurrent": max_jobs,
+                "current": user_jobs,
+            },
+        )
+
+    # Create job entry — use a temporary ID, replaced after orch runs
+    import uuid
+    job_id = f"async_{uuid.uuid4().hex[:12]}"
+    now = datetime.now(timezone.utc)
+
+    with _jobs_lock:
+        _jobs[job_id] = {
+            "generation_id": job_id,
+            "status": "pending",
+            "user_id": current_user.id,
+            "created_at": now.isoformat(),
+        }
+
+    # Save placeholder Generation record
+    gen_record = Generation(
+        user_id=current_user.id,
+        generation_id=job_id,
+        user_input=req.user_input,
+        target_subreddit=req.target_subreddit,
+    )
+    session.add(gen_record)
+    session.commit()
+
+    # Run generation in background thread
+    _executor.submit(
+        _run_full_generation,
+        job_id=job_id,
+        user_input=req.user_input,
+        target_subreddit=req.target_subreddit,
+        n_titles=req.n_titles,
+        title_index=title_index,
+        user_id=current_user.id,
+        db_path=_db_path,
+    )
+
+    return {
+        "generation_id": job_id,
+        "status": "pending",
+        "message": "Generation started. Poll GET /api/generate/{id}/status for results.",
+    }
+
+
+@router.get("/{generation_id}/status", response_model=AsyncJobStatus)
+def get_generation_status(
+    generation_id: str,
+    session: Session = Depends(get_db),
+    current_user: User = Depends(require_quota),
+):
+    """Poll the status of an async generation job."""
+    with _jobs_lock:
+        job = _jobs.get(generation_id)
+
+    if job is None:
+        # Check if it's a completed sync generation in the DB
+        gen = session.query(Generation).filter(
+            Generation.generation_id == generation_id,
+            Generation.user_id == current_user.id,
+        ).first()
+        if gen:
+            return AsyncJobStatus(
+                generation_id=generation_id,
+                status="done",
+                result={
+                    "generation_id": gen.generation_id,
+                    "titles": gen.titles_json or [],
+                    "selected_title": gen.selected_title,
+                    "body": gen.body,
+                    "self_check": gen.self_check_json,
+                },
+            )
+        raise HTTPException(status_code=404, detail="Generation job not found")
+
+    if job.get("user_id") != current_user.id:
+        raise HTTPException(status_code=403, detail="Not your generation job")
+
+    return AsyncJobStatus(
+        generation_id=generation_id,
+        status=job["status"],
+        result=job.get("result"),
+        error=job.get("error"),
+    )
+
+
+# ── Legacy Sync Endpoints ──────────────────────────────────────────
+
+
 @router.post("/predict", response_model=PredictResponse)
 def predict(
     req: PredictRequest,
+    request: Request,
     llm: LLMClient = Depends(get_llm_client),
     session: Session = Depends(get_db),
-    current_user: User | None = Depends(get_current_user),
+    current_user: User = Depends(require_quota),
 ):
     """Generate titles AND rank them with historical performance predictions."""
     try:
+        check_rate_limit(request, current_user)
+
         orch = _new_orchestrator()
         orch._llm = llm
 
@@ -278,7 +480,7 @@ def predict(
             for t in result.candidate_titles
         ]
 
-        user_id = current_user.id if current_user else "_anonymous"
+        user_id = current_user.id
         predictions = predict_titles(
             session, user_id, req.target_subreddit, titles_dicts
         )
