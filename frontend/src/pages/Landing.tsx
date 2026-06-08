@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Database, Microscope, Zap, TrendingUp, Brain, BarChart3, Target, Hash, GitBranch } from 'lucide-react'
+import { ArrowRight, Database, Microscope, Brain, Target, Hash, GitBranch } from 'lucide-react'
 import { useLang } from '../i18n/LanguageContext'
 import LangSwitch from '../components/LangSwitch'
 
