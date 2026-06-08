@@ -5,10 +5,14 @@ import { api } from '../api'
 import type { QuotaInfo } from '../api'
 import type { TitleItem, FullGenerationResponse } from '../api'
 import { useLang } from '../i18n/LanguageContext'
+import Onboarding from '../components/Onboarding'
 
 export default function Dashboard() {
   const { t } = useLang()
   const navigate = useNavigate()
+  const [showOnboarding, setShowOnboarding] = useState(
+    !localStorage.getItem('kf_onboarded')
+  )
   const [input, setInput] = useState('')
   const [subreddit, setSubreddit] = useState('')
   const [loading, setLoading] = useState(false)
@@ -123,6 +127,12 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-4xl">
+      {showOnboarding && (
+        <Onboarding onComplete={() => {
+          localStorage.setItem('kf_onboarded', '1')
+          setShowOnboarding(false)
+        }} />
+      )}
       <h1 className="text-[22px] font-semibold tracking-[-0.4px] mb-4">{t('dash.title')}</h1>
 
       {/* Quota Progress Bar */}

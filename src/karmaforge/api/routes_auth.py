@@ -75,6 +75,16 @@ def register(req: RegisterRequest, request: Request, session: Session = Depends(
         session.commit()
 
         token = _create_token(user.id, user.email, state.jwt_secret)
+
+        # Fire-and-forget welcome email
+        import threading
+        from .email_service import send_welcome_email
+        threading.Thread(
+            target=send_welcome_email,
+            args=(user.email, user.display_name),
+            daemon=True,
+        ).start()
+
         return AuthResponse(token=token, user={"id": user.id, "email": user.email, "display_name": user.display_name, "tier": "free"})
     except HTTPException:
         raise
