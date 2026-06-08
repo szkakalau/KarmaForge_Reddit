@@ -18,7 +18,7 @@ export default class ErrorBoundary extends Component<Props, State> {
     // Report to Sentry if configured (lightweight, no npm dependency)
     const dsn = import.meta.env.VITE_SENTRY_DSN
     if (dsn) {
-      const [proto, rest] = dsn.split('://')
+      const [, rest] = dsn.split('://')
       const [key, host] = (rest || '').split('@')
       const projectId = host?.split('/').pop() || ''
       const endpoint = `https://${host?.replace(`/${projectId}`, '')}/api/${projectId}/envelope/`
