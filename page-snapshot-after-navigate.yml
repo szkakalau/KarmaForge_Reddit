@@ -1,0 +1,46 @@
+- main [ref=e22]:
+  - generic [ref=e23]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e28]
+    - paragraph [ref=e33]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - button [ref=e37] [cursor=pointer]: 生成
+          - button [ref=e38] [cursor=pointer]: 追踪
+          - button [ref=e39] [cursor=pointer]: 历史
+          - button [ref=e40] [cursor=pointer]: 模式库
+          - button [ref=e41] [cursor=pointer]: 进化
+          - button [ref=e42] [cursor=pointer]: 设置
+        - tablist [ref=e43]:
+          - tab "生成" [selected] [ref=e44] [cursor=pointer]
+          - tab "追踪" [ref=e45] [cursor=pointer]
+          - tab "历史" [ref=e46] [cursor=pointer]
+          - tab "模式库" [ref=e47] [cursor=pointer]
+          - tab "进化" [ref=e48] [cursor=pointer]
+          - tab "设置" [ref=e49] [cursor=pointer]
+      - tabpanel [ref=e50]:
+        - generic [ref=e53]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: 帖子主题
+            - textbox "帖子主题" [ref=e59]:
+              - /placeholder: 描述你想发的内容，例如：I built a Python automation script that saves 3 hours daily
+          - generic [ref=e61]:
+            - generic [ref=e63]:
+              - generic [ref=e64]: 目标 Subreddit
+              - generic [ref=e67]:
+                - listbox "目标 Subreddit" [ref=e68]: Auto-detect
+                - generic:
+                  - img
+            - generic [ref=e70]:
+              - generic [ref=e71]:
+                - generic [ref=e73]: 候选标题数
+                - generic [ref=e74]:
+                  - spinbutton "number input for 候选标题数" [ref=e75]: "3"
+                  - button "Reset to default value" [ref=e76] [cursor=pointer]: ↺
+              - generic [ref=e77]:
+                - generic [ref=e78]: "1"
+                - slider "range slider for 候选标题数" [ref=e79] [cursor=pointer]: "3"
+                - generic [ref=e80]: "5"
+          - generic [ref=e81]:
+            - button "生成标题" [ref=e82] [cursor=pointer]
+            - button "生成完整帖子" [ref=e83] [cursor=pointer]

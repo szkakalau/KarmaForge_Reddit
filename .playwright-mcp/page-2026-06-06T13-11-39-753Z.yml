@@ -1,0 +1,61 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e8]: KarmaForge
+      - button "EN" [ref=e9]
+    - heading "Reddit 帖子， 真正能被顶上去" [level=1] [ref=e10]:
+      - text: Reddit 帖子，
+      - text: 真正能被顶上去
+    - paragraph [ref=e11]: KarmaForge 分析每个 subreddit 的爆款模式，用 AI 生成符合社区文化的标题和正文。不是通用模板 — 每个帖子都针对你的目标社区量身定制。
+    - generic [ref=e12]:
+      - link "进入 Dashboard" [ref=e13] [cursor=pointer]:
+        - /url: /app
+        - text: 进入 Dashboard
+        - img [ref=e14]
+      - link "查看定价" [ref=e16] [cursor=pointer]:
+        - /url: /pricing
+  - generic [ref=e18]:
+    - heading "三步工作流" [level=2] [ref=e19]
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e23]: "1"
+        - heading "描述你的内容" [level=3] [ref=e24]
+        - paragraph [ref=e25]: 输入你想推广的产品或话题。AI 自动匹配最适合的 subreddit 和爆款模式。
+      - generic [ref=e26]:
+        - generic [ref=e28]: "2"
+        - heading "选择最佳标题" [level=3] [ref=e29]
+        - paragraph [ref=e30]: 从多个 AI 生成的候选中选择。每个标题都基于真实爆款数据评分，确保文化适配。
+      - generic [ref=e31]:
+        - generic [ref=e33]: "3"
+        - heading "发布 + 追踪效果" [level=3] [ref=e34]
+        - paragraph [ref=e35]: 手动发布到 Reddit，然后追踪 upvotes、评论和存活率。系统越用越懂你的社区。
+  - generic [ref=e37]:
+    - heading "为什么有效" [level=2] [ref=e38]
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - paragraph [ref=e41]: 15+
+        - paragraph [ref=e42]: 支持的 subreddit 社区
+      - generic [ref=e43]:
+        - paragraph [ref=e44]: 10×
+        - paragraph [ref=e45]: 中位数 upvotes 提升
+      - generic [ref=e46]:
+        - paragraph [ref=e47]: "8"
+        - paragraph [ref=e48]: 种爆款钩子类型
+      - generic [ref=e49]:
+        - paragraph [ref=e50]: ∞
+        - paragraph [ref=e51]: 每次发帖都在自我进化
+  - generic [ref=e53]:
+    - heading "准备好了吗？" [level=2] [ref=e54]
+    - paragraph [ref=e55]: 免费开始，每月 20 次生成。随时升级到 Pro 解锁更多。
+    - link "进入 Dashboard" [ref=e56] [cursor=pointer]:
+      - /url: /app
+      - text: 进入 Dashboard
+      - img [ref=e57]
+  - contentinfo [ref=e59]:
+    - generic [ref=e60]:
+      - generic [ref=e63]: KarmaForge v3
+      - generic [ref=e64]:
+        - link "定价" [ref=e65] [cursor=pointer]:
+          - /url: /pricing
+        - link "登录" [ref=e66] [cursor=pointer]:
+          - /url: /login

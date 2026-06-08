@@ -225,6 +225,21 @@ def create_app(state: AppState | None = None) -> FastAPI:
         version="3.0.0",
     )
     app.state.app_state = state or get_state()
+
+    # Sentry — only active when SENTRY_DSN is configured
+    sentry_dsn = os.getenv("SENTRY_DSN", "")
+    if sentry_dsn:
+        import sentry_sdk
+        from sentry_sdk.integrations.fastapi import FastApiIntegration
+        sentry_sdk.init(
+            dsn=sentry_dsn,
+            integrations=[FastApiIntegration()],
+            traces_sample_rate=float(os.getenv("SENTRY_TRACES_RATE", "0.1")),
+            environment=os.getenv("SENTRY_ENV", "production"),
+            release=f"karmaforge@{os.getenv('RENDER_GIT_COMMIT', 'dev')}",
+        )
+        logger.info("Sentry initialized — environment=%s", os.getenv("SENTRY_ENV", "production"))
+
     allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000")
     allowed_origins = [o.strip() for o in allowed_origins_raw.split(",") if o.strip()]
     app.add_middleware(

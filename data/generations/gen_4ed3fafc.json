@@ -1,0 +1,114 @@
+{
+  "generation_id": "gen_4ed3fafc",
+  "created_at": "2026-06-05T16:44:34.084207+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "productivity",
+      "score": 1.0
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_05",
+      "name": "Pattern 6: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.546
+    },
+    {
+      "pattern_id": "pattern_01",
+      "name": "Pattern 2: pain_point + no_body",
+      "hook_type": "pain_point",
+      "viral_rate": 0.337
+    },
+    {
+      "pattern_id": "pattern_00",
+      "name": "Pattern 1: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.305
+    },
+    {
+      "pattern_id": "pattern_06",
+      "name": "Pattern 7: controversial_opinion + no_body",
+      "hook_type": "controversial_opinion",
+      "viral_rate": 0.275
+    },
+    {
+      "pattern_id": "pattern_16",
+      "name": "Pattern 17: counterintuitive_discovery + no_body",
+      "hook_type": "counterintuitive_discovery",
+      "viral_rate": 0.262
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I spent hours manually making flashcards from PDFs and lecture notes until I found a free AI tool that does it instantly with spaced repetition built in.",
+      "score": 76.27863221647696,
+      "hook_type": "pain_point",
+      "pattern_id": "pattern_01"
+    },
+    {
+      "title": "I spent months manually making flashcards from dense PDFs until I built a free AI tool that extracts key concepts and schedules spaced repetition for you.",
+      "score": 76.07501848763772,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_05"
+    },
+    {
+      "title": "I stopped taking manual notes and started feeding my PDFs into an AI that makes flashcards with spaced repetition—my retention doubled without extra study time.",
+      "score": 76.07033179374012,
+      "hook_type": "counterintuitive_discovery",
+      "pattern_id": "pattern_16"
+    },
+    {
+      "title": "Using AI to turn your PDFs into flashcards is actually better than making them yourself—spaced repetition does the heavy lifting, not manual effort.",
+      "score": 75.56642551885241,
+      "hook_type": "controversial_opinion",
+      "pattern_id": "pattern_06"
+    },
+    {
+      "title": "Is anyone else tired of manually making flashcards from PDFs? I built a free tool that uses AI and spaced repetition to do it for you.",
+      "score": 73.26624783342234,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_00"
+    }
+  ],
+  "selected_title": {
+    "title": "I spent hours manually making flashcards from PDFs and lecture notes until I found a free AI tool that does it instantly with spaced repetition built in.",
+    "score": 76.27863221647696
+  },
+  "body": "I’ve been spending hours every week manually making flashcards from PDFs and lecture notes. It felt productive, but honestly it was just busywork. I’d copy-paste definitions, rewrite concepts, and then still struggle to actually remember anything long-term.\n\nThen I stumbled onto a free AI tool that does it all in seconds. You upload your PDF or paste notes, and it generates flashcards with spaced repetition built in. No more manual formatting, no more forgetting to review. It’s been a game changer for my study sessions.\n\nI’m not affiliated with it, just genuinely surprised something this useful is free. Has anyone else found a tool that actually saves time without sacrificing quality? Curious what’s working for you all.",
+  "metadata": {
+    "推荐发帖日": "周二",
+    "推荐发帖时间(UTC)": 14,
+    "推荐Flair": "Technique",
+    "标记为OC": false
+  },
+  "self_check": {
+    "是否通过": true,
+    "各维度": {
+      "标题长度": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "正文长度": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "可读性": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "钩子体现": {
+        "得分": 25,
+        "状态": "警告"
+      },
+      "反模式检测": {
+        "得分": 100,
+        "状态": "正常",
+        "触发的反模式": []
+      }
+    },
+    "改进建议": [
+      "钩子类型「pain_point」未明显体现"
+    ]
+  }
+}

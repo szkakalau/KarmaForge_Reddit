@@ -1,0 +1,61 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e8]: KarmaForge
+      - button "中" [ref=e9]
+    - heading "Reddit posts that actually get upvoted" [level=1] [ref=e10]:
+      - text: Reddit posts that
+      - text: actually get upvoted
+    - paragraph [ref=e11]: KarmaForge analyzes viral patterns in every subreddit and generates culturally-aligned titles and body text with AI. Not generic templates — every post is tailored to your target community.
+    - generic [ref=e12]:
+      - link "Go to Dashboard" [ref=e13] [cursor=pointer]:
+        - /url: /app
+        - text: Go to Dashboard
+        - img [ref=e14]
+      - link "View pricing" [ref=e16] [cursor=pointer]:
+        - /url: /pricing
+  - generic [ref=e18]:
+    - heading "How it works" [level=2] [ref=e19]
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e23]: "1"
+        - heading "Describe your content" [level=3] [ref=e24]
+        - paragraph [ref=e25]: Tell us what you're promoting. AI automatically matches the best subreddits and viral patterns for your topic.
+      - generic [ref=e26]:
+        - generic [ref=e28]: "2"
+        - heading "Pick the best title" [level=3] [ref=e29]
+        - paragraph [ref=e30]: Choose from multiple AI-generated candidates. Every title is scored against real viral data to ensure cultural fit.
+      - generic [ref=e31]:
+        - generic [ref=e33]: "3"
+        - heading "Post & track results" [level=3] [ref=e34]
+        - paragraph [ref=e35]: Publish to Reddit manually, then track upvotes, comments, and survival rate. The system learns your community over time.
+  - generic [ref=e37]:
+    - heading "Why it works" [level=2] [ref=e38]
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - paragraph [ref=e41]: 15+
+        - paragraph [ref=e42]: subreddit communities
+      - generic [ref=e43]:
+        - paragraph [ref=e44]: 10×
+        - paragraph [ref=e45]: median upvote lift
+      - generic [ref=e46]:
+        - paragraph [ref=e47]: "8"
+        - paragraph [ref=e48]: viral hook types
+      - generic [ref=e49]:
+        - paragraph [ref=e50]: ∞
+        - paragraph [ref=e51]: self-improving with every post
+  - generic [ref=e53]:
+    - heading "Ready to grow?" [level=2] [ref=e54]
+    - paragraph [ref=e55]: Start free with 20 generations per month. Upgrade to Pro anytime.
+    - link "Go to Dashboard" [ref=e56] [cursor=pointer]:
+      - /url: /app
+      - text: Go to Dashboard
+      - img [ref=e57]
+  - contentinfo [ref=e59]:
+    - generic [ref=e60]:
+      - generic [ref=e63]: KarmaForge v3
+      - generic [ref=e64]:
+        - link "Pricing" [ref=e65] [cursor=pointer]:
+          - /url: /pricing
+        - link "Login" [ref=e66] [cursor=pointer]:
+          - /url: /login

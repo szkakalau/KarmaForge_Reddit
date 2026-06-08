@@ -1,0 +1,162 @@
+- main [ref=e6]:
+  - generic [ref=e7]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e12]
+    - paragraph [ref=e17]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - button [ref=e21] [cursor=pointer]: 生成
+          - button [ref=e22] [cursor=pointer]: 追踪
+          - button [ref=e23] [cursor=pointer]: 历史
+          - button [ref=e24] [cursor=pointer]: 模式库
+          - button [ref=e25] [cursor=pointer]: 进化
+          - button [ref=e26] [cursor=pointer]: 设置
+        - tablist [ref=e27]:
+          - tab "生成" [selected] [ref=e28] [cursor=pointer]
+          - tab "追踪" [ref=e29] [cursor=pointer]
+          - tab "历史" [ref=e30] [cursor=pointer]
+          - tab "模式库" [ref=e31] [cursor=pointer]
+          - tab "进化" [ref=e32] [cursor=pointer]
+          - tab "设置" [ref=e33] [cursor=pointer]
+      - tabpanel [ref=e34]:
+        - generic [ref=e35]:
+          - generic [ref=e37]:
+            - generic [ref=e40]:
+              - generic [ref=e41]: 帖子主题
+              - textbox "帖子主题" [ref=e43]:
+                - /placeholder: 描述你想发的内容，例如：I built a Python automation script that saves 3 hours daily
+                - text: I built an automation script that saves me 3 hours a day
+            - generic [ref=e45]:
+              - generic [ref=e47]:
+                - generic [ref=e48]: 目标 Subreddit
+                - generic [ref=e51]:
+                  - listbox "目标 Subreddit" [ref=e52]: Auto-detect
+                  - generic:
+                    - img
+              - generic [ref=e54]:
+                - generic [ref=e55]:
+                  - generic [ref=e57]: 候选标题数
+                  - generic [ref=e58]:
+                    - spinbutton "number input for 候选标题数" [ref=e59]: "3"
+                    - button "Reset to default value" [ref=e60] [cursor=pointer]: ↺
+                - generic [ref=e61]:
+                  - generic [ref=e62]: "1"
+                  - slider "range slider for 候选标题数" [ref=e63] [cursor=pointer]: "3"
+                  - generic [ref=e64]: "5"
+            - generic [ref=e65]:
+              - button "生成标题" [ref=e66] [cursor=pointer]
+              - button "生成完整帖子" [ref=e67] [cursor=pointer]
+          - generic [ref=e68]:
+            - paragraph [ref=e73]:
+              - strong [ref=e74]: "匹配的 Subreddits:"
+              - text: r/productivity (80%) | r/lifehacks (60%) | r/programming (40%) | r/selfhosted (40%) | r/Showerthoughts (40%)
+            - group [ref=e77]:
+              - generic [ref=e78]: 候选标题
+              - generic [ref=e79]:
+                - generic [ref=e80] [cursor=pointer]:
+                  - radio "[90] (curious_question) What’s the one automation that saved you the most time daily?" [checked] [ref=e81]
+                  - generic [ref=e82]: "[90] (curious_question) What’s the one automation that saved you the most time daily?"
+                - generic [ref=e83] [cursor=pointer]:
+                  - radio "[90] (story_opener) I automated my entire morning routine and now I get 3 extra hours back every single day" [ref=e84]
+                  - generic [ref=e85]: "[90] (story_opener) I automated my entire morning routine and now I get 3 extra hours back every single day"
+                - generic [ref=e86] [cursor=pointer]:
+                  - radio "[75] (tutorial_howto) How I automated 3 hours of daily busywork with a simple script" [ref=e87]
+                  - generic [ref=e88]: "[75] (tutorial_howto) How I automated 3 hours of daily busywork with a simple script"
+            - generic [ref=e194]:
+              - paragraph [ref=e195]: We all have those tasks that eat up way more time than they should. You know the ones—the tiny, repetitive things that somehow add up to hours over a week. For me, it was email sorting. I used to spend 20 minutes every morning just filtering out newsletters, spam, and automated notifications from actual work emails. It was draining and made me feel behind before I even started my real work.
+              - paragraph [ref=e196]: Then I set up a simple filter system in Gmail. Now, any email with “unsubscribe” in the footer or from a list of common senders gets automatically labeled and archived. I only see what’s actually important. That single tweak saves me about 15 minutes every single day. Over a year, that’s over 90 hours—basically two full work weeks. I didn’t realize how much mental clutter it was causing until it was gone.
+              - paragraph [ref=e197]: But I know everyone’s different. Maybe your biggest time sink is something else entirely. I’ve heard people rave about automated bill payments, or scripts that rename and organize downloaded files, or even smart home routines that turn off lights and lock doors with one voice command. Some folks swear by keyboard shortcuts for repetitive typing, like text expanders for common phrases or email templates.
+              - paragraph [ref=e198]: What’s the one automation you’ve set up that makes you wonder how you ever lived without it? I’m genuinely curious—I’m always looking for new ways to chip away at those little drains on my day. Maybe your trick will be the one I try next.
+            - generic [ref=e103]:
+              - generic [ref=e104]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 自检报告
+              - button "Copy" [ref=e200] [cursor=pointer]:
+                - img [ref=e202]
+              - generic [ref=e206]:
+                - generic [ref=e207]:
+                  - generic "Line number 1" [ref=e208]: "1"
+                  - generic [ref=e209]:
+                    - button "Collapse" [ref=e210] [cursor=pointer]: ▼
+                    - generic [ref=e211]: "{"
+                - generic [ref=e212]:
+                  - generic [ref=e214]:
+                    - generic "Line number 2" [ref=e215]: "2"
+                    - generic [ref=e216]:
+                      - generic [ref=e217]: "\"passed\""
+                      - generic [ref=e218]: ":"
+                      - generic [ref=e219]: "true"
+                      - generic [ref=e220]: ","
+                  - generic [ref=e221]:
+                    - generic [ref=e222]:
+                      - generic "Line number 3" [ref=e223]: "3"
+                      - generic [ref=e224]:
+                        - button "Collapse" [ref=e225] [cursor=pointer]: ▼
+                        - generic [ref=e226]: "\"title_check\""
+                        - generic [ref=e227]: ":"
+                        - generic [ref=e228]: "{"
+                    - generic [ref=e229]:
+                      - generic [ref=e231]:
+                        - generic "Line number 4" [ref=e232]: "4"
+                        - generic [ref=e233]:
+                          - generic [ref=e234]: "\"overall_score\""
+                          - generic [ref=e235]: ":"
+                          - generic [ref=e236]: "84"
+                          - generic [ref=e237]: ","
+                      - generic [ref=e239]:
+                        - generic "Line number 5" [ref=e240]: "5"
+                        - generic [ref=e241]:
+                          - generic [ref=e242]: "\"word_count\""
+                          - generic [ref=e243]: ":"
+                          - generic [ref=e244]: "11"
+                          - generic [ref=e245]: ","
+                      - generic [ref=e247]:
+                        - generic "Line number 6" [ref=e248]: "6"
+                        - generic [ref=e249]:
+                          - generic [ref=e250]: "\"hook_clarity\""
+                          - generic [ref=e251]: ":"
+                          - generic [ref=e252]: "60"
+                          - generic [ref=e253]: ","
+                      - generic [ref=e254]:
+                        - generic [ref=e255]:
+                          - generic "Line number 7" [ref=e256]: "7"
+                          - generic [ref=e257]:
+                            - button "Collapse" [ref=e258] [cursor=pointer]: ▼
+                            - generic [ref=e259]: "\"anti_patterns_triggered\""
+                            - generic [ref=e260]: ":"
+                            - generic [ref=e261]: "["
+                        - generic [ref=e263]:
+                          - generic "Line number 8" [ref=e264]: "8"
+                          - generic [ref=e265]:
+                            - generic [ref=e266]: "]"
+                            - generic [ref=e267]: ","
+                      - generic [ref=e269]:
+                        - generic "Line number 9" [ref=e270]: "9"
+                        - generic [ref=e271]:
+                          - generic [ref=e272]: "\"suggestion\""
+                          - generic [ref=e273]: ":"
+                          - generic [ref=e274]: "\"\""
+                      - generic [ref=e275]:
+                        - generic "Line number 10" [ref=e276]: "10"
+                        - generic [ref=e277]:
+                          - generic [ref=e278]: "}"
+                          - generic [ref=e279]: ","
+                  - generic [ref=e281]:
+                    - generic "Line number 11" [ref=e282]: "11"
+                    - generic [ref=e283]:
+                      - generic [ref=e284]: "\"anti_patterns_count\""
+                      - generic [ref=e285]: ":"
+                      - generic [ref=e286]: "0"
+                  - generic [ref=e287]:
+                    - generic "Line number 12" [ref=e288]: "12"
+                    - generic [ref=e290]: "}"
+            - generic [ref=e125]:
+              - generic [ref=e126]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 元数据建议
+              - generic "Empty value" [ref=e292]:
+                - img [ref=e294]

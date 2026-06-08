@@ -1,0 +1,142 @@
+- generic [ref=e5]:
+  - main [ref=e6]:
+    - generic [ref=e7]:
+      - heading "KarmaForge Desktop" [level=1] [ref=e12]
+      - paragraph [ref=e17]: Reddit 爆款引擎 — 从研究到行动闭环
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - button [ref=e21] [cursor=pointer]: 生成
+            - button [ref=e22] [cursor=pointer]: 追踪
+            - button [ref=e23] [cursor=pointer]: 历史
+            - button [ref=e24] [cursor=pointer]: 模式库
+            - button [ref=e25] [cursor=pointer]: 进化
+            - button [ref=e26] [cursor=pointer]: 设置
+          - tablist [ref=e27]:
+            - tab "生成" [selected] [ref=e28] [cursor=pointer]
+            - tab "追踪" [ref=e29] [cursor=pointer]
+            - tab "历史" [ref=e30] [cursor=pointer]
+            - tab "模式库" [ref=e31] [cursor=pointer]
+            - tab "进化" [ref=e32] [cursor=pointer]
+            - tab "设置" [ref=e33] [cursor=pointer]
+        - tabpanel [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e37]:
+              - generic [ref=e40]:
+                - generic [ref=e41]: 帖子主题
+                - textbox "帖子主题" [ref=e43]:
+                  - /placeholder: 描述你想发的内容，例如：I built a Python automation script that saves 3 hours daily
+                  - text: I built a Python automation tool
+              - generic [ref=e45]:
+                - generic [ref=e47]:
+                  - generic [ref=e48]: 目标 Subreddit
+                  - generic [ref=e51]:
+                    - listbox "目标 Subreddit" [ref=e52]: Auto-detect
+                    - generic:
+                      - img
+                - generic [ref=e54]:
+                  - generic [ref=e55]:
+                    - generic [ref=e57]: 候选标题数
+                    - generic [ref=e58]:
+                      - spinbutton "number input for 候选标题数" [ref=e59]: "3"
+                      - button "Reset to default value" [ref=e60] [cursor=pointer]: ↺
+                  - generic [ref=e61]:
+                    - generic [ref=e62]: "1"
+                    - slider "range slider for 候选标题数" [ref=e63] [cursor=pointer]: "3"
+                    - generic [ref=e64]: "5"
+              - generic [ref=e65]:
+                - button "生成标题" [active] [ref=e66] [cursor=pointer]
+                - button "生成完整帖子" [ref=e67] [cursor=pointer]
+            - generic [ref=e85]:
+              - generic [ref=e89]:
+                - paragraph [ref=e90]: "[完成] 3 个标题已生成 — r/programming (60%) | r/productivity (40%) | r/selfhosted (40%) | r/lifehacks (40%) | r/SaaS (40%)"
+                - paragraph [ref=e91]:
+                  - text: 点击标题选中，然后点击
+                  - strong [ref=e92]: 生成完整帖子
+                  - text: 生成正文。
+              - paragraph [ref=e97]:
+                - strong [ref=e98]: "Matched Subreddits:"
+                - text: r/programming (60%) | r/productivity (40%) | r/selfhosted (40%) | r/lifehacks (40%) | r/SaaS (40%)
+              - generic [ref=e101]:
+                - generic [ref=e102]:
+                  - button "复制" [ref=e103] [cursor=pointer]:
+                    - img
+                  - text: "[75](curious_question)Built a Python tool that automates my entire deployment pipeline. Why isn't everyone doing this?"
+                - generic [ref=e106]:
+                  - button "复制" [ref=e107] [cursor=pointer]:
+                    - img
+                  - text: "[75](number_shock)I automated my entire deployment process with 150 lines of Python and nobody told me it could be this simple"
+                - generic [ref=e110]:
+                  - button "复制" [ref=e111] [cursor=pointer]:
+                    - img
+                  - text: "[75](tutorial_howto)No one taught me how to build a Python automation tool, so I did"
+              - generic [ref=e116]:
+                - generic [ref=e117]:
+                  - generic:
+                    - generic:
+                      - img
+                    - text: 自检报告
+                - generic "Empty value" [ref=e119]:
+                  - img [ref=e121]
+              - generic [ref=e123]:
+                - generic [ref=e124]:
+                  - generic:
+                    - generic:
+                      - img
+                    - text: 元数据建议
+                - button "Copy" [ref=e126] [cursor=pointer]:
+                  - img [ref=e128]
+                - generic [ref=e132]:
+                  - generic [ref=e133]:
+                    - generic "Line number 1" [ref=e134]: "1"
+                    - generic [ref=e135]:
+                      - button "Collapse" [ref=e136] [cursor=pointer]: ▼
+                      - generic [ref=e137]: "{"
+                  - generic [ref=e138]:
+                    - generic [ref=e140]:
+                      - generic "Line number 2" [ref=e141]: "2"
+                      - generic [ref=e142]:
+                        - generic [ref=e143]: "\"推荐发帖日\""
+                        - generic [ref=e144]: ":"
+                        - generic [ref=e145]: "\"周二\""
+                        - generic [ref=e146]: ","
+                    - generic [ref=e148]:
+                      - generic "Line number 3" [ref=e149]: "3"
+                      - generic [ref=e150]:
+                        - generic [ref=e151]: "\"推荐发帖时间(UTC)\""
+                        - generic [ref=e152]: ":"
+                        - generic [ref=e153]: "14"
+                        - generic [ref=e154]: ","
+                    - generic [ref=e156]:
+                      - generic "Line number 4" [ref=e157]: "4"
+                      - generic [ref=e158]:
+                        - generic [ref=e159]: "\"推荐Flair\""
+                        - generic [ref=e160]: ":"
+                        - generic [ref=e161]: "\"Resource\""
+                        - generic [ref=e162]: ","
+                    - generic [ref=e164]:
+                      - generic "Line number 5" [ref=e165]: "5"
+                      - generic [ref=e166]:
+                        - generic [ref=e167]: "\"标记为OC\""
+                        - generic [ref=e168]: ":"
+                        - generic [ref=e169]: "true"
+                    - generic [ref=e170]:
+                      - generic "Line number 6" [ref=e171]: "6"
+                      - generic [ref=e173]: "}"
+            - generic [ref=e72]:
+              - generic [ref=e73]: Textbox
+              - textbox "Textbox" [ref=e75]:
+                - /placeholder: ""
+  - contentinfo "Gradio footer navigation" [ref=e76]:
+    - button "通过 API 使用 标志" [ref=e77] [cursor=pointer]:
+      - text: 通过 API 使用
+      - img "标志" [ref=e78]
+    - generic [ref=e79]: ·
+    - link "使用 Gradio 构建 标志" [ref=e80] [cursor=pointer]:
+      - /url: https://gradio.app
+      - text: 使用 Gradio 构建
+      - img "标志" [ref=e81]
+    - generic [ref=e82]: ·
+    - button "设置 设置" [ref=e83] [cursor=pointer]:
+      - text: 设置
+      - img "设置" [ref=e84]

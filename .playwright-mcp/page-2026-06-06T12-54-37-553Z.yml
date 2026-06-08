@@ -1,0 +1,15 @@
+- generic [ref=e4]:
+  - generic [ref=e7]: KarmaForge
+  - heading "Create account" [level=1] [ref=e19]
+  - generic [ref=e22]: "OperationalError: (sqlite3.OperationalError) no such column: users.tier [SQL: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.oauth_provider AS users_oauth_provider, users.oauth_id AS users_oauth_id, users.display_name AS users_display_name, users.tier AS users_tier, users.created_at AS users_created_at, users.updated_at AS users_updated_at FROM users WHERE users.email = ? LIMIT ? OFFSET ?] [parameters: ('test@kf.com', 1, 0)] (Background on this error at: https://sqlalche.me/e/20/e3q8)"
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]: Email
+      - textbox [ref=e12]: test@kf.com
+    - generic [ref=e13]:
+      - generic [ref=e14]: Password
+      - textbox [ref=e15]: password12345
+    - button "Create account" [ref=e20]
+  - paragraph [ref=e17]:
+    - text: Already have an account?
+    - button "Sign in" [ref=e21]

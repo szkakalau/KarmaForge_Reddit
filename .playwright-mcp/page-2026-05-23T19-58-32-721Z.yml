@@ -1,0 +1,320 @@
+- main [ref=e6]:
+  - generic [ref=e7]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e12]
+    - paragraph [ref=e17]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - button [ref=e21] [cursor=pointer]: 生成
+          - button [ref=e22] [cursor=pointer]: 追踪
+          - button [ref=e23] [cursor=pointer]: 历史
+          - button [ref=e24] [cursor=pointer]: 模式库
+          - button [ref=e25] [cursor=pointer]: 进化
+          - button [ref=e26] [cursor=pointer]: 设置
+        - tablist [ref=e27]:
+          - tab "生成" [ref=e28] [cursor=pointer]
+          - tab "追踪" [selected] [ref=e29] [cursor=pointer]
+          - tab "历史" [ref=e30] [cursor=pointer]
+          - tab "模式库" [ref=e31] [cursor=pointer]
+          - tab "进化" [ref=e32] [cursor=pointer]
+          - tab "设置" [ref=e33] [cursor=pointer]
+      - tabpanel [ref=e71]:
+        - generic [ref=e72]:
+          - generic [ref=e75]:
+            - generic [ref=e76]: 选择生成记录
+            - generic [ref=e79]:
+              - listbox "选择生成记录" [ref=e80]: "gen_d93e50a9: Python devs who learned Rust from scratch - what broke your"
+              - generic:
+                - img
+          - generic [ref=e215]:
+            - heading "Python devs who learned Rust from scratch - what broke your brain first?" [level=2] [ref=e216]
+            - paragraph [ref=e217]:
+              - strong [ref=e218]: "Subreddit:"
+              - text: r/programming |
+              - strong [ref=e219]: "Pattern:"
+              - text: "Pattern 24: curious_question + no_body (curious_question)"
+              - strong [ref=e220]: "ID:"
+              - code [ref=e221]: gen_d93e50a9
+              - text: "|"
+              - strong [ref=e222]: "Created:"
+              - text: 2026-05-23T18:55
+            - blockquote [ref=e223]:
+              - paragraph [ref=e224]:
+                - strong [ref=e225]: Python devs who learned Rust from scratch - what broke your brain first?
+                - text: I’ve been writing Python for about 8 years—everything from data pipelines to REST APIs to a few half-baked CLI tools. Loved it. Hated the slowness, but accepted it as the c...
+          - generic [ref=e82]:
+            - generic [ref=e84]:
+              - generic [ref=e85]: Upvotes
+              - spinbutton "Upvotes" [ref=e86]: "15"
+            - generic [ref=e88]:
+              - generic [ref=e89]: Comments
+              - spinbutton "Comments" [ref=e90]: "3"
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - generic [ref=e95]: Upvote Ratio (%)
+                - generic [ref=e96]:
+                  - spinbutton "number input for Upvote Ratio (%)" [ref=e97]: "75"
+                  - button "Reset to default value" [ref=e98] [cursor=pointer]: ↺
+              - generic [ref=e99]:
+                - generic [ref=e100]: "0"
+                - slider "range slider for Upvote Ratio (%)" [ref=e101] [cursor=pointer]: "75"
+                - generic [ref=e102]: "100"
+            - generic [ref=e104]:
+              - generic [ref=e105]: 目标 Subreddit (自动识别)
+              - textbox "目标 Subreddit (自动识别)" [disabled] [ref=e107]:
+                - /placeholder: ""
+                - text: programming
+          - button "记录效果" [ref=e108] [cursor=pointer]
+          - generic [ref=e226]:
+            - paragraph [ref=e231]:
+              - strong [ref=e232]: r/programming
+              - text: "|"
+              - strong [ref=e233]: "Upvotes:"
+              - text: 15 |
+              - strong [ref=e234]: "Comments:"
+              - text: 3 |
+              - strong [ref=e235]: "Ratio:"
+              - text: 75% |
+              - strong [ref=e236]: "Median:"
+              - text: "50"
+            - generic [ref=e237]:
+              - generic:
+                - generic:
+                  - img
+                - text: 效果判定
+              - heading "**[failed]** 失败 (upvotes < median × 1.5)" [level=2] [ref=e239]
+            - button "分析归因" [active] [ref=e240] [cursor=pointer]
+            - generic [ref=e241]:
+              - generic [ref=e242]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 归因分析
+              - button "Copy" [ref=e244] [cursor=pointer]:
+                - img [ref=e246]
+              - generic [ref=e250]:
+                - generic [ref=e251]:
+                  - generic "Line number 1" [ref=e252]: "1"
+                  - generic [ref=e253]:
+                    - button "Collapse" [ref=e254] [cursor=pointer]: ▼
+                    - generic [ref=e255]: "{"
+                - generic [ref=e256]:
+                  - generic [ref=e258]:
+                    - generic "Line number 2" [ref=e259]: "2"
+                    - generic [ref=e260]:
+                      - generic [ref=e261]: "\"primary_reason\""
+                      - generic [ref=e262]: ":"
+                      - generic [ref=e263]: "\"Pattern 'Pattern 24: curious_question + no_body' has inherently low viral rate (0%)\""
+                      - generic [ref=e264]: ","
+                  - generic [ref=e265]:
+                    - generic [ref=e266]:
+                      - generic "Line number 3" [ref=e267]: "3"
+                      - generic [ref=e268]:
+                        - button "Collapse" [ref=e269] [cursor=pointer]: ▼
+                        - generic [ref=e270]: "\"secondary_reasons\""
+                        - generic [ref=e271]: ":"
+                        - generic [ref=e272]: "["
+                    - generic [ref=e274]:
+                      - generic "Line number 4" [ref=e275]: "4"
+                      - generic [ref=e276]:
+                        - generic [ref=e277]: "]"
+                        - generic [ref=e278]: ","
+                  - generic [ref=e279]:
+                    - generic [ref=e280]:
+                      - generic "Line number 5" [ref=e281]: "5"
+                      - generic [ref=e282]:
+                        - button "Collapse" [ref=e283] [cursor=pointer]: ▼
+                        - generic [ref=e284]: "\"action_items\""
+                        - generic [ref=e285]: ":"
+                        - generic [ref=e286]: "["
+                    - generic [ref=e287]:
+                      - generic [ref=e289]:
+                        - generic "Line number 6" [ref=e290]: "6"
+                        - generic [ref=e292]: "\"Try a different pattern with higher historical viral rate\""
+                      - generic [ref=e293]:
+                        - generic "Line number 7" [ref=e294]: "7"
+                        - generic [ref=e295]:
+                          - generic [ref=e296]: "]"
+                          - generic [ref=e297]: ","
+                  - generic [ref=e299]:
+                    - generic "Line number 8" [ref=e300]: "8"
+                    - generic [ref=e301]:
+                      - generic [ref=e302]: "\"confidence\""
+                      - generic [ref=e303]: ":"
+                      - generic [ref=e304]: "40"
+                      - generic [ref=e305]: ","
+                  - generic [ref=e306]:
+                    - generic [ref=e307]:
+                      - generic "Line number 9" [ref=e308]: "9"
+                      - generic [ref=e309]:
+                        - button "Collapse" [ref=e310] [cursor=pointer]: ▼
+                        - generic [ref=e311]: "\"dimensions\""
+                        - generic [ref=e312]: ":"
+                        - generic [ref=e313]: "{"
+                    - generic [ref=e314]:
+                      - generic [ref=e315]:
+                        - generic [ref=e316]:
+                          - generic "Line number 10" [ref=e317]: "10"
+                          - generic [ref=e318]:
+                            - button "Collapse" [ref=e319] [cursor=pointer]: ▼
+                            - generic [ref=e320]: "\"title_hook_fit\""
+                            - generic [ref=e321]: ":"
+                            - generic [ref=e322]: "{"
+                        - generic [ref=e323]:
+                          - generic [ref=e325]:
+                            - generic "Line number 11" [ref=e326]: "11"
+                            - generic [ref=e327]:
+                              - generic [ref=e328]: "\"score\""
+                              - generic [ref=e329]: ":"
+                              - generic [ref=e330]: "70"
+                              - generic [ref=e331]: ","
+                          - generic [ref=e333]:
+                            - generic "Line number 12" [ref=e334]: "12"
+                            - generic [ref=e335]:
+                              - generic [ref=e336]: "\"issue\""
+                              - generic [ref=e337]: ":"
+                              - generic [ref=e338]: "null"
+                          - generic [ref=e339]:
+                            - generic "Line number 13" [ref=e340]: "13"
+                            - generic [ref=e341]:
+                              - generic [ref=e342]: "}"
+                              - generic [ref=e343]: ","
+                      - generic [ref=e344]:
+                        - generic [ref=e345]:
+                          - generic "Line number 14" [ref=e346]: "14"
+                          - generic [ref=e347]:
+                            - button "Collapse" [ref=e348] [cursor=pointer]: ▼
+                            - generic [ref=e349]: "\"body_structure_fit\""
+                            - generic [ref=e350]: ":"
+                            - generic [ref=e351]: "{"
+                        - generic [ref=e352]:
+                          - generic [ref=e354]:
+                            - generic "Line number 15" [ref=e355]: "15"
+                            - generic [ref=e356]:
+                              - generic [ref=e357]: "\"score\""
+                              - generic [ref=e358]: ":"
+                              - generic [ref=e359]: "70"
+                              - generic [ref=e360]: ","
+                          - generic [ref=e362]:
+                            - generic "Line number 16" [ref=e363]: "16"
+                            - generic [ref=e364]:
+                              - generic [ref=e365]: "\"issue\""
+                              - generic [ref=e366]: ":"
+                              - generic [ref=e367]: "null"
+                          - generic [ref=e368]:
+                            - generic "Line number 17" [ref=e369]: "17"
+                            - generic [ref=e370]:
+                              - generic [ref=e371]: "}"
+                              - generic [ref=e372]: ","
+                      - generic [ref=e373]:
+                        - generic [ref=e374]:
+                          - generic "Line number 18" [ref=e375]: "18"
+                          - generic [ref=e376]:
+                            - button "Collapse" [ref=e377] [cursor=pointer]: ▼
+                            - generic [ref=e378]: "\"content_quality\""
+                            - generic [ref=e379]: ":"
+                            - generic [ref=e380]: "{"
+                        - generic [ref=e381]:
+                          - generic [ref=e383]:
+                            - generic "Line number 19" [ref=e384]: "19"
+                            - generic [ref=e385]:
+                              - generic [ref=e386]: "\"score\""
+                              - generic [ref=e387]: ":"
+                              - generic [ref=e388]: "75"
+                              - generic [ref=e389]: ","
+                          - generic [ref=e391]:
+                            - generic "Line number 20" [ref=e392]: "20"
+                            - generic [ref=e393]:
+                              - generic [ref=e394]: "\"issue\""
+                              - generic [ref=e395]: ":"
+                              - generic [ref=e396]: "null"
+                          - generic [ref=e397]:
+                            - generic "Line number 21" [ref=e398]: "21"
+                            - generic [ref=e399]:
+                              - generic [ref=e400]: "}"
+                              - generic [ref=e401]: ","
+                      - generic [ref=e402]:
+                        - generic [ref=e403]:
+                          - generic "Line number 22" [ref=e404]: "22"
+                          - generic [ref=e405]:
+                            - button "Collapse" [ref=e406] [cursor=pointer]: ▼
+                            - generic [ref=e407]: "\"timing_fit\""
+                            - generic [ref=e408]: ":"
+                            - generic [ref=e409]: "{"
+                        - generic [ref=e410]:
+                          - generic [ref=e412]:
+                            - generic "Line number 23" [ref=e413]: "23"
+                            - generic [ref=e414]:
+                              - generic [ref=e415]: "\"score\""
+                              - generic [ref=e416]: ":"
+                              - generic [ref=e417]: "60"
+                              - generic [ref=e418]: ","
+                          - generic [ref=e420]:
+                            - generic "Line number 24" [ref=e421]: "24"
+                            - generic [ref=e422]:
+                              - generic [ref=e423]: "\"issue\""
+                              - generic [ref=e424]: ":"
+                              - generic [ref=e425]: "null"
+                          - generic [ref=e426]:
+                            - generic "Line number 25" [ref=e427]: "25"
+                            - generic [ref=e428]:
+                              - generic [ref=e429]: "}"
+                              - generic [ref=e430]: ","
+                      - generic [ref=e431]:
+                        - generic [ref=e432]:
+                          - generic "Line number 26" [ref=e433]: "26"
+                          - generic [ref=e434]:
+                            - button "Collapse" [ref=e435] [cursor=pointer]: ▼
+                            - generic [ref=e436]: "\"topic_relevance\""
+                            - generic [ref=e437]: ":"
+                            - generic [ref=e438]: "{"
+                        - generic [ref=e439]:
+                          - generic [ref=e441]:
+                            - generic "Line number 27" [ref=e442]: "27"
+                            - generic [ref=e443]:
+                              - generic [ref=e444]: "\"score\""
+                              - generic [ref=e445]: ":"
+                              - generic [ref=e446]: "60"
+                              - generic [ref=e447]: ","
+                          - generic [ref=e449]:
+                            - generic "Line number 28" [ref=e450]: "28"
+                            - generic [ref=e451]:
+                              - generic [ref=e452]: "\"issue\""
+                              - generic [ref=e453]: ":"
+                              - generic [ref=e454]: "null"
+                          - generic [ref=e455]:
+                            - generic "Line number 29" [ref=e456]: "29"
+                            - generic [ref=e457]:
+                              - generic [ref=e458]: "}"
+                              - generic [ref=e459]: ","
+                      - generic [ref=e460]:
+                        - generic [ref=e461]:
+                          - generic "Line number 30" [ref=e462]: "30"
+                          - generic [ref=e463]:
+                            - button "Collapse" [ref=e464] [cursor=pointer]: ▼
+                            - generic [ref=e465]: "\"pattern_fit\""
+                            - generic [ref=e466]: ":"
+                            - generic [ref=e467]: "{"
+                        - generic [ref=e468]:
+                          - generic [ref=e470]:
+                            - generic "Line number 31" [ref=e471]: "31"
+                            - generic [ref=e472]:
+                              - generic [ref=e473]: "\"score\""
+                              - generic [ref=e474]: ":"
+                              - generic [ref=e475]: "25"
+                              - generic [ref=e476]: ","
+                          - generic [ref=e478]:
+                            - generic "Line number 32" [ref=e479]: "32"
+                            - generic [ref=e480]:
+                              - generic [ref=e481]: "\"issue\""
+                              - generic [ref=e482]: ":"
+                              - generic [ref=e483]: "\"Pattern 'Pattern 24: curious_question + no_body' has inherently low viral rate (0%)\""
+                          - generic [ref=e484]:
+                            - generic "Line number 33" [ref=e485]: "33"
+                            - generic [ref=e487]: "}"
+                      - generic [ref=e488]:
+                        - generic "Line number 34" [ref=e489]: "34"
+                        - generic [ref=e491]: "}"
+                  - generic [ref=e492]:
+                    - generic "Line number 35" [ref=e493]: "35"
+                    - generic [ref=e495]: "}"

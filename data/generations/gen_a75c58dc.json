@@ -1,0 +1,114 @@
+{
+  "generation_id": "gen_a75c58dc",
+  "created_at": "2026-06-05T16:32:55.189804+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "productivity",
+      "score": 1.0
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_05",
+      "name": "Pattern 6: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.546
+    },
+    {
+      "pattern_id": "pattern_01",
+      "name": "Pattern 2: pain_point + no_body",
+      "hook_type": "pain_point",
+      "viral_rate": 0.337
+    },
+    {
+      "pattern_id": "pattern_00",
+      "name": "Pattern 1: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.305
+    },
+    {
+      "pattern_id": "pattern_06",
+      "name": "Pattern 7: controversial_opinion + no_body",
+      "hook_type": "controversial_opinion",
+      "viral_rate": 0.275
+    },
+    {
+      "pattern_id": "pattern_16",
+      "name": "Pattern 17: counterintuitive_discovery + no_body",
+      "hook_type": "counterintuitive_discovery",
+      "viral_rate": 0.262
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I spent 3 hours manually making flashcards for my exam, then built a free tool that turns my PDFs and notes into study cards in seconds—wish I had this sooner.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_05"
+    },
+    {
+      "title": "I’ve spent hours manually making flashcards from lecture notes and PDFs—finally found a free AI tool that does it in seconds, no more wasted study prep time.",
+      "score": 90.0,
+      "hook_type": "pain_point",
+      "pattern_id": "pattern_01"
+    },
+    {
+      "title": "Is anyone else tired of manually making flashcards from lecture PDFs? I found a tool that auto-generates them from notes—free tier actually works.",
+      "score": 90.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_00"
+    },
+    {
+      "title": "If you're still handwriting flashcards in 2024, you're wasting hours that an AI tool could save by pulling key concepts straight from your PDFs.",
+      "score": 90.0,
+      "hook_type": "controversial_opinion",
+      "pattern_id": "pattern_06"
+    },
+    {
+      "title": "I spent 3 hours manually making flashcards for exams, then realized an AI tool that auto-generates them from my PDFs was free—and I actually learned more.",
+      "score": 90.0,
+      "hook_type": "counterintuitive_discovery",
+      "pattern_id": "pattern_16"
+    }
+  ],
+  "selected_title": {
+    "title": "I spent 3 hours manually making flashcards for my exam, then built a free tool that turns my PDFs and notes into study cards in seconds—wish I had this sooner.",
+    "score": 90.0
+  },
+  "body": "I spent last Sunday hunched over my desk, highlighter in one hand, stack of index cards in the other. Three hours. That’s how long it took me to turn a 40-page PDF into about 80 handwritten flashcards for my upcoming exam. My wrist was cramping, my back hurt, and I kept second-guessing whether I was writing the right questions. By the end, I was so drained I barely had energy to actually study the cards I’d just made.\n\nI told myself it was just part of the process. That’s what everyone does, right? Grind through the manual work, then grind through the memorization. But the next day, I had a thought: there has to be a faster way. I’m not a developer by trade, but I know enough to tinker. So I spent a few evenings building a simple tool that takes a PDF or a block of notes and spits out study cards in seconds. No AI fluff, no fancy dashboard—just extract the key points, turn them into question-answer pairs, and let me get back to actually learning.\n\nI’ve been using it for a week now, and honestly, I wish I’d had this three years ago. Instead of spending hours formatting cards, I’m spending that time on active recall and spaced repetition. The tool is free, and I’m not trying to sell anything—I just wanted to share because I know there are other people out there grinding through the same inefficient process.\n\nHas anyone else found a workflow that saves time on flashcard creation? Or do you still prefer the tactile feel of handwritten cards? I’m curious what’s worked for you.",
+  "metadata": {
+    "推荐发帖日": "周二",
+    "推荐发帖时间(UTC)": 14,
+    "推荐Flair": "Technique",
+    "标记为OC": false
+  },
+  "self_check": {
+    "是否通过": true,
+    "各维度": {
+      "标题长度": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "正文长度": {
+        "得分": 40,
+        "状态": "警告"
+      },
+      "可读性": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "钩子体现": {
+        "得分": 60,
+        "状态": "正常"
+      },
+      "反模式检测": {
+        "得分": 100,
+        "状态": "正常",
+        "触发的反模式": []
+      }
+    },
+    "改进建议": [
+      "正文 272 词，超出目标范围 1-1"
+    ]
+  }
+}

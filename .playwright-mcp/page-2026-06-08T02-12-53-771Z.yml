@@ -1,0 +1,139 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e7]: KarmaForge
+    - link "Dashboard" [ref=e8] [cursor=pointer]:
+      - /url: /app
+      - img [ref=e9]
+      - text: Dashboard
+    - link "History" [ref=e14] [cursor=pointer]:
+      - /url: /app/history
+      - img [ref=e15]
+      - text: History
+    - link "Analytics" [ref=e19] [cursor=pointer]:
+      - /url: /app/analytics
+      - img [ref=e20]
+      - text: Analytics
+    - link "Upgrade to Pro" [ref=e22] [cursor=pointer]:
+      - /url: /app/pricing
+      - img [ref=e23]
+      - text: Upgrade to Pro
+    - generic [ref=e26]:
+      - button "中" [ref=e27]
+      - generic [ref=e29]: Free Plan
+      - button "Sign out" [ref=e30]:
+        - img [ref=e31]
+        - text: Sign out
+  - main [ref=e34]:
+    - generic [ref=e35]:
+      - heading "Choose your plan" [level=1] [ref=e36]
+      - paragraph [ref=e37]: Start free. Upgrade anytime to unlock more generations and pro features.
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - heading "Free" [level=2] [ref=e40]
+          - paragraph [ref=e41]: For occasional Reddit posters
+          - generic [ref=e42]: $0/mo
+          - button "Current plan" [disabled] [ref=e43]
+          - list [ref=e44]:
+            - listitem [ref=e45]:
+              - img [ref=e46]
+              - generic [ref=e48]: "20"
+              - text: Monthly generations
+            - listitem [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: "3"
+              - text: Title candidates
+            - listitem [ref=e53]:
+              - img [ref=e54]
+              - generic [ref=e56]: 30 days
+              - text: History
+            - listitem [ref=e57]:
+              - img [ref=e58]
+              - generic [ref=e60]: Basic
+              - text: Subreddit matching
+            - listitem [ref=e61]:
+              - img [ref=e62]
+              - generic [ref=e64]: —
+              - text: AI revisions
+            - listitem [ref=e65]:
+              - img [ref=e66]
+              - generic [ref=e68]: —
+              - text: Data export
+            - listitem [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e72]: —
+              - text: Priority support
+        - generic [ref=e73]:
+          - generic [ref=e74]: Recommended
+          - generic [ref=e75]:
+            - heading "Pro" [level=2] [ref=e76]
+            - img [ref=e77]
+          - paragraph [ref=e79]: For serious Reddit growth
+          - generic [ref=e80]: $5/mo
+          - button "Upgrade to Pro" [ref=e81]:
+            - img [ref=e82]
+            - text: Upgrade to Pro
+          - list [ref=e84]:
+            - listitem [ref=e85]:
+              - img [ref=e86]
+              - generic [ref=e88]: "300"
+              - text: Monthly generations
+            - listitem [ref=e89]:
+              - img [ref=e90]
+              - generic [ref=e92]: "5"
+              - text: Title candidates
+            - listitem [ref=e93]:
+              - img [ref=e94]
+              - generic [ref=e96]: Unlimited
+              - text: History
+            - listitem [ref=e97]:
+              - img [ref=e98]
+              - generic [ref=e100]: Full + profiles
+              - text: Subreddit matching
+            - listitem [ref=e101]:
+              - img [ref=e102]
+              - generic [ref=e104]: Unlimited
+              - text: AI revisions
+            - listitem [ref=e105]:
+              - img [ref=e106]
+              - generic [ref=e108]: CSV / JSON
+              - text: Data export
+            - listitem [ref=e109]:
+              - img [ref=e110]
+              - generic [ref=e112]: Email support
+              - text: Priority support
+      - heading "Feature comparison" [level=2] [ref=e113]
+      - table [ref=e115]:
+        - rowgroup [ref=e116]:
+          - row "Feature Free Pro" [ref=e117]:
+            - columnheader "Feature" [ref=e118]
+            - columnheader "Free" [ref=e119]
+            - columnheader "Pro" [ref=e120]
+        - rowgroup [ref=e121]:
+          - row "Monthly generations 20 300" [ref=e122]:
+            - cell "Monthly generations" [ref=e123]
+            - cell "20" [ref=e124]
+            - cell "300" [ref=e125]
+          - row "Title candidates 3 5" [ref=e126]:
+            - cell "Title candidates" [ref=e127]
+            - cell "3" [ref=e128]
+            - cell "5" [ref=e129]
+          - row "History 30 days Unlimited" [ref=e130]:
+            - cell "History" [ref=e131]
+            - cell "30 days" [ref=e132]
+            - cell "Unlimited" [ref=e133]
+          - row "Subreddit matching Basic Full + profiles" [ref=e134]:
+            - cell "Subreddit matching" [ref=e135]
+            - cell "Basic" [ref=e136]
+            - cell "Full + profiles" [ref=e137]
+          - row "AI revisions — Unlimited" [ref=e138]:
+            - cell "AI revisions" [ref=e139]
+            - cell "—" [ref=e140]
+            - cell "Unlimited" [ref=e141]
+          - row "Data export — CSV / JSON" [ref=e142]:
+            - cell "Data export" [ref=e143]
+            - cell "—" [ref=e144]
+            - cell "CSV / JSON" [ref=e145]
+          - row "Priority support — Email support" [ref=e146]:
+            - cell "Priority support" [ref=e147]
+            - cell "—" [ref=e148]
+            - cell "Email support" [ref=e149]

@@ -1,0 +1,70 @@
+- main [ref=e6]:
+  - generic [ref=e7]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e12]
+    - paragraph [ref=e17]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - button [ref=e21] [cursor=pointer]: 生成
+          - button [ref=e22] [cursor=pointer]: 追踪
+          - button [ref=e23] [cursor=pointer]: 历史
+          - button [ref=e24] [cursor=pointer]: 模式库
+          - button [ref=e25] [cursor=pointer]: 进化
+          - button [ref=e26] [cursor=pointer]: 设置
+        - tablist [ref=e27]:
+          - tab "生成" [ref=e28] [cursor=pointer]
+          - tab "追踪" [selected] [ref=e29] [cursor=pointer]
+          - tab "历史" [ref=e30] [cursor=pointer]
+          - tab "模式库" [ref=e31] [cursor=pointer]
+          - tab "进化" [ref=e32] [cursor=pointer]
+          - tab "设置" [ref=e33] [cursor=pointer]
+      - text: 1 ▼ 2 3 ▼ 4 ▼ 5 6 7 8 ▼ 9 10 11 12 ▼ 13 14 15 16 ▼ 17 18 19 20 ▼ 21 22 23 ▶ 24 25 26 27 ▼ 28 29 30 1 ▼ 2 3 4 5 6
+      - tabpanel [ref=e68]:
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - generic [ref=e74]:
+              - generic [ref=e75]: Reddit 帖子 URL
+              - textbox "Reddit 帖子 URL" [active] [ref=e77]:
+                - /placeholder: https://www.reddit.com/r/productivity/comments/abc123/...
+                - text: https://www.reddit.com/r/GetStudying/comments/1tkfpkr/i_spend_more_time_making_anki_cards_than_studying/
+            - generic [ref=e81]:
+              - generic [ref=e82]: 关联生成记录
+              - generic [ref=e85]:
+                - listbox "关联生成记录" [ref=e86]: (none)
+                - generic:
+                  - img
+          - button "追踪效果" [ref=e87] [cursor=pointer]
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - generic [ref=e90]:
+                - generic [ref=e91]: processing | 180.4s
+                - img [ref=e93]
+              - paragraph [ref=e107]:
+                - strong [ref=e108]: "Upvotes:"
+                - text: 0 |
+                - strong [ref=e109]: "Comments:"
+                - text: 0 |
+                - strong [ref=e110]: "Ratio:"
+                - text: 0% |
+                - strong [ref=e111]: "Median:"
+                - text: "50"
+            - generic [ref=e112]:
+              - generic [ref=e113]:
+                - generic [ref=e115]: processing | 180.4s
+                - img [ref=e117]
+              - generic:
+                - generic:
+                  - img
+                - text: 效果判定
+              - heading "**[failed]** 失败 (upvotes < median × 1.5)" [level=2] [ref=e129]
+            - generic [ref=e130]:
+              - generic [ref=e131]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 归因分析
+              - generic [ref=e132]:
+                - generic [ref=e134]: processing | 180.4s
+                - img [ref=e136]
+              - generic "Empty value" [ref=e148]:
+                - img [ref=e150]

@@ -1,0 +1,14 @@
+- generic [ref=e66]:
+  - generic [ref=e69]: KarmaForge
+  - heading "Welcome back" [level=1] [ref=e70]
+  - generic [ref=e71]:
+    - generic [ref=e72]:
+      - generic [ref=e73]: Email
+      - textbox [ref=e74]
+    - generic [ref=e75]:
+      - generic [ref=e76]: Password
+      - textbox [ref=e77]
+    - button "Sign in" [ref=e78]
+  - paragraph [ref=e79]:
+    - text: Don't have an account?
+    - button "Register" [ref=e80]

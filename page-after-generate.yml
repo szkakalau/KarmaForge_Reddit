@@ -1,0 +1,164 @@
+- main [ref=e6]:
+  - generic [ref=e7]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e12]
+    - paragraph [ref=e17]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - button [ref=e21] [cursor=pointer]: 生成
+          - button [ref=e22] [cursor=pointer]: 追踪
+          - button [ref=e23] [cursor=pointer]: 历史
+          - button [ref=e24] [cursor=pointer]: 模式库
+          - button [ref=e25] [cursor=pointer]: 进化
+          - button [ref=e26] [cursor=pointer]: 设置
+        - tablist [ref=e27]:
+          - tab "生成" [selected] [ref=e28] [cursor=pointer]
+          - tab "追踪" [ref=e29] [cursor=pointer]
+          - tab "历史" [ref=e30] [cursor=pointer]
+          - tab "模式库" [ref=e31] [cursor=pointer]
+          - tab "进化" [ref=e32] [cursor=pointer]
+          - tab "设置" [ref=e33] [cursor=pointer]
+      - tabpanel [ref=e34]:
+        - generic [ref=e35]:
+          - generic [ref=e37]:
+            - generic [ref=e40]:
+              - generic [ref=e41]: 帖子主题
+              - textbox "帖子主题" [ref=e43]:
+                - /placeholder: 描述你想发的内容，例如：I built a Python automation script that saves 3 hours daily
+                - text: 我开发了ANKI
+            - generic [ref=e45]:
+              - generic [ref=e47]:
+                - generic [ref=e48]: 目标 Subreddit
+                - generic [ref=e51]:
+                  - listbox "目标 Subreddit" [ref=e52]: Auto-detect
+                  - generic:
+                    - img
+              - generic [ref=e54]:
+                - generic [ref=e55]:
+                  - generic [ref=e57]: 候选标题数
+                  - generic [ref=e58]:
+                    - spinbutton "number input for 候选标题数" [ref=e59]: "3"
+                    - button "Reset to default value" [ref=e60] [cursor=pointer]: ↺
+                - generic [ref=e61]:
+                  - generic [ref=e62]: "1"
+                  - slider "range slider for 候选标题数" [ref=e63] [cursor=pointer]: "3"
+                  - generic [ref=e64]: "5"
+            - generic [ref=e65]:
+              - button "生成标题" [ref=e66] [cursor=pointer]
+              - button "生成完整帖子" [ref=e67] [cursor=pointer]
+          - generic [ref=e68]:
+            - paragraph [ref=e73]:
+              - strong [ref=e74]: "匹配的 Subreddits:"
+              - text: r/AskReddit (40%) | r/LifeProTips (30%) | r/Showerthoughts (20%)
+            - group [ref=e76]:
+              - generic [ref=e77]: 候选标题
+              - generic [ref=e78]:
+                - generic [ref=e79] [cursor=pointer]:
+                  - radio "[90] (tutorial_howto) How do I use Anki to remember anything I study?" [checked] [ref=e80]
+                  - generic [ref=e81]: "[90] (tutorial_howto) How do I use Anki to remember anything I study?"
+                - generic [ref=e82] [cursor=pointer]:
+                  - radio "[90] (curious_question) What's the one thing you wish you could memorize instantly?" [ref=e83]
+                  - generic [ref=e84]: "[90] (curious_question) What's the one thing you wish you could memorize instantly?"
+                - generic [ref=e85] [cursor=pointer]:
+                  - radio "[90] (story_opener) People who use Anki, what is one thing you wish you knew before you started building your own decks?" [ref=e86]
+                  - generic [ref=e87]: "[90] (story_opener) People who use Anki, what is one thing you wish you knew before you started building your own decks?"
+            - generic [ref=e193]:
+              - paragraph [ref=e194]: I’ve been using Anki for about a year now, and honestly, it’s the only thing that’s ever made me feel like I’m not just wasting time studying. I used to read my notes over and over, thinking I was learning, but I’d forget everything within a week. Anki changed that, but it took me a while to figure out how to use it properly. Here’s the simple workflow that finally clicked for me.
+              - paragraph [ref=e195]: First, stop trying to memorize entire textbook pages. That never works. Instead, break everything into tiny, atomic facts. For example, if you’re studying biology, don’t make a card that says “Explain photosynthesis.” Make one card that asks “What is the main pigment in plants?” and another that asks “Where does the light-dependent reaction occur?” Each card should test just one piece of information. This makes it way easier for your brain to recall later.
+              - paragraph [ref=e196]: Second, when you’re making cards, don’t copy-paste from your notes. Rewrite the answer in your own words, as if you’re explaining it to a friend. This forces your brain to process the info instead of just recognizing text. I also add a simple mnemonic or a silly image if I’m struggling. For anatomy, I’ll imagine a weird cartoon character doing the movement I need to remember. It sounds dumb, but it sticks.
+              - paragraph [ref=e197]: Third, use the default settings. I know there are tons of add-ons and fancy interval tweaks, but just stick with the basic 1, 10, 1440 minute steps for new cards. Don’t change anything until you’ve used it for at least a month. The algorithm is smart enough. Also, do your reviews every day, even if it’s just five minutes. Missing a day creates a backlog that feels impossible to catch up on.
+              - paragraph [ref=e198]: "Finally, here’s the biggest tip: don’t try to cram everything into one deck. Separate your subjects. I have a deck for medical terms, one for history dates, and one for coding syntax. It keeps my brain from mixing things up."
+              - paragraph [ref=e199]: I still struggle with consistency sometimes, especially when I’m tired. But when I stick to this system, I actually remember stuff months later. What’s been your biggest hurdle with Anki? Is it making the cards, or actually sticking with the daily reviews?
+            - generic [ref=e102]:
+              - generic [ref=e103]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 自检报告
+              - button "Copy" [ref=e201] [cursor=pointer]:
+                - img [ref=e203]
+              - generic [ref=e207]:
+                - generic [ref=e208]:
+                  - generic "Line number 1" [ref=e209]: "1"
+                  - generic [ref=e210]:
+                    - button "Collapse" [ref=e211] [cursor=pointer]: ▼
+                    - generic [ref=e212]: "{"
+                - generic [ref=e213]:
+                  - generic [ref=e215]:
+                    - generic "Line number 2" [ref=e216]: "2"
+                    - generic [ref=e217]:
+                      - generic [ref=e218]: "\"passed\""
+                      - generic [ref=e219]: ":"
+                      - generic [ref=e220]: "true"
+                      - generic [ref=e221]: ","
+                  - generic [ref=e222]:
+                    - generic [ref=e223]:
+                      - generic "Line number 3" [ref=e224]: "3"
+                      - generic [ref=e225]:
+                        - button "Collapse" [ref=e226] [cursor=pointer]: ▼
+                        - generic [ref=e227]: "\"title_check\""
+                        - generic [ref=e228]: ":"
+                        - generic [ref=e229]: "{"
+                    - generic [ref=e230]:
+                      - generic [ref=e232]:
+                        - generic "Line number 4" [ref=e233]: "4"
+                        - generic [ref=e234]:
+                          - generic [ref=e235]: "\"overall_score\""
+                          - generic [ref=e236]: ":"
+                          - generic [ref=e237]: "70"
+                          - generic [ref=e238]: ","
+                      - generic [ref=e240]:
+                        - generic "Line number 5" [ref=e241]: "5"
+                        - generic [ref=e242]:
+                          - generic [ref=e243]: "\"word_count\""
+                          - generic [ref=e244]: ":"
+                          - generic [ref=e245]: "10"
+                          - generic [ref=e246]: ","
+                      - generic [ref=e248]:
+                        - generic "Line number 6" [ref=e249]: "6"
+                        - generic [ref=e250]:
+                          - generic [ref=e251]: "\"hook_clarity\""
+                          - generic [ref=e252]: ":"
+                          - generic [ref=e253]: "25"
+                          - generic [ref=e254]: ","
+                      - generic [ref=e255]:
+                        - generic [ref=e256]:
+                          - generic "Line number 7" [ref=e257]: "7"
+                          - generic [ref=e258]:
+                            - button "Collapse" [ref=e259] [cursor=pointer]: ▼
+                            - generic [ref=e260]: "\"anti_patterns_triggered\""
+                            - generic [ref=e261]: ":"
+                            - generic [ref=e262]: "["
+                        - generic [ref=e264]:
+                          - generic "Line number 8" [ref=e265]: "8"
+                          - generic [ref=e266]:
+                            - generic [ref=e267]: "]"
+                            - generic [ref=e268]: ","
+                      - generic [ref=e270]:
+                        - generic "Line number 9" [ref=e271]: "9"
+                        - generic [ref=e272]:
+                          - generic [ref=e273]: "\"suggestion\""
+                          - generic [ref=e274]: ":"
+                          - generic [ref=e275]: "\"\""
+                      - generic [ref=e276]:
+                        - generic "Line number 10" [ref=e277]: "10"
+                        - generic [ref=e278]:
+                          - generic [ref=e279]: "}"
+                          - generic [ref=e280]: ","
+                  - generic [ref=e282]:
+                    - generic "Line number 11" [ref=e283]: "11"
+                    - generic [ref=e284]:
+                      - generic [ref=e285]: "\"anti_patterns_count\""
+                      - generic [ref=e286]: ":"
+                      - generic [ref=e287]: "0"
+                  - generic [ref=e288]:
+                    - generic "Line number 12" [ref=e289]: "12"
+                    - generic [ref=e291]: "}"
+            - generic [ref=e124]:
+              - generic [ref=e125]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 元数据建议
+              - generic "Empty value" [ref=e293]:
+                - img [ref=e295]

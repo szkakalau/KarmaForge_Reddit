@@ -1,0 +1,61 @@
+- generic [ref=e24]:
+  - generic [ref=e25]:
+    - generic [ref=e26]:
+      - generic [ref=e29]: Reddpilot
+      - button "EN" [ref=e30]
+    - heading "Reddit 帖子， 真正能被顶上去" [level=1] [ref=e31]:
+      - text: Reddit 帖子，
+      - text: 真正能被顶上去
+    - paragraph [ref=e32]: Reddpilot 分析每个 subreddit 的爆款模式，用 AI 生成符合社区文化的标题和正文。不是通用模板 — 每个帖子都针对你的目标社区量身定制。
+    - generic [ref=e33]:
+      - link "进入 Dashboard" [ref=e34] [cursor=pointer]:
+        - /url: /app
+        - text: 进入 Dashboard
+        - img [ref=e35]
+      - link "查看定价" [ref=e37] [cursor=pointer]:
+        - /url: /pricing
+  - generic [ref=e39]:
+    - heading "三步工作流" [level=2] [ref=e40]
+    - generic [ref=e41]:
+      - generic [ref=e42]:
+        - generic [ref=e44]: "1"
+        - heading "描述你的内容" [level=3] [ref=e45]
+        - paragraph [ref=e46]: 输入你想推广的产品或话题。AI 自动匹配最适合的 subreddit 和爆款模式。
+      - generic [ref=e47]:
+        - generic [ref=e49]: "2"
+        - heading "选择最佳标题" [level=3] [ref=e50]
+        - paragraph [ref=e51]: 从多个 AI 生成的候选中选择。每个标题都基于真实爆款数据评分，确保文化适配。
+      - generic [ref=e52]:
+        - generic [ref=e54]: "3"
+        - heading "发布 + 追踪效果" [level=3] [ref=e55]
+        - paragraph [ref=e56]: 手动发布到 Reddit，然后追踪 upvotes、评论和存活率。系统越用越懂你的社区。
+  - generic [ref=e58]:
+    - heading "为什么有效" [level=2] [ref=e59]
+    - generic [ref=e60]:
+      - generic [ref=e61]:
+        - paragraph [ref=e62]: 15+
+        - paragraph [ref=e63]: 支持的 subreddit 社区
+      - generic [ref=e64]:
+        - paragraph [ref=e65]: 10×
+        - paragraph [ref=e66]: 中位数 upvotes 提升
+      - generic [ref=e67]:
+        - paragraph [ref=e68]: "8"
+        - paragraph [ref=e69]: 种爆款钩子类型
+      - generic [ref=e70]:
+        - paragraph [ref=e71]: ∞
+        - paragraph [ref=e72]: 每次发帖都在自我进化
+  - generic [ref=e74]:
+    - heading "准备好了吗？" [level=2] [ref=e75]
+    - paragraph [ref=e76]: 免费开始，每月 20 次生成。随时升级到 Pro 解锁更多。
+    - link "进入 Dashboard" [ref=e77] [cursor=pointer]:
+      - /url: /app
+      - text: 进入 Dashboard
+      - img [ref=e78]
+  - contentinfo [ref=e80]:
+    - generic [ref=e81]:
+      - generic [ref=e84]: Reddpilot v3
+      - generic [ref=e85]:
+        - link "定价" [ref=e86] [cursor=pointer]:
+          - /url: /pricing
+        - link "登录" [ref=e87] [cursor=pointer]:
+          - /url: /login

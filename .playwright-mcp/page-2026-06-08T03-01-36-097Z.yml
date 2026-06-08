@@ -1,0 +1,17 @@
+- generic [ref=e68]:
+  - generic [ref=e69]:
+    - generic [ref=e72]: Reddpilot
+    - button "EN" [ref=e73]
+  - heading "创建账户" [level=1] [ref=e85]
+  - generic [ref=e88]: "404"
+  - generic [ref=e75]:
+    - generic [ref=e76]:
+      - generic [ref=e77]: 邮箱
+      - textbox [ref=e78]: test@reddpilot.com
+    - generic [ref=e79]:
+      - generic [ref=e80]: 密码
+      - textbox [ref=e81]: test123456
+    - button "创建账户" [ref=e86]
+  - paragraph [ref=e83]:
+    - text: 已有账户？
+    - button "登录" [ref=e87]

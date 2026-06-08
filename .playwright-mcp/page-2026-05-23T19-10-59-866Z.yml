@@ -1,0 +1,83 @@
+- main [ref=e6]:
+  - generic [ref=e7]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e12]
+    - paragraph [ref=e17]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - button [ref=e21] [cursor=pointer]: 生成
+          - button [ref=e22] [cursor=pointer]: 追踪
+          - button [ref=e23] [cursor=pointer]: 历史
+          - button [ref=e24] [cursor=pointer]: 模式库
+          - button [ref=e25] [cursor=pointer]: 进化
+          - button [ref=e26] [cursor=pointer]: 设置
+        - tablist [ref=e27]:
+          - tab "生成" [selected] [ref=e28] [cursor=pointer]
+          - tab "追踪" [ref=e29] [cursor=pointer]
+          - tab "历史" [ref=e30] [cursor=pointer]
+          - tab "模式库" [ref=e31] [cursor=pointer]
+          - tab "进化" [ref=e32] [cursor=pointer]
+          - tab "设置" [ref=e33] [cursor=pointer]
+      - tabpanel [ref=e34]:
+        - generic [ref=e35]:
+          - generic [ref=e37]:
+            - generic [ref=e40]:
+              - generic [ref=e41]: 帖子主题
+              - textbox "帖子主题" [ref=e43]:
+                - /placeholder: 描述你想发的内容，例如：I built a Python automation script that saves 3 hours daily
+                - text: Building a chess engine in Rust
+            - generic [ref=e45]:
+              - generic [ref=e47]:
+                - generic [ref=e48]: 目标 Subreddit
+                - generic [ref=e51]:
+                  - listbox "目标 Subreddit" [ref=e52]: Auto-detect
+                  - generic:
+                    - img
+              - generic [ref=e54]:
+                - generic [ref=e55]:
+                  - generic [ref=e57]: 候选标题数
+                  - generic [ref=e58]:
+                    - spinbutton "number input for 候选标题数" [ref=e59]: "3"
+                    - button "Reset to default value" [ref=e60] [cursor=pointer]: ↺
+                - generic [ref=e61]:
+                  - generic [ref=e62]: "1"
+                  - slider "range slider for 候选标题数" [ref=e63] [cursor=pointer]: "3"
+                  - generic [ref=e64]: "5"
+            - generic [ref=e65]:
+              - button "生成标题" [ref=e66] [cursor=pointer]
+              - button "生成完整帖子" [ref=e67] [cursor=pointer]
+          - generic [ref=e71]:
+            - blockquote [ref=e163]:
+              - paragraph [ref=e164]: generating post body + quality check...
+            - paragraph [ref=e165]:
+              - strong [ref=e166]: "Matched Subreddits:"
+              - text: r/SaaS
+            - generic [ref=e87]:
+              - generic [ref=e88] [cursor=pointer]:
+                - button "复制" [ref=e89]:
+                  - img [ref=e90]
+                - text: "[90](curious_question)Why aren't more SaaS founders building with Rust for latency-critical features?"
+              - generic [ref=e93] [cursor=pointer]:
+                - button "复制" [ref=e94]:
+                  - img [ref=e95]
+                - text: "[90](story_opener)I spent 6 months building a chess engine in Rust and here are the performance benchmarks"
+              - generic [ref=e98] [cursor=pointer]:
+                - button "复制" [ref=e99]:
+                  - img [ref=e100]
+                - text: "[75](tutorial_howto)I built a chess engine in Rust and here's the performance data"
+            - generic [ref=e105]:
+              - generic [ref=e106]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 自检报告
+              - generic "Empty value" [ref=e108]:
+                - img [ref=e110]
+            - generic [ref=e112]:
+              - generic [ref=e113]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 元数据建议
+              - generic "Empty value" [ref=e168]:
+                - img [ref=e170]

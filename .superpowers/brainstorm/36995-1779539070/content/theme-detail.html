@@ -1,0 +1,93 @@
+<h2>KarmaForge Desktop — 视觉主题细化</h2>
+<p class="subtitle">Warm Paper 方向的具体颜色和排版参数</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">颜色系统</div>
+    <div class="mockup-body" style="padding:20px;font-family:Georgia,serif;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:#faf6f0;border:1px solid #e0d5c5;padding:12px;border-radius:6px;">
+          <div style="width:40px;height:40px;background:#faf6f0;border:1px solid #e0d5c5;border-radius:4px;margin-bottom:4px;"></div>
+          <div style="font-size:12px;font-weight:600;">Background</div>
+          <div style="font-size:11px;color:#8b7a6a;">#faf6f0</div>
+        </div>
+        <div style="background:#faf6f0;border:1px solid #e0d5c5;padding:12px;border-radius:6px;">
+          <div style="width:40px;height:40px;background:#fff;border:1px solid #e0d5c5;border-radius:4px;margin-bottom:4px;"></div>
+          <div style="font-size:12px;font-weight:600;">Card</div>
+          <div style="font-size:11px;color:#8b7a6a;">#ffffff</div>
+        </div>
+        <div style="background:#faf6f0;border:1px solid #e0d5c5;padding:12px;border-radius:6px;">
+          <div style="width:40px;height:40px;background:#c1663a;border-radius:4px;margin-bottom:4px;"></div>
+          <div style="font-size:12px;font-weight:600;">Primary</div>
+          <div style="font-size:11px;color:#8b7a6a;">#c1663a</div>
+        </div>
+        <div style="background:#faf6f0;border:1px solid #e0d5c5;padding:12px;border-radius:6px;">
+          <div style="width:40px;height:40px;background:#3d3226;border-radius:4px;margin-bottom:4px;"></div>
+          <div style="font-size:12px;font-weight:600;">Text</div>
+          <div style="font-size:11px;color:#8b7a6a;">#3d3226</div>
+        </div>
+        <div style="background:#faf6f0;border:1px solid #e0d5c5;padding:12px;border-radius:6px;">
+          <div style="width:40px;height:40px;background:#e8f0e4;border:1px solid #b8d4ae;border-radius:4px;margin-bottom:4px;"></div>
+          <div style="font-size:12px;font-weight:600;">Success</div>
+          <div style="font-size:11px;color:#8b7a6a;">#e8f0e4 / #3d6b35</div>
+        </div>
+        <div style="background:#faf6f0;border:1px solid #e0d5c5;padding:12px;border-radius:6px;">
+          <div style="width:40px;height:40px;background:#fce8e4;border:1px solid #e8a898;border-radius:4px;margin-bottom:4px;"></div>
+          <div style="font-size:12px;font-weight:600;">Error</div>
+          <div style="font-size:11px;color:#8b7a6a;">#fce8e4 / #b83a1f</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mockup">
+    <div class="mockup-header">排版 & 圆角</div>
+    <div class="mockup-body" style="padding:20px;background:#faf6f0;">
+      <div style="font-family:'Lora',Georgia,serif;font-size:22px;font-weight:700;color:#3d3226;margin-bottom:4px;">Lora Bold — 页面标题</div>
+      <div style="font-family:'Lora',Georgia,serif;font-size:16px;font-weight:600;color:#3d3226;margin-bottom:12px;">Lora SemiBold — 区块标题</div>
+      <div style="font-family:'Public Sans',system-ui,sans-serif;font-size:14px;color:#5c4d3d;margin-bottom:8px;">Public Sans 14px — 正文和 UI 文本</div>
+      <div style="font-family:'Public Sans',system-ui,sans-serif;font-size:12px;color:#8b7a6a;">Public Sans 12px — 辅助提示文字</div>
+      <div style="margin-top:16px;display:flex;gap:8px;">
+        <button style="background:#c1663a;color:#fff;border:none;padding:8px 20px;border-radius:8px;font-family:'Public Sans',sans-serif;font-weight:600;">主按钮 8px 圆角</button>
+        <button style="background:#fff;color:#c1663a;border:1px solid #c1663a;padding:8px 20px;border-radius:8px;font-family:'Public Sans',sans-serif;">次要按钮</button>
+      </div>
+      <div style="margin-top:16px;background:#fff;border:1px solid #e0d5c5;border-radius:10px;padding:16px;font-family:'Public Sans',sans-serif;color:#5c4d3d;">
+        卡片内容 — 10px 圆角，浅色描边
+      </div>
+      <div style="margin-top:8px;background:#faf6f0;border:1px solid #e0d5c5;border-radius:8px;padding:10px;font-family:'Public Sans',sans-serif;font-size:14px;color:#3d3226;">
+        输入框 — 8px 圆角
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="section" style="margin-top:24px;">Gradio 主题实现</h2>
+<div class="mockup">
+  <div class="mockup-header">gr.themes.Soft() 参数覆盖</div>
+  <div class="mockup-body" style="padding:16px;font-family:monospace;font-size:13px;line-height:1.6;background:#faf6f0;">
+    theme = gr.themes.Soft(<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;primary_hue=<span style="color:#c1663a;">"orange"</span>,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;neutral_hue=<span style="color:#8b7a6a;">"stone"</span>,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;font=<span style="color:#3d6b35;">gr.themes.GoogleFont("Lora")</span>,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;font_mono=<span style="color:#3d6b35;">gr.themes.GoogleFont("JetBrains Mono")</span>,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;radius_size=<span style="color:#c1663a;">"lg"</span>,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;spacing_size=<span style="color:#c1663a;">"md"</span>,<br>
+    )
+  </div>
+</div>
+
+<div class="pros-cons">
+  <div class="pros"><h4>Gradio 可以做到</h4>
+    <ul>
+      <li>Primary/neutral hue 控制主色调</li>
+      <li>Google Fonts 集成（Lora 标题 + 等宽字体）</li>
+      <li>圆角、间距全局参数</li>
+      <li>CSS 注入进一步微调背景色和卡片样式</li>
+    </ul></div>
+  <div class="cons"><h4>Gradio 限制</h4>
+    <ul>
+      <li>无法完全复刻 Warm Paper 的精细卡边和纹理质感</li>
+      <li>body 字体只能用 GoogleFont 设置一种，UI 和正文同字体</li>
+      <li>标签页样式由 Gradio 组件控制，定制有限</li>
+      <li>最终效果会比 mockup 粗糙一些</li>
+    </ul></div>
+</div>

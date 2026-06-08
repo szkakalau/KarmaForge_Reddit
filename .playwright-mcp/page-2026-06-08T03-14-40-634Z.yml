@@ -1,0 +1,139 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e7]: Reddpilot
+    - link "Dashboard" [ref=e8] [cursor=pointer]:
+      - /url: /app
+      - img [ref=e9]
+      - text: Dashboard
+    - link "历史" [ref=e14] [cursor=pointer]:
+      - /url: /app/history
+      - img [ref=e15]
+      - text: 历史
+    - link "分析" [ref=e19] [cursor=pointer]:
+      - /url: /app/analytics
+      - img [ref=e20]
+      - text: 分析
+    - link "升级到 Pro" [ref=e22] [cursor=pointer]:
+      - /url: /app/pricing
+      - img [ref=e23]
+      - text: 升级到 Pro
+    - generic [ref=e26]:
+      - button "EN" [ref=e27]
+      - generic [ref=e29]: Free 计划
+      - button "退出登录" [ref=e30]:
+        - img [ref=e31]
+        - text: 退出登录
+  - main [ref=e34]:
+    - generic [ref=e35]:
+      - heading "选择你的计划" [level=1] [ref=e36]
+      - paragraph [ref=e37]: 从免费开始。随时升级以解锁更多生成次数和高级功能。
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - heading "Free" [level=2] [ref=e40]
+          - paragraph [ref=e41]: 适合偶尔在 Reddit 发帖的用户
+          - generic [ref=e42]: $0/月
+          - button "当前计划" [disabled] [ref=e43]
+          - list [ref=e44]:
+            - listitem [ref=e45]:
+              - img [ref=e46]
+              - generic [ref=e48]: 20 次
+              - text: 月生成次数
+            - listitem [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: 3 个
+              - text: 候选标题数
+            - listitem [ref=e53]:
+              - img [ref=e54]
+              - generic [ref=e56]: 30 天内
+              - text: 历史记录
+            - listitem [ref=e57]:
+              - img [ref=e58]
+              - generic [ref=e60]: 基础版
+              - text: Subreddit 匹配
+            - listitem [ref=e61]:
+              - img [ref=e62]
+              - generic [ref=e64]: —
+              - text: AI 修改
+            - listitem [ref=e65]:
+              - img [ref=e66]
+              - generic [ref=e68]: —
+              - text: 数据导出
+            - listitem [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e72]: —
+              - text: 优先支持
+        - generic [ref=e73]:
+          - generic [ref=e74]: 推荐
+          - generic [ref=e75]:
+            - heading "Pro" [level=2] [ref=e76]
+            - img [ref=e77]
+          - paragraph [ref=e79]: 适合认真在 Reddit 上做增长的用户
+          - generic [ref=e80]: $5/月
+          - button "升级到 Pro" [ref=e81]:
+            - img [ref=e82]
+            - text: 升级到 Pro
+          - list [ref=e84]:
+            - listitem [ref=e85]:
+              - img [ref=e86]
+              - generic [ref=e88]: 300 次
+              - text: 月生成次数
+            - listitem [ref=e89]:
+              - img [ref=e90]
+              - generic [ref=e92]: 5 个
+              - text: 候选标题数
+            - listitem [ref=e93]:
+              - img [ref=e94]
+              - generic [ref=e96]: 永久保留
+              - text: 历史记录
+            - listitem [ref=e97]:
+              - img [ref=e98]
+              - generic [ref=e100]: 完整版 + 画像
+              - text: Subreddit 匹配
+            - listitem [ref=e101]:
+              - img [ref=e102]
+              - generic [ref=e104]: 无限次 Revise
+              - text: AI 修改
+            - listitem [ref=e105]:
+              - img [ref=e106]
+              - generic [ref=e108]: CSV / JSON
+              - text: 数据导出
+            - listitem [ref=e109]:
+              - img [ref=e110]
+              - generic [ref=e112]: Email 支持
+              - text: 优先支持
+      - heading "功能对比" [level=2] [ref=e113]
+      - table [ref=e115]:
+        - rowgroup [ref=e116]:
+          - row "功能 Free Pro" [ref=e117]:
+            - columnheader "功能" [ref=e118]
+            - columnheader "Free" [ref=e119]
+            - columnheader "Pro" [ref=e120]
+        - rowgroup [ref=e121]:
+          - row "月生成次数 20 次 300 次" [ref=e122]:
+            - cell "月生成次数" [ref=e123]
+            - cell "20 次" [ref=e124]
+            - cell "300 次" [ref=e125]
+          - row "候选标题数 3 个 5 个" [ref=e126]:
+            - cell "候选标题数" [ref=e127]
+            - cell "3 个" [ref=e128]
+            - cell "5 个" [ref=e129]
+          - row "历史记录 30 天内 永久保留" [ref=e130]:
+            - cell "历史记录" [ref=e131]
+            - cell "30 天内" [ref=e132]
+            - cell "永久保留" [ref=e133]
+          - row "Subreddit 匹配 基础版 完整版 + 画像" [ref=e134]:
+            - cell "Subreddit 匹配" [ref=e135]
+            - cell "基础版" [ref=e136]
+            - cell "完整版 + 画像" [ref=e137]
+          - row "AI 修改 — 无限次 Revise" [ref=e138]:
+            - cell "AI 修改" [ref=e139]
+            - cell "—" [ref=e140]
+            - cell "无限次 Revise" [ref=e141]
+          - row "数据导出 — CSV / JSON" [ref=e142]:
+            - cell "数据导出" [ref=e143]
+            - cell "—" [ref=e144]
+            - cell "CSV / JSON" [ref=e145]
+          - row "优先支持 — Email 支持" [ref=e146]:
+            - cell "优先支持" [ref=e147]
+            - cell "—" [ref=e148]
+            - cell "Email 支持" [ref=e149]

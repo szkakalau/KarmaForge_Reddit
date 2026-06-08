@@ -1,0 +1,49 @@
+- generic [ref=e19]:
+  - navigation [ref=e20]:
+    - generic [ref=e23]: KarmaForge
+    - link "Dashboard" [ref=e24] [cursor=pointer]:
+      - /url: /
+      - img [ref=e25]
+      - text: Dashboard
+    - link "History" [ref=e30] [cursor=pointer]:
+      - /url: /history
+      - img [ref=e31]
+      - text: History
+    - link "Analytics" [ref=e35] [cursor=pointer]:
+      - /url: /analytics
+      - img [ref=e36]
+      - text: Analytics
+    - link "升级到 Pro" [ref=e38] [cursor=pointer]:
+      - /url: /pricing
+      - img [ref=e39]
+      - text: 升级到 Pro
+    - generic [ref=e42]:
+      - generic [ref=e44]: Free 计划
+      - button "Sign out" [ref=e45]:
+        - img [ref=e46]
+        - text: Sign out
+  - main [ref=e49]:
+    - generic [ref=e50]:
+      - heading "Generate" [level=1] [ref=e51]
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: 本月生成配额
+          - generic [ref=e55]:
+            - text: "20"
+            - generic [ref=e56]: / 20 次剩余
+        - generic [ref=e57]:
+          - progressbar
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - generic [ref=e61]: What are you promoting?
+          - textbox "Describe your product or topic..." [ref=e62]
+        - generic [ref=e63]:
+          - generic [ref=e64]: Subreddit
+          - textbox "r/SaaS" [ref=e65]
+        - button "Generate" [disabled] [ref=e66]:
+          - img [ref=e67]
+          - text: Generate
+      - generic [ref=e70]:
+        - img [ref=e72]
+        - heading "Ready to grow on Reddit" [level=2] [ref=e75]
+        - paragraph [ref=e76]: Describe what you're promoting, pick a subreddit, and let KarmaForge craft titles that actually work on Reddit.

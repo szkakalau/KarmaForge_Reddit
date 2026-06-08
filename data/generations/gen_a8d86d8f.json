@@ -1,0 +1,90 @@
+{
+  "generation_id": "gen_a8d86d8f",
+  "created_at": "2026-06-05T16:44:02.645938+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "programming",
+      "score": 1.0
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_01",
+      "name": "How-to Tutorial",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.45
+    },
+    {
+      "pattern_id": "pattern_03",
+      "name": "Resource Share",
+      "hook_type": "resource_share",
+      "viral_rate": 0.38
+    },
+    {
+      "pattern_id": "pattern_02",
+      "name": "Personal Story",
+      "hook_type": "story_opener",
+      "viral_rate": 0.62
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "How To — I built a Python CLI tool",
+      "score": 68.19923523805971,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_01"
+    },
+    {
+      "title": "My Journey — I built a Python CLI tool",
+      "score": 64.28860228424483,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_02"
+    },
+    {
+      "title": "I Built — I built a Python CLI tool",
+      "score": 63.768195590463534,
+      "hook_type": "resource_share",
+      "pattern_id": "pattern_03"
+    }
+  ],
+  "selected_title": {
+    "title": "How To — I built a Python CLI tool",
+    "score": 68.19923523805971
+  },
+  "body": "I wanted to share a practical guide about \"I built a Python CLI tool\".\n\nHere's the step-by-step process I followed:\n\n1. First, understand the core problem\n2. Then, find the right approach\n3. Finally, execute and iterate\n\nI hope this helps anyone dealing with similar challenges. Happy to answer questions in the comments.",
+  "metadata": {
+    "推荐发帖日": "周二",
+    "推荐发帖时间(UTC)": 14,
+    "推荐Flair": "Resource",
+    "标记为OC": true
+  },
+  "self_check": {
+    "是否通过": true,
+    "各维度": {
+      "标题长度": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "正文长度": {
+        "得分": 50,
+        "状态": "警告"
+      },
+      "可读性": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "钩子体现": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "反模式检测": {
+        "得分": 100,
+        "状态": "正常",
+        "触发的反模式": []
+      }
+    },
+    "改进建议": [
+      "正文 53 词（目标: 100-600）"
+    ]
+  }
+}

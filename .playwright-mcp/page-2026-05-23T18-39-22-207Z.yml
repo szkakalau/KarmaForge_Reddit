@@ -1,0 +1,104 @@
+- main [ref=e22]:
+  - generic [ref=e23]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e28]
+    - paragraph [ref=e33]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - button [ref=e37] [cursor=pointer]: 生成
+          - button [ref=e38] [cursor=pointer]: 追踪
+          - button [ref=e39] [cursor=pointer]: 历史
+          - button [ref=e40] [cursor=pointer]: 模式库
+          - button [ref=e41] [cursor=pointer]: 进化
+          - button [ref=e42] [cursor=pointer]: 设置
+        - tablist [ref=e43]:
+          - tab "生成" [selected] [ref=e44] [cursor=pointer]
+          - tab "追踪" [ref=e45] [cursor=pointer]
+          - tab "历史" [ref=e46] [cursor=pointer]
+          - tab "模式库" [ref=e47] [cursor=pointer]
+          - tab "进化" [ref=e48] [cursor=pointer]
+          - tab "设置" [ref=e49] [cursor=pointer]
+      - tabpanel [ref=e50]:
+        - generic [ref=e51]:
+          - generic [ref=e53]:
+            - generic [ref=e56]:
+              - generic [ref=e57]: 帖子主题
+              - textbox "帖子主题" [ref=e59]:
+                - /placeholder: 描述你想发的内容，例如：I built a Python automation script that saves 3 hours daily
+                - text: Building a chess engine in Rust
+            - generic [ref=e61]:
+              - generic [ref=e63]:
+                - generic [ref=e64]: 目标 Subreddit
+                - generic [ref=e67]:
+                  - listbox "目标 Subreddit" [ref=e68]: Auto-detect
+                  - generic:
+                    - img
+              - generic [ref=e70]:
+                - generic [ref=e71]:
+                  - generic [ref=e73]: 候选标题数
+                  - generic [ref=e74]:
+                    - spinbutton "number input for 候选标题数" [ref=e75]: "3"
+                    - button "Reset to default value" [ref=e76] [cursor=pointer]: ↺
+                - generic [ref=e77]:
+                  - generic [ref=e78]: "1"
+                  - slider "range slider for 候选标题数" [ref=e79] [cursor=pointer]: "3"
+                  - generic [ref=e80]: "5"
+            - generic [ref=e81]:
+              - button "生成标题" [ref=e82] [cursor=pointer]
+              - button "生成完整帖子" [ref=e83] [cursor=pointer]
+          - generic [ref=e87]:
+            - generic [ref=e88]:
+              - generic [ref=e179]:
+                - generic [ref=e180]: 6.5s
+                - generic [ref=e182]: Generating body... - 20.0%
+              - blockquote [ref=e185]:
+                - paragraph [ref=e186]: generating body for I built a chess engine in Rust and here are the performance ...
+            - paragraph [ref=e99]:
+              - strong [ref=e100]: "Matched Subreddits:"
+              - text: r/SaaS (20%) | r/SideProject (20%)
+            - generic [ref=e103]:
+              - generic [ref=e104] [cursor=pointer]:
+                - button "复制" [ref=e105]:
+                  - img [ref=e106]
+                - text: "[90](curious_question)Why isn't anyone building a Rust chess engine as a SaaS product?"
+              - generic [ref=e109] [cursor=pointer]:
+                - button "复制" [ref=e110]:
+                  - img [ref=e111]
+                - text: "[90](story_opener)I spent 6 months building a chess engine in Rust and here are the performance benchmarks."
+              - generic [ref=e114] [cursor=pointer]:
+                - button "复制" [ref=e115]:
+                  - img [ref=e116]
+                - text: "[75](tutorial_howto)I built a chess engine in Rust and here are the performance metrics"
+            - generic [ref=e187]:
+              - generic [ref=e188]: 6.5s
+              - generic [ref=e190]: Generating body... - 20.0%
+            - generic [ref=e121]:
+              - generic [ref=e122]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 自检报告
+              - generic [ref=e193]:
+                - generic [ref=e194]: 6.5s
+                - generic [ref=e196]: Generating body... - 20.0%
+              - generic "Empty value" [ref=e124]:
+                - img [ref=e126]
+            - generic [ref=e128]:
+              - generic [ref=e129]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 元数据建议
+              - generic [ref=e199]:
+                - generic [ref=e200]: 6.5s
+                - generic [ref=e202]: Generating body... - 20.0%
+              - generic "Empty value" [ref=e206]:
+                - img [ref=e208]
+          - generic [ref=e86]:
+            - generic:
+              - generic:
+                - generic: Textbox
+                - generic:
+                  - textbox "Textbox":
+                    - /placeholder: ""
+                    - text: I built a chess engine in Rust and here are the performance metrics

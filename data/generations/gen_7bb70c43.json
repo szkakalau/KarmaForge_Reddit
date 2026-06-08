@@ -1,0 +1,90 @@
+{
+  "generation_id": "gen_7bb70c43",
+  "created_at": "2026-05-23T20:26:31.553244+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "programming",
+      "score": 1.0
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_01",
+      "name": "How-to Tutorial",
+      "hook_type": "tutorial_howto",
+      "viral_rate": 0.45
+    },
+    {
+      "pattern_id": "pattern_03",
+      "name": "Resource Share",
+      "hook_type": "resource_share",
+      "viral_rate": 0.38
+    },
+    {
+      "pattern_id": "pattern_02",
+      "name": "Personal Story",
+      "hook_type": "story_opener",
+      "viral_rate": 0.62
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "How To — I built a Python CLI tool",
+      "score": 90.0,
+      "hook_type": "tutorial_howto",
+      "pattern_id": "pattern_01"
+    },
+    {
+      "title": "I Built — I built a Python CLI tool",
+      "score": 90.0,
+      "hook_type": "resource_share",
+      "pattern_id": "pattern_03"
+    },
+    {
+      "title": "My Journey — I built a Python CLI tool",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_02"
+    }
+  ],
+  "selected_title": {
+    "title": "How To — I built a Python CLI tool",
+    "score": 90.0
+  },
+  "body": "I wanted to share a practical guide about \"I built a Python CLI tool\".\n\nHere's the step-by-step process I followed:\n\n1. First, understand the core problem\n2. Then, find the right approach\n3. Finally, execute and iterate\n\nI hope this helps anyone dealing with similar challenges. Happy to answer questions in the comments.",
+  "metadata": {
+    "推荐发帖日": "周二",
+    "推荐发帖时间(UTC)": 14,
+    "推荐Flair": "Resource",
+    "标记为OC": true
+  },
+  "self_check": {
+    "passed": true,
+    "dimensions": {
+      "title_length": {
+        "score": 100,
+        "status": "ok"
+      },
+      "body_length": {
+        "score": 50,
+        "status": "warn"
+      },
+      "readability": {
+        "score": 100,
+        "status": "ok"
+      },
+      "hook_presence": {
+        "score": 100,
+        "status": "ok"
+      },
+      "anti_patterns": {
+        "score": 100,
+        "status": "ok",
+        "triggered": []
+      }
+    },
+    "suggestions": [
+      "正文 53 词（目标: 100-600）"
+    ]
+  }
+}

@@ -57,6 +57,7 @@ web = [
     "passlib[bcrypt]>=1.7",
     "gradio>=5.0",
     "stripe>=9.0",
+    "sentry-sdk>=2.0",
 ]
 
 [project.scripts]

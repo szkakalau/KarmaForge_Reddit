@@ -1,0 +1,207 @@
+- main [ref=e6]:
+  - generic [ref=e7]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e12]
+    - paragraph [ref=e17]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - button [ref=e21] [cursor=pointer]: 生成
+          - button [ref=e22] [cursor=pointer]: 追踪
+          - button [ref=e23] [cursor=pointer]: 历史
+          - button [ref=e24] [cursor=pointer]: 模式库
+          - button [ref=e25] [cursor=pointer]: 进化
+          - button [ref=e26] [cursor=pointer]: 设置
+        - tablist [ref=e27]:
+          - tab "生成" [ref=e28] [cursor=pointer]
+          - tab "追踪" [ref=e29] [cursor=pointer]
+          - tab "历史" [selected] [ref=e30] [cursor=pointer]
+          - tab "模式库" [ref=e31] [cursor=pointer]
+          - tab "进化" [ref=e32] [cursor=pointer]
+          - tab "设置" [ref=e33] [cursor=pointer]
+      - tabpanel [ref=e71]:
+        - generic [ref=e72]:
+          - generic [ref=e74]:
+            - generic [ref=e76]:
+              - generic [ref=e77]: 按 Subreddit 筛选
+              - generic [ref=e80]:
+                - listbox "按 Subreddit 筛选" [ref=e81]: All
+                - generic:
+                  - img
+            - generic [ref=e83]:
+              - generic [ref=e84]: 按效果筛选
+              - generic [ref=e87]:
+                - listbox "按效果筛选" [ref=e88]: All
+                - generic:
+                  - img
+          - generic [ref=e90]:
+            - generic [ref=e91]:
+              - paragraph [ref=e93]: 生成历史
+              - toolbar "Table actions" [ref=e94]:
+                - generic [ref=e95]:
+                  - button "Copy table data" [ref=e96] [cursor=pointer]:
+                    - img [ref=e98]
+                  - button "Fullscreen" [ref=e101] [cursor=pointer]:
+                    - img [ref=e103]
+            - grid [ref=e105]:
+              - button "将 CSV 或 TSV 文件拖放到此处以将数据导入数据框" [ref=e106]:
+                - grid [ref=e107]:
+                  - generic [ref=e108]: 生成历史
+                  - table [ref=e109]:
+                    - rowgroup [ref=e110]:
+                      - row "ID Date Subreddit Title Perf" [ref=e111]:
+                        - columnheader "ID" [ref=e112]:
+                          - button "ID" [ref=e115] [cursor=pointer]
+                        - columnheader "Date" [ref=e116]:
+                          - button "Date" [ref=e119] [cursor=pointer]
+                        - columnheader "Subreddit" [ref=e120]:
+                          - button "Subreddit" [ref=e123] [cursor=pointer]
+                        - columnheader "Title" [ref=e124]:
+                          - button "Title" [ref=e127] [cursor=pointer]
+                        - columnheader "Perf" [ref=e128]:
+                          - button "Perf" [ref=e131] [cursor=pointer]
+                  - generic [ref=e132]:
+                    - generic [ref=e133]:
+                      - button "gen_fbd920f0" [ref=e136] [cursor=pointer]
+                      - button "2026-05-23" [ref=e139] [cursor=pointer]
+                      - button "r/programming" [ref=e142] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e145] [cursor=pointer]
+                      - button "failed" [ref=e148] [cursor=pointer]
+                    - generic [ref=e149]:
+                      - button "gen_fa1a0a99" [ref=e152] [cursor=pointer]
+                      - button "2026-05-23" [ref=e155] [cursor=pointer]
+                      - button "r/SaaS" [ref=e158] [cursor=pointer]
+                      - button "Why do 80% of SaaS apps fail before reaching 100 paying user" [ref=e161] [cursor=pointer]
+                      - button "-" [ref=e164] [cursor=pointer]
+                    - generic [ref=e165]:
+                      - button "gen_f8fbf93d" [ref=e168] [cursor=pointer]
+                      - button "2026-05-23" [ref=e171] [cursor=pointer]
+                      - button "r/AskReddit" [ref=e174] [cursor=pointer]
+                      - button "People who use spaced repetition for learning, what is your" [ref=e177] [cursor=pointer]
+                      - button "-" [ref=e180] [cursor=pointer]
+                    - generic [ref=e181]:
+                      - button "gen_f7557702" [ref=e184] [cursor=pointer]
+                      - button "2026-05-23" [ref=e187] [cursor=pointer]
+                      - button "r/programming" [ref=e190] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e193] [cursor=pointer]
+                      - button "-" [ref=e196] [cursor=pointer]
+                    - generic [ref=e197]:
+                      - button "gen_f64aa1c1" [ref=e200] [cursor=pointer]
+                      - button "2026-05-23" [ref=e203] [cursor=pointer]
+                      - button "r/productivity" [ref=e206] [cursor=pointer]
+                      - button "I automated 14 hours of weekly work with a Python script and" [ref=e209] [cursor=pointer]
+                      - button "-" [ref=e212] [cursor=pointer]
+                    - generic [ref=e213]:
+                      - button "gen_f0f64a63" [ref=e216] [cursor=pointer]
+                      - button "2026-05-23" [ref=e219] [cursor=pointer]
+                      - button "r/programming" [ref=e222] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e225] [cursor=pointer]
+                      - button "-" [ref=e228] [cursor=pointer]
+                    - generic [ref=e229]:
+                      - button "gen_ee6cd825" [ref=e232] [cursor=pointer]
+                      - button "2026-05-23" [ref=e235] [cursor=pointer]
+                      - button "r/SaaS" [ref=e238] [cursor=pointer]
+                      - button "How I built an MVP app in 3 days with zero code" [ref=e241] [cursor=pointer]
+                      - button "-" [ref=e244] [cursor=pointer]
+                    - generic [ref=e245]:
+                      - button "gen_ec6500ce" [ref=e248] [cursor=pointer]
+                      - button "2026-05-23" [ref=e251] [cursor=pointer]
+                      - button "r/programming" [ref=e254] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e257] [cursor=pointer]
+                      - button "-" [ref=e260] [cursor=pointer]
+                    - generic [ref=e261]:
+                      - button "gen_e58f00b7" [ref=e264] [cursor=pointer]
+                      - button "2026-05-23" [ref=e267] [cursor=pointer]
+                      - button "r/programming" [ref=e270] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e273] [cursor=pointer]
+                      - button "-" [ref=e276] [cursor=pointer]
+                    - generic [ref=e277]:
+                      - button "gen_e4221b3d" [ref=e280] [cursor=pointer]
+                      - button "2026-05-23" [ref=e283] [cursor=pointer]
+                      - button "r/Fitness" [ref=e286] [cursor=pointer]
+                      - button "I tried intermittent fasting and weight training for 6 month" [ref=e289] [cursor=pointer]
+                      - button "-" [ref=e292] [cursor=pointer]
+                    - generic [ref=e293]:
+                      - button "gen_e097d457" [ref=e296] [cursor=pointer]
+                      - button "2026-05-23" [ref=e299] [cursor=pointer]
+                      - button "r/SaaS" [ref=e302] [cursor=pointer]
+                      - button "Is building an MVP in 2025 actually cheaper than 2020?" [ref=e305] [cursor=pointer]
+                      - button "-" [ref=e308] [cursor=pointer]
+                    - generic [ref=e309]:
+                      - button "gen_dfcdd267" [ref=e312] [cursor=pointer]
+                      - button "2026-05-23" [ref=e315] [cursor=pointer]
+                      - button "r/SaaS" [ref=e318] [cursor=pointer]
+                      - button "How I built an MVP app in 3 days with zero code" [ref=e321] [cursor=pointer]
+                      - button "-" [ref=e324] [cursor=pointer]
+                    - generic [ref=e325]:
+                      - button "gen_de92ca70" [ref=e328] [cursor=pointer]
+                      - button "2026-05-23" [ref=e331] [cursor=pointer]
+                      - button "r/programming" [ref=e334] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e337] [cursor=pointer]
+                      - button "-" [ref=e340] [cursor=pointer]
+                    - generic [ref=e341]:
+                      - button "gen_dad80bc0" [ref=e344] [cursor=pointer]
+                      - button "2026-05-23" [ref=e347] [cursor=pointer]
+                      - button "r/programming" [ref=e350] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e353] [cursor=pointer]
+                      - button "-" [ref=e356] [cursor=pointer]
+                    - generic [ref=e357]:
+                      - button "gen_d93e50a9" [ref=e360] [cursor=pointer]
+                      - button "2026-05-23" [ref=e363] [cursor=pointer]
+                      - button "r/programming" [ref=e366] [cursor=pointer]
+                      - button "Python devs who learned Rust from scratch - what broke your" [ref=e369] [cursor=pointer]
+                      - button "-" [ref=e372] [cursor=pointer]
+                    - generic [ref=e373]:
+                      - button "gen_d76e9501" [ref=e376] [cursor=pointer]
+                      - button "2026-05-23" [ref=e379] [cursor=pointer]
+                      - button "r/programming" [ref=e382] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e385] [cursor=pointer]
+                      - button "-" [ref=e388] [cursor=pointer]
+                    - generic [ref=e389]:
+                      - button "gen_d353608c" [ref=e392] [cursor=pointer]
+                      - button "2026-05-23" [ref=e395] [cursor=pointer]
+                      - button "r/SaaS" [ref=e398] [cursor=pointer]
+                      - button "How I built an MVP app in 3 days with zero code" [ref=e401] [cursor=pointer]
+                      - button "-" [ref=e404] [cursor=pointer]
+                    - generic [ref=e405]:
+                      - button "gen_ce5f716b" [ref=e408] [cursor=pointer]
+                      - button "2026-05-23" [ref=e411] [cursor=pointer]
+                      - button "r/programming" [ref=e414] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e417] [cursor=pointer]
+                      - button "-" [ref=e420] [cursor=pointer]
+                    - generic [ref=e421]:
+                      - button "gen_cc000b36" [ref=e424] [cursor=pointer]
+                      - button "2026-05-23" [ref=e427] [cursor=pointer]
+                      - button "r/AskReddit" [ref=e430] [cursor=pointer]
+                      - button "Why does 我做了一个anki产品 work the way it does?" [ref=e433] [cursor=pointer]
+                      - button "-" [ref=e436] [cursor=pointer]
+                    - generic [ref=e437]:
+                      - button "gen_c8b06514" [ref=e440] [cursor=pointer]
+                      - button "2026-05-23" [ref=e443] [cursor=pointer]
+                      - button "r/programming" [ref=e446] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e449] [cursor=pointer]
+                      - button "-" [ref=e452] [cursor=pointer]
+                    - generic [ref=e453]:
+                      - button "gen_c89f743f" [ref=e456] [cursor=pointer]
+                      - button "2026-05-23" [ref=e459] [cursor=pointer]
+                      - button "r/programming" [ref=e462] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e465] [cursor=pointer]
+                      - button "-" [ref=e468] [cursor=pointer]
+                    - generic [ref=e469]:
+                      - button "gen_c6e2d871" [ref=e472] [cursor=pointer]
+                      - button "2026-05-23" [ref=e475] [cursor=pointer]
+                      - button "r/SaaS" [ref=e478] [cursor=pointer]
+                      - button "How I built an MVP app in 3 days with zero code" [ref=e481] [cursor=pointer]
+                      - button "-" [ref=e484] [cursor=pointer]
+                    - generic [ref=e485]:
+                      - button "gen_c668597f" [ref=e488] [cursor=pointer]
+                      - button "2026-05-23" [ref=e491] [cursor=pointer]
+                      - button "r/programming" [ref=e494] [cursor=pointer]
+                      - button "How To — I built a Python CLI tool" [ref=e497] [cursor=pointer]
+                      - button "-" [ref=e500] [cursor=pointer]
+                    - generic [ref=e501]:
+                      - button "gen_c594840e" [ref=e504] [cursor=pointer]
+                      - button "2026-05-23" [ref=e507] [cursor=pointer]
+                      - button "r/SaaS" [ref=e510] [cursor=pointer]
+                      - button "How I built an MVP app in 3 days with zero code" [ref=e513] [cursor=pointer]
+                      - button "-" [ref=e516] [cursor=pointer]
+          - button "查看详情" [ref=e517] [cursor=pointer]

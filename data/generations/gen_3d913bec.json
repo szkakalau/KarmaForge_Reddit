@@ -1,0 +1,92 @@
+{
+  "generation_id": "gen_3d913bec",
+  "created_at": "2026-06-05T16:45:00.408369+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "getdisciplined",
+      "score": 1.0
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_05",
+      "name": "Pattern 6: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.546
+    },
+    {
+      "pattern_id": "pattern_01",
+      "name": "Pattern 2: pain_point + no_body",
+      "hook_type": "pain_point",
+      "viral_rate": 0.337
+    },
+    {
+      "pattern_id": "pattern_00",
+      "name": "Pattern 1: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.305
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I tried every study method under the sun, but nothing stuck until I built a flashcard generator that turns my messy notes into clean study cards in seconds—here’s 50 free credits to see if it works for you.",
+      "score": 80.20877224037943,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_05"
+    },
+    {
+      "title": "I spent hours making flashcards by hand, but nobody told me an AI could do it in seconds with free credits.",
+      "score": 74.92975809113973,
+      "hook_type": "pain_point",
+      "pattern_id": "pattern_01"
+    },
+    {
+      "title": "I’ve been using an AI flashcard generator to turn messy lecture notes into study cards—has anyone else found it actually helps with retention or just wastes time?",
+      "score": 74.30332050778239,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_00"
+    }
+  ],
+  "selected_title": {
+    "title": "I tried every study method under the sun, but nothing stuck until I built a flashcard generator that turns my messy notes into clean study cards in seconds—here’s 50 free credits to see if it works for you.",
+    "score": 80.20877224037943
+  },
+  "body": "I’ve spent years bouncing between highlighters, Notion databases, and those “study with me” videos that somehow made me feel worse. Nothing ever stuck. My notes were a mess of half-finished thoughts and random scribbles, and reviewing them felt like trying to read a foreign language I’d invented myself.\n\nLast month, I finally got fed up and built a tool that turns my chaotic lecture notes into clean flashcards in seconds. No more manual typing or guessing what’s important. It just works. I’ve been using it for two weeks, and for the first time, I’m actually retaining what I study.\n\nI’ve got 50 free credits to give away to see if it helps anyone else here. No strings attached—just want to know if I’m onto something.\n\nWhat’s the one study method you’ve tried that actually changed the game for you?",
+  "metadata": {
+    "推荐发帖日": "周二",
+    "推荐发帖时间(UTC)": 14,
+    "推荐Flair": "Advice",
+    "标记为OC": false
+  },
+  "self_check": {
+    "是否通过": false,
+    "各维度": {
+      "标题长度": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "正文长度": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "可读性": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "钩子体现": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "反模式检测": {
+        "得分": 70,
+        "状态": "失败",
+        "触发的反模式": [
+          "Very Long Title"
+        ]
+      }
+    },
+    "改进建议": [
+      "触发反模式「标题过长」— 标题超过30个词会让读者不知所措；多数 subreddit 偏好简洁钩子（12-22词）"
+    ]
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "generation_id": "gen_b085b9a8",
+  "created_at": "2026-06-05T16:34:37.918283+00:00",
+  "matched_subreddits": [
+    {
+      "subreddit": "lifehacks",
+      "score": 1.0
+    }
+  ],
+  "selected_patterns": [
+    {
+      "pattern_id": "pattern_05",
+      "name": "Pattern 6: story_opener + no_body",
+      "hook_type": "story_opener",
+      "viral_rate": 0.546
+    },
+    {
+      "pattern_id": "pattern_01",
+      "name": "Pattern 2: pain_point + no_body",
+      "hook_type": "pain_point",
+      "viral_rate": 0.337
+    },
+    {
+      "pattern_id": "pattern_00",
+      "name": "Pattern 1: curious_question + no_body",
+      "hook_type": "curious_question",
+      "viral_rate": 0.305
+    }
+  ],
+  "candidate_titles": [
+    {
+      "title": "I spent four hours making flashcards for my midterm by hand, then realized I could just paste my lecture notes into a free AI tool and have it generate them in 30 seconds.",
+      "score": 90.0,
+      "hook_type": "story_opener",
+      "pattern_id": "pattern_05"
+    },
+    {
+      "title": "I spent hours manually making flashcards from lecture notes until I found a way to automate it and got my evenings back.",
+      "score": 90.0,
+      "hook_type": "pain_point",
+      "pattern_id": "pattern_01"
+    },
+    {
+      "title": "Why spend hours manually making flashcards when you can turn your lecture notes into them automatically with a simple tool?",
+      "score": 90.0,
+      "hook_type": "curious_question",
+      "pattern_id": "pattern_00"
+    }
+  ],
+  "selected_title": {
+    "title": "I spent four hours making flashcards for my midterm by hand, then realized I could just paste my lecture notes into a free AI tool and have it generate them in 30 seconds.",
+    "score": 90.0
+  },
+  "body": "I spent four hours making flashcards for my midterm by hand, then realized I could just paste my lecture notes into a free AI tool and have it generate them in 30 seconds.\n\nI’m not even kidding. I had this huge stack of index cards spread across my desk, color-coded with highlighters, my hand cramping from writing out definitions and key concepts. I was feeling pretty proud of myself for being so “old school” and focused. Then my roommate walked in, saw my setup, and asked why I wasn’t using a flashcard generator. I laughed it off at first, but curiosity got the better of me.\n\nI opened a free AI tool, copied and pasted my entire lecture notes document, and asked it to make flashcards. Thirty seconds later, I had a clean list of questions and answers, formatted perfectly. I could even export them to a mobile app and quiz myself on the bus. I just sat there staring at my hand-written pile, feeling like I’d just discovered fire while still rubbing two sticks together.\n\nThe worst part? The AI version actually had better phrasing than my notes. It caught a few concepts I’d written down incorrectly. So not only did I save time, I got a better study tool.\n\nI’m not saying ditch handwriting entirely—there’s definitely value in writing things out for memory. But for pure efficiency, this was a game changer. Has anyone else had that moment where you realize you’ve been doing something the hard way for years, and a simple tool could have saved you hours? What’s your biggest “why didn’t I think of that sooner” study hack?",
+  "metadata": {
+    "推荐发帖日": "周二",
+    "推荐发帖时间(UTC)": 14,
+    "推荐Flair": "Tip",
+    "标记为OC": false
+  },
+  "self_check": {
+    "是否通过": false,
+    "各维度": {
+      "标题长度": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "正文长度": {
+        "得分": 40,
+        "状态": "警告"
+      },
+      "可读性": {
+        "得分": 100,
+        "状态": "正常"
+      },
+      "钩子体现": {
+        "得分": 60,
+        "状态": "正常"
+      },
+      "反模式检测": {
+        "得分": 70,
+        "状态": "失败",
+        "触发的反模式": [
+          "Very Long Title"
+        ]
+      }
+    },
+    "改进建议": [
+      "正文 273 词，超出目标范围 1-1",
+      "触发反模式「标题过长」— 标题超过30个词会让读者不知所措；多数 subreddit 偏好简洁钩子（12-22词）"
+    ]
+  }
+}

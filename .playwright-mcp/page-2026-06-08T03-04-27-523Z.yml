@@ -1,0 +1,16 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - generic [ref=e8]: Reddpilot
+    - button "EN" [ref=e9]
+  - heading "欢迎回来" [level=1] [ref=e10]
+  - generic [ref=e11]:
+    - generic [ref=e12]:
+      - generic [ref=e13]: 邮箱
+      - textbox [ref=e14]
+    - generic [ref=e15]:
+      - generic [ref=e16]: 密码
+      - textbox [ref=e17]
+    - button "登录" [ref=e18]
+  - paragraph [ref=e19]:
+    - text: 还没有账户？
+    - button "注册" [ref=e20]

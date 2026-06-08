@@ -1,0 +1,50 @@
+- main [ref=e6]:
+  - generic [ref=e7]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e12]
+    - paragraph [ref=e17]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - button [ref=e21] [cursor=pointer]: 生成
+          - button [ref=e22] [cursor=pointer]: 追踪
+          - button [ref=e23] [cursor=pointer]: 历史
+          - button [ref=e24] [cursor=pointer]: 模式库
+          - button [ref=e25] [cursor=pointer]: 进化
+          - button [ref=e26] [cursor=pointer]: 设置
+        - tablist [ref=e27]:
+          - tab "生成" [ref=e28] [cursor=pointer]
+          - tab "追踪" [selected] [ref=e29] [cursor=pointer]
+          - tab "历史" [ref=e30] [cursor=pointer]
+          - tab "模式库" [ref=e31] [cursor=pointer]
+          - tab "进化" [ref=e32] [cursor=pointer]
+          - tab "设置" [ref=e33] [cursor=pointer]
+      - tabpanel [ref=e71]:
+        - generic [ref=e72]:
+          - generic [ref=e75]:
+            - generic [ref=e76]: 选择生成记录
+            - generic [ref=e79]:
+              - listbox "选择生成记录" [ref=e80]: (选择一条生成记录...)
+              - generic:
+                - img
+          - generic [ref=e82]:
+            - generic [ref=e84]:
+              - generic [ref=e85]: Upvotes
+              - spinbutton "Upvotes" [ref=e86]: "0"
+            - generic [ref=e88]:
+              - generic [ref=e89]: Comments
+              - spinbutton "Comments" [ref=e90]: "0"
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - generic [ref=e95]: Upvote Ratio (%)
+                - generic [ref=e96]:
+                  - spinbutton "number input for Upvote Ratio (%)" [ref=e97]: "90"
+                  - button "Reset to default value" [ref=e98] [cursor=pointer]: ↺
+              - generic [ref=e99]:
+                - generic [ref=e100]: "0"
+                - slider "range slider for Upvote Ratio (%)" [ref=e101] [cursor=pointer]: "90"
+                - generic [ref=e102]: "100"
+            - generic [ref=e104]:
+              - generic [ref=e105]: 目标 Subreddit (自动识别)
+              - textbox "目标 Subreddit (自动识别)" [disabled] [ref=e107]:
+                - /placeholder: ""
+          - button "记录效果" [ref=e108] [cursor=pointer]

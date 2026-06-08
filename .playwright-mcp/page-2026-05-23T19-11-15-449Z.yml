@@ -1,0 +1,278 @@
+- main [ref=e6]:
+  - generic [ref=e7]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e12]
+    - paragraph [ref=e17]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - button [ref=e21] [cursor=pointer]: 生成
+          - button [ref=e22] [cursor=pointer]: 追踪
+          - button [ref=e23] [cursor=pointer]: 历史
+          - button [ref=e24] [cursor=pointer]: 模式库
+          - button [ref=e25] [cursor=pointer]: 进化
+          - button [ref=e26] [cursor=pointer]: 设置
+        - tablist [ref=e27]:
+          - tab "生成" [selected] [ref=e28] [cursor=pointer]
+          - tab "追踪" [ref=e29] [cursor=pointer]
+          - tab "历史" [ref=e30] [cursor=pointer]
+          - tab "模式库" [ref=e31] [cursor=pointer]
+          - tab "进化" [ref=e32] [cursor=pointer]
+          - tab "设置" [ref=e33] [cursor=pointer]
+      - tabpanel [ref=e34]:
+        - generic [ref=e35]:
+          - generic [ref=e37]:
+            - generic [ref=e40]:
+              - generic [ref=e41]: 帖子主题
+              - textbox "帖子主题" [ref=e43]:
+                - /placeholder: 描述你想发的内容，例如：I built a Python automation script that saves 3 hours daily
+                - text: Building a chess engine in Rust
+            - generic [ref=e45]:
+              - generic [ref=e47]:
+                - generic [ref=e48]: 目标 Subreddit
+                - generic [ref=e51]:
+                  - listbox "目标 Subreddit" [ref=e52]: Auto-detect
+                  - generic:
+                    - img
+              - generic [ref=e54]:
+                - generic [ref=e55]:
+                  - generic [ref=e57]: 候选标题数
+                  - generic [ref=e58]:
+                    - spinbutton "number input for 候选标题数" [ref=e59]: "3"
+                    - button "Reset to default value" [ref=e60] [cursor=pointer]: ↺
+                - generic [ref=e61]:
+                  - generic [ref=e62]: "1"
+                  - slider "range slider for 候选标题数" [ref=e63] [cursor=pointer]: "3"
+                  - generic [ref=e64]: "5"
+            - generic [ref=e65]:
+              - button "生成标题" [ref=e66] [cursor=pointer]
+              - button "生成完整帖子" [ref=e67] [cursor=pointer]
+          - generic [ref=e71]:
+            - paragraph [ref=e172]: "[DONE] complete — quality check passed."
+            - paragraph [ref=e165]:
+              - strong [ref=e166]: "Matched Subreddits:"
+              - text: r/SaaS
+            - generic [ref=e87]:
+              - generic [ref=e88] [cursor=pointer]:
+                - button "复制" [ref=e89]:
+                  - img [ref=e90]
+                - text: "[90](curious_question)Why aren't more SaaS founders building with Rust for latency-critical features?"
+              - generic [ref=e93] [cursor=pointer]:
+                - button "复制" [ref=e94]:
+                  - img [ref=e95]
+                - text: "[90](story_opener)I spent 6 months building a chess engine in Rust and here are the performance benchmarks"
+              - generic [ref=e98] [cursor=pointer]:
+                - button "复制" [ref=e99]:
+                  - img [ref=e100]
+                - text: "[75](tutorial_howto)I built a chess engine in Rust and here's the performance data"
+            - generic [ref=e174]:
+              - button "复制" [ref=e175] [cursor=pointer]:
+                - img [ref=e176]
+              - generic [ref=e179]: 正文预览
+              - generic [ref=e180]: "So about six months ago I quit my SaaS job to go full-time indie, and I figured the best way to shake off the corporate rust was to literally build a chess engine in Rust. I know, I know, not exactly a SaaS product, but hear me out — I wanted to see if the performance gains from a systems language could translate into something that actually matters for a subscription product down the line. Spoiler: it did, but not in the way I expected. The engine itself is a basic UCI-compatible bot, about 4,000 lines of Rust, with alpha-beta pruning, a transposition table, and a simple evaluation function. No neural nets, no GPU magic, just good old-fashioned search. I benchmarked it against a Python prototype I had (same logic, different language) and the results were honestly jaw-dropping. The Rust version searches about 12x faster per second, which means it can reach depth 12 in under a second while Python chokes at depth 9. That speed bump alone slashed my compute costs by roughly 80% when I ran it on a rented VPS. But here's where the SaaS angle kicks in. I packaged the engine as an API endpoint and started offering it as a cheap analysis tool for chess coaches. After three months, I'm at $1,200 MRR with a churn rate of 6.2% (mostly from free-tier users who never upgraded). Customer acquisition cost is around $35 per paid user, mostly from Reddit and a few chess Discord servers. The big takeaway? The Rust performance lets me keep server costs under $50/month, so my gross margin is absurdly high compared to similar Python-based services I've seen. Now I'm wondering if I should open-source the core engine or keep it proprietary. The community side of me wants to share, but the SaaS side sees a moat. Has anyone here built a product around a performance-critical library? Did you keep the core closed or did open-sourcing help with adoption? Curious how you balanced that trade-off."
+            - generic [ref=e105]:
+              - generic [ref=e106]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 自检报告
+              - button "Copy" [ref=e182] [cursor=pointer]:
+                - img [ref=e184]
+              - generic [ref=e188]:
+                - generic [ref=e189]:
+                  - generic "Line number 1" [ref=e190]: "1"
+                  - generic [ref=e191]:
+                    - button "Collapse" [ref=e192] [cursor=pointer]: ▼
+                    - generic [ref=e193]: "{"
+                - generic [ref=e194]:
+                  - generic [ref=e196]:
+                    - generic "Line number 2" [ref=e197]: "2"
+                    - generic [ref=e198]:
+                      - generic [ref=e199]: "\"passed\""
+                      - generic [ref=e200]: ":"
+                      - generic [ref=e201]: "true"
+                      - generic [ref=e202]: ","
+                  - generic [ref=e203]:
+                    - generic [ref=e204]:
+                      - generic "Line number 3" [ref=e205]: "3"
+                      - generic [ref=e206]:
+                        - button "Collapse" [ref=e207] [cursor=pointer]: ▼
+                        - generic [ref=e208]: "\"dimensions\""
+                        - generic [ref=e209]: ":"
+                        - generic [ref=e210]: "{"
+                    - generic [ref=e211]:
+                      - generic [ref=e212]:
+                        - generic [ref=e213]:
+                          - generic "Line number 4" [ref=e214]: "4"
+                          - generic [ref=e215]:
+                            - button "Collapse" [ref=e216] [cursor=pointer]: ▼
+                            - generic [ref=e217]: "\"title_length\""
+                            - generic [ref=e218]: ":"
+                            - generic [ref=e219]: "{"
+                        - generic [ref=e220]:
+                          - generic [ref=e222]:
+                            - generic "Line number 5" [ref=e223]: "5"
+                            - generic [ref=e224]:
+                              - generic [ref=e225]: "\"score\""
+                              - generic [ref=e226]: ":"
+                              - generic [ref=e227]: "100"
+                              - generic [ref=e228]: ","
+                          - generic [ref=e230]:
+                            - generic "Line number 6" [ref=e231]: "6"
+                            - generic [ref=e232]:
+                              - generic [ref=e233]: "\"status\""
+                              - generic [ref=e234]: ":"
+                              - generic [ref=e235]: "\"ok\""
+                          - generic [ref=e236]:
+                            - generic "Line number 7" [ref=e237]: "7"
+                            - generic [ref=e238]:
+                              - generic [ref=e239]: "}"
+                              - generic [ref=e240]: ","
+                      - generic [ref=e241]:
+                        - generic [ref=e242]:
+                          - generic "Line number 8" [ref=e243]: "8"
+                          - generic [ref=e244]:
+                            - button "Collapse" [ref=e245] [cursor=pointer]: ▼
+                            - generic [ref=e246]: "\"body_length\""
+                            - generic [ref=e247]: ":"
+                            - generic [ref=e248]: "{"
+                        - generic [ref=e249]:
+                          - generic [ref=e251]:
+                            - generic "Line number 9" [ref=e252]: "9"
+                            - generic [ref=e253]:
+                              - generic [ref=e254]: "\"score\""
+                              - generic [ref=e255]: ":"
+                              - generic [ref=e256]: "40"
+                              - generic [ref=e257]: ","
+                          - generic [ref=e259]:
+                            - generic "Line number 10" [ref=e260]: "10"
+                            - generic [ref=e261]:
+                              - generic [ref=e262]: "\"status\""
+                              - generic [ref=e263]: ":"
+                              - generic [ref=e264]: "\"warn\""
+                          - generic [ref=e265]:
+                            - generic "Line number 11" [ref=e266]: "11"
+                            - generic [ref=e267]:
+                              - generic [ref=e268]: "}"
+                              - generic [ref=e269]: ","
+                      - generic [ref=e270]:
+                        - generic [ref=e271]:
+                          - generic "Line number 12" [ref=e272]: "12"
+                          - generic [ref=e273]:
+                            - button "Collapse" [ref=e274] [cursor=pointer]: ▼
+                            - generic [ref=e275]: "\"readability\""
+                            - generic [ref=e276]: ":"
+                            - generic [ref=e277]: "{"
+                        - generic [ref=e278]:
+                          - generic [ref=e280]:
+                            - generic "Line number 13" [ref=e281]: "13"
+                            - generic [ref=e282]:
+                              - generic [ref=e283]: "\"score\""
+                              - generic [ref=e284]: ":"
+                              - generic [ref=e285]: "100"
+                              - generic [ref=e286]: ","
+                          - generic [ref=e288]:
+                            - generic "Line number 14" [ref=e289]: "14"
+                            - generic [ref=e290]:
+                              - generic [ref=e291]: "\"status\""
+                              - generic [ref=e292]: ":"
+                              - generic [ref=e293]: "\"ok\""
+                          - generic [ref=e294]:
+                            - generic "Line number 15" [ref=e295]: "15"
+                            - generic [ref=e296]:
+                              - generic [ref=e297]: "}"
+                              - generic [ref=e298]: ","
+                      - generic [ref=e299]:
+                        - generic [ref=e300]:
+                          - generic "Line number 16" [ref=e301]: "16"
+                          - generic [ref=e302]:
+                            - button "Collapse" [ref=e303] [cursor=pointer]: ▼
+                            - generic [ref=e304]: "\"hook_presence\""
+                            - generic [ref=e305]: ":"
+                            - generic [ref=e306]: "{"
+                        - generic [ref=e307]:
+                          - generic [ref=e309]:
+                            - generic "Line number 17" [ref=e310]: "17"
+                            - generic [ref=e311]:
+                              - generic [ref=e312]: "\"score\""
+                              - generic [ref=e313]: ":"
+                              - generic [ref=e314]: "60"
+                              - generic [ref=e315]: ","
+                          - generic [ref=e317]:
+                            - generic "Line number 18" [ref=e318]: "18"
+                            - generic [ref=e319]:
+                              - generic [ref=e320]: "\"status\""
+                              - generic [ref=e321]: ":"
+                              - generic [ref=e322]: "\"ok\""
+                          - generic [ref=e323]:
+                            - generic "Line number 19" [ref=e324]: "19"
+                            - generic [ref=e325]:
+                              - generic [ref=e326]: "}"
+                              - generic [ref=e327]: ","
+                      - generic [ref=e328]:
+                        - generic [ref=e329]:
+                          - generic "Line number 20" [ref=e330]: "20"
+                          - generic [ref=e331]:
+                            - button "Collapse" [ref=e332] [cursor=pointer]: ▼
+                            - generic [ref=e333]: "\"anti_patterns\""
+                            - generic [ref=e334]: ":"
+                            - generic [ref=e335]: "{"
+                        - generic [ref=e336]:
+                          - generic [ref=e338]:
+                            - generic "Line number 21" [ref=e339]: "21"
+                            - generic [ref=e340]:
+                              - generic [ref=e341]: "\"score\""
+                              - generic [ref=e342]: ":"
+                              - generic [ref=e343]: "100"
+                              - generic [ref=e344]: ","
+                          - generic [ref=e346]:
+                            - generic "Line number 22" [ref=e347]: "22"
+                            - generic [ref=e348]:
+                              - generic [ref=e349]: "\"status\""
+                              - generic [ref=e350]: ":"
+                              - generic [ref=e351]: "\"ok\""
+                              - generic [ref=e352]: ","
+                          - generic [ref=e353]:
+                            - generic [ref=e354]:
+                              - generic "Line number 23" [ref=e355]: "23"
+                              - generic [ref=e356]:
+                                - button "Expand" [ref=e357] [cursor=pointer]: ▶
+                                - generic [ref=e358]: "\"triggered\""
+                                - generic [ref=e359]: ":"
+                                - generic [ref=e360]: "["
+                                - button "Array(0)" [ref=e361] [cursor=pointer]
+                                - generic [ref=e362]: "]"
+                            - text: "24"
+                          - generic [ref=e363]:
+                            - generic "Line number 25" [ref=e364]: "25"
+                            - generic [ref=e366]: "}"
+                      - generic [ref=e367]:
+                        - generic "Line number 26" [ref=e368]: "26"
+                        - generic [ref=e369]:
+                          - generic [ref=e370]: "}"
+                          - generic [ref=e371]: ","
+                  - generic [ref=e372]:
+                    - generic [ref=e373]:
+                      - generic "Line number 27" [ref=e374]: "27"
+                      - generic [ref=e375]:
+                        - button "Collapse" [ref=e376] [cursor=pointer]: ▼
+                        - generic [ref=e377]: "\"suggestions\""
+                        - generic [ref=e378]: ":"
+                        - generic [ref=e379]: "["
+                    - generic [ref=e380]:
+                      - generic [ref=e382]:
+                        - generic "Line number 28" [ref=e383]: "28"
+                        - generic [ref=e385]: "\"Body is 333 words, above target 1-1\""
+                      - generic [ref=e386]:
+                        - generic "Line number 29" [ref=e387]: "29"
+                        - generic [ref=e389]: "]"
+                  - generic [ref=e390]:
+                    - generic "Line number 30" [ref=e391]: "30"
+                    - generic [ref=e393]: "}"
+            - generic [ref=e112]:
+              - generic [ref=e113]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 元数据建议
+              - generic "Empty value" [ref=e168]:
+                - img [ref=e170]

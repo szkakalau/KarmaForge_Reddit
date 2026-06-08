@@ -1,0 +1,63 @@
+- main [ref=e6]:
+  - generic [ref=e7]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e12]
+    - paragraph [ref=e17]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - button [ref=e21] [cursor=pointer]: 生成
+          - button [ref=e22] [cursor=pointer]: 追踪
+          - button [ref=e23] [cursor=pointer]: 历史
+          - button [ref=e24] [cursor=pointer]: 模式库
+          - button [ref=e25] [cursor=pointer]: 进化
+          - button [ref=e26] [cursor=pointer]: 设置
+        - tablist [ref=e27]:
+          - tab "生成" [ref=e28] [cursor=pointer]
+          - tab "追踪" [selected] [ref=e29] [cursor=pointer]
+          - tab "历史" [ref=e30] [cursor=pointer]
+          - tab "模式库" [ref=e31] [cursor=pointer]
+          - tab "进化" [ref=e32] [cursor=pointer]
+          - tab "设置" [ref=e33] [cursor=pointer]
+      - tabpanel [ref=e71]:
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - generic [ref=e77]:
+              - generic [ref=e78]: Reddit 帖子 URL
+              - textbox "Reddit 帖子 URL" [ref=e80]:
+                - /placeholder: https://www.reddit.com/r/productivity/comments/abc123/...
+                - text: https://old.reddit.com/r/announcements/comments/1h7k9k5/
+            - generic [ref=e84]:
+              - generic [ref=e85]: 关联生成记录
+              - generic [ref=e88]:
+                - listbox "关联生成记录" [ref=e89]: (none)
+                - generic:
+                  - img
+          - button "追踪效果" [active] [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - generic [ref=e94]: processing | 3.3s
+                - img [ref=e96]
+              - paragraph [ref=e110]:
+                - strong [ref=e111]: 提取失败。
+                - text: 请确认 URL 正确且帖子可公开访问。
+            - generic [ref=e112]:
+              - generic [ref=e113]:
+                - generic [ref=e115]: processing | 3.3s
+                - img [ref=e117]
+              - generic:
+                - generic:
+                  - img
+                - text: 效果判定
+              - heading [level=2] [ref=e129]
+            - generic [ref=e130]:
+              - generic [ref=e131]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 归因分析
+              - generic [ref=e132]:
+                - generic [ref=e134]: processing | 3.3s
+                - img [ref=e136]
+              - generic "Empty value" [ref=e148]:
+                - img [ref=e150]

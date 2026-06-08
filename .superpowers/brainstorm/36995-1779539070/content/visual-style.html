@@ -1,0 +1,79 @@
+<h2>KarmaForge — 视觉风格方向</h2>
+<p class="subtitle">Gradio 支持自定义主题。暗色还是亮色？什么性格？</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>暗色终端风 (Dark Terminal)</h3>
+      <p>深灰底 + 青绿强调色。像 VS Code 暗色主题或终端窗口。自用工具的经典选择，护眼、专业，长时间使用不累。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>暖色纸质风 (Warm Paper)</h3>
+      <p>暖灰/米白底色 + 深棕文字 + 珊瑚强调色。像 Notion 或 Obsidian 的暖色模式，阅读感强，适合写帖子正文。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>锐利暗色 (Sharp Dark)</h3>
+      <p>近黑底色 + 高饱和蓝紫色强调 + 高对比度。像 Linear.app 的暗色模式，现代、利落、有张力。</p>
+    </div>
+  </div>
+</div>
+
+<h2 class="section">颜色预览</h2>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">A: Dark Terminal</div>
+    <div class="mockup-body" style="background:#1a1b26;color:#a9b1d6;padding:20px;border-radius:8px;font-family:monospace;">
+      <div style="display:flex;border-bottom:1px solid #334;padding-bottom:12px;margin-bottom:12px;gap:16px;">
+        <span style="color:#7dcfff;font-weight:700;">生成</span>
+        <span style="color:#565f89;">追踪</span>
+        <span style="color:#565f89;">模式库</span>
+      </div>
+      <div style="color:#7dcfff;font-size:14px;margin-bottom:8px;">$ 输入主题</div>
+      <div style="background:#24283b;padding:8px 12px;border-radius:4px;margin-bottom:12px;color:#c0caf5;border:1px solid #3b4261;">I built a Python automation tool...</div>
+      <div style="background:#1d3520;padding:10px;border-radius:4px;margin-bottom:8px;color:#9ece6a;border:1px solid #3d6140;">
+        ✓ 已生成 3 个候选标题
+      </div>
+      <button style="background:#7dcfff;color:#1a1b26;border:none;padding:6px 16px;border-radius:4px;font-weight:600;">生成</button>
+    </div>
+  </div>
+  <div class="mockup">
+    <div class="mockup-header">B: Warm Paper</div>
+    <div class="mockup-body" style="background:#faf6f0;color:#3d3226;padding:20px;border-radius:8px;font-family:Georgia,serif;">
+      <div style="display:flex;border-bottom:1px solid #e0d5c5;padding-bottom:12px;margin-bottom:12px;gap:16px;">
+        <span style="color:#c1663a;font-weight:700;">生成</span>
+        <span style="color:#a09080;">追踪</span>
+        <span style="color:#a09080;">模式库</span>
+      </div>
+      <div style="color:#6b5a4b;font-size:14px;margin-bottom:8px;">输入主题</div>
+      <div style="background:#fff;padding:8px 12px;border-radius:4px;margin-bottom:12px;border:1px solid #e0d5c5;">I built a Python automation tool...</div>
+      <div style="background:#e8f0e4;padding:10px;border-radius:4px;margin-bottom:8px;color:#3d6b35;border:1px solid #b8d4ae;">
+        ✓ 已生成 3 个候选标题
+      </div>
+      <button style="background:#c1663a;color:#fff;border:none;padding:6px 16px;border-radius:4px;font-weight:600;">生成</button>
+    </div>
+  </div>
+  <div class="mockup">
+    <div class="mockup-header">C: Sharp Dark</div>
+    <div class="mockup-body" style="background:#0d0d12;color:#d4d4e0;padding:20px;border-radius:8px;font-family:system-ui,sans-serif;">
+      <div style="display:flex;border-bottom:1px solid #1f1f2e;padding-bottom:12px;margin-bottom:12px;gap:16px;">
+        <span style="color:#818cf8;font-weight:700;">生成</span>
+        <span style="color:#5c5c78;">追踪</span>
+        <span style="color:#5c5c78;">模式库</span>
+      </div>
+      <div style="color:#a0a0c0;font-size:14px;margin-bottom:8px;">输入主题</div>
+      <div style="background:#151520;padding:8px 12px;border-radius:4px;margin-bottom:12px;color:#e0e0f0;border:1px solid #252540;">I built a Python automation tool...</div>
+      <div style="background:#0d1a12;padding:10px;border-radius:4px;margin-bottom:8px;color:#6ee7b7;border:1px solid #1a4030;">
+        ✓ 已生成 3 个候选标题
+      </div>
+      <button style="background:#818cf8;color:#0d0d12;border:none;padding:6px 16px;border-radius:6px;font-weight:600;">生成</button>
+    </div>
+  </div>
+</div>

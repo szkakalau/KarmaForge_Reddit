@@ -1,0 +1,320 @@
+- main [ref=e22]:
+  - generic [ref=e23]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e28]
+    - paragraph [ref=e33]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - button [ref=e37] [cursor=pointer]: 生成
+          - button [ref=e38] [cursor=pointer]: 追踪
+          - button [ref=e39] [cursor=pointer]: 历史
+          - button [ref=e40] [cursor=pointer]: 模式库
+          - button [ref=e41] [cursor=pointer]: 进化
+          - button [ref=e42] [cursor=pointer]: 设置
+        - tablist [ref=e43]:
+          - tab "生成" [selected] [ref=e44] [cursor=pointer]
+          - tab "追踪" [ref=e45] [cursor=pointer]
+          - tab "历史" [ref=e46] [cursor=pointer]
+          - tab "模式库" [ref=e47] [cursor=pointer]
+          - tab "进化" [ref=e48] [cursor=pointer]
+          - tab "设置" [ref=e49] [cursor=pointer]
+      - tabpanel [ref=e50]:
+        - generic [ref=e51]:
+          - generic [ref=e53]:
+            - generic [ref=e56]:
+              - generic [ref=e57]: 帖子主题
+              - textbox "帖子主题" [ref=e59]:
+                - /placeholder: 描述你想发的内容，例如：I built a Python automation script that saves 3 hours daily
+                - text: How I lost 30 pounds in 6 months through intermittent fasting
+            - generic [ref=e61]:
+              - generic [ref=e63]:
+                - generic [ref=e64]: 目标 Subreddit
+                - generic [ref=e67]:
+                  - listbox "目标 Subreddit" [ref=e68]: Auto-detect
+                  - generic:
+                    - img
+              - generic [ref=e70]:
+                - generic [ref=e71]:
+                  - generic [ref=e73]: 候选标题数
+                  - generic [ref=e74]:
+                    - spinbutton "number input for 候选标题数" [ref=e75]: "3"
+                    - button "Reset to default value" [ref=e76] [cursor=pointer]: ↺
+                - generic [ref=e77]:
+                  - generic [ref=e78]: "1"
+                  - slider "range slider for 候选标题数" [ref=e79] [cursor=pointer]: "3"
+                  - generic [ref=e80]: "5"
+            - generic [ref=e81]:
+              - button "生成标题" [ref=e82] [cursor=pointer]
+              - button "生成完整帖子" [active] [ref=e83] [cursor=pointer]
+          - generic [ref=e86]:
+            - paragraph [ref=e214]: ✅ Body ready (cached)
+            - paragraph [ref=e110]:
+              - strong [ref=e111]: "Matched Subreddits:"
+              - text: r/Fitness (60%) | r/Entrepreneur (20%) | r/SaaS (20%) | r/indiehackers (20%)
+            - generic [ref=e120]:
+              - generic [ref=e121] [cursor=pointer]:
+                - button "复制" [ref=e122]:
+                  - img [ref=e123]
+                - text: "[90](tutorial_howto)I lost 30 pounds in 6 months using 16:8 intermittent fasting"
+              - generic [ref=e126] [cursor=pointer]:
+                - button "复制" [ref=e127]:
+                  - img [ref=e128]
+                - text: "[90](story_opener)I tried intermittent fasting for 6 months and dropped 30 pounds without counting calories."
+              - generic [ref=e131] [cursor=pointer]:
+                - button "复制" [ref=e132]:
+                  - img [ref=e133]
+                - text: "[60](curious_question)Is anyone else shocked by how much easier hunger gets after the first 2 weeks of fasting?"
+            - generic [ref=e216]:
+              - button "复制" [ref=e217] [cursor=pointer]:
+                - img [ref=e218]
+              - generic [ref=e221]: 正文预览
+              - generic [ref=e222]: "**Title:** I lost 30 pounds in 6 months using 16:8 intermittent fasting I see a lot of posts here about cutting, bulking, and complicated meal plans, so I wanted to share what actually worked for me without losing my mind. **The setup:** 32M, 5’10”, started at 220 lbs, currently at 190 lbs. I’ve been lifting on and off for years, but my diet was always the weak point. I’d track macros for two weeks, get overwhelmed, and quit. This time I tried 16:8 intermittent fasting—eating window from 12pm to 8pm, fasting the other 16 hours. **How I did it:** - **First month:** Just the fasting window. No calorie counting. I ate whatever I wanted between 12 and 8, but naturally ate less because I skipped breakfast and stopped late-night snacking. Lost 8 pounds. - **Months 2-4:** Added a 500-calorie deficit (tracked loosely, around 2,000-2,200 calories per day). Still fasted 16:8. Lost another 15 pounds. - **Months 5-6:** Started lifting 4x/week (PPL split, 3 sets of 8-12 reps per exercise). Kept the deficit. Lost the last 7 pounds. **What I actually ate:** Coffee and water during the fast. Lunch was usually a chicken breast or salmon with rice and veggies (400-500 cal). Dinner was a bigger meal—lean protein, sweet potato, salad. Snack was Greek yogurt or fruit. I didn’t cut out carbs or go keto. **The honest timeline:** The first two weeks were rough. Headaches and hunger around 11am. That passed. Weight loss wasn’t linear—I stalled for 10 days in month 3, then dropped 4 pounds in a week. Strength stayed the same or slightly increased during the cut, which surprised me. **What I’d tell someone starting:** Don’t overthink it. Just pick a 16-hour window that fits your schedule (mine was 8pm to 12pm). Drink black coffee in the morning. Give it 3-4 weeks before you decide if it works. And be real about the timeline—this took me 6 months, not 6 weeks. **Question for you:** For those who’ve done 16:8 long-term, did you eventually switch to a different protocol (like 18:6 or OMAD), or stick with it? I’m thinking about maintaining at 16:8 with a slight surplus to build muscle."
+            - generic [ref=e144]:
+              - generic [ref=e145]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 自检报告
+              - button "Copy" [ref=e224] [cursor=pointer]:
+                - img [ref=e226]
+              - generic [ref=e230]:
+                - generic [ref=e231]:
+                  - generic "Line number 1" [ref=e232]: "1"
+                  - generic [ref=e233]:
+                    - button "Collapse" [ref=e234] [cursor=pointer]: ▼
+                    - generic [ref=e235]: "{"
+                - generic [ref=e236]:
+                  - generic [ref=e238]:
+                    - generic "Line number 2" [ref=e239]: "2"
+                    - generic [ref=e240]:
+                      - generic [ref=e241]: "\"passed\""
+                      - generic [ref=e242]: ":"
+                      - generic [ref=e243]: "true"
+                      - generic [ref=e244]: ","
+                  - generic [ref=e245]:
+                    - generic [ref=e246]:
+                      - generic "Line number 3" [ref=e247]: "3"
+                      - generic [ref=e248]:
+                        - button "Collapse" [ref=e249] [cursor=pointer]: ▼
+                        - generic [ref=e250]: "\"dimensions\""
+                        - generic [ref=e251]: ":"
+                        - generic [ref=e252]: "{"
+                    - generic [ref=e253]:
+                      - generic [ref=e254]:
+                        - generic [ref=e255]:
+                          - generic "Line number 4" [ref=e256]: "4"
+                          - generic [ref=e257]:
+                            - button "Collapse" [ref=e258] [cursor=pointer]: ▼
+                            - generic [ref=e259]: "\"title_length\""
+                            - generic [ref=e260]: ":"
+                            - generic [ref=e261]: "{"
+                        - generic [ref=e262]:
+                          - generic [ref=e264]:
+                            - generic "Line number 5" [ref=e265]: "5"
+                            - generic [ref=e266]:
+                              - generic [ref=e267]: "\"score\""
+                              - generic [ref=e268]: ":"
+                              - generic [ref=e269]: "100"
+                              - generic [ref=e270]: ","
+                          - generic [ref=e272]:
+                            - generic "Line number 6" [ref=e273]: "6"
+                            - generic [ref=e274]:
+                              - generic [ref=e275]: "\"status\""
+                              - generic [ref=e276]: ":"
+                              - generic [ref=e277]: "\"ok\""
+                          - generic [ref=e278]:
+                            - generic "Line number 7" [ref=e279]: "7"
+                            - generic [ref=e280]:
+                              - generic [ref=e281]: "}"
+                              - generic [ref=e282]: ","
+                      - generic [ref=e283]:
+                        - generic [ref=e284]:
+                          - generic "Line number 8" [ref=e285]: "8"
+                          - generic [ref=e286]:
+                            - button "Collapse" [ref=e287] [cursor=pointer]: ▼
+                            - generic [ref=e288]: "\"body_length\""
+                            - generic [ref=e289]: ":"
+                            - generic [ref=e290]: "{"
+                        - generic [ref=e291]:
+                          - generic [ref=e293]:
+                            - generic "Line number 9" [ref=e294]: "9"
+                            - generic [ref=e295]:
+                              - generic [ref=e296]: "\"score\""
+                              - generic [ref=e297]: ":"
+                              - generic [ref=e298]: "40"
+                              - generic [ref=e299]: ","
+                          - generic [ref=e301]:
+                            - generic "Line number 10" [ref=e302]: "10"
+                            - generic [ref=e303]:
+                              - generic [ref=e304]: "\"status\""
+                              - generic [ref=e305]: ":"
+                              - generic [ref=e306]: "\"warn\""
+                          - generic [ref=e307]:
+                            - generic "Line number 11" [ref=e308]: "11"
+                            - generic [ref=e309]:
+                              - generic [ref=e310]: "}"
+                              - generic [ref=e311]: ","
+                      - generic [ref=e312]:
+                        - generic [ref=e313]:
+                          - generic "Line number 12" [ref=e314]: "12"
+                          - generic [ref=e315]:
+                            - button "Collapse" [ref=e316] [cursor=pointer]: ▼
+                            - generic [ref=e317]: "\"readability\""
+                            - generic [ref=e318]: ":"
+                            - generic [ref=e319]: "{"
+                        - generic [ref=e320]:
+                          - generic [ref=e322]:
+                            - generic "Line number 13" [ref=e323]: "13"
+                            - generic [ref=e324]:
+                              - generic [ref=e325]: "\"score\""
+                              - generic [ref=e326]: ":"
+                              - generic [ref=e327]: "100"
+                              - generic [ref=e328]: ","
+                          - generic [ref=e330]:
+                            - generic "Line number 14" [ref=e331]: "14"
+                            - generic [ref=e332]:
+                              - generic [ref=e333]: "\"status\""
+                              - generic [ref=e334]: ":"
+                              - generic [ref=e335]: "\"ok\""
+                          - generic [ref=e336]:
+                            - generic "Line number 15" [ref=e337]: "15"
+                            - generic [ref=e338]:
+                              - generic [ref=e339]: "}"
+                              - generic [ref=e340]: ","
+                      - generic [ref=e341]:
+                        - generic [ref=e342]:
+                          - generic "Line number 16" [ref=e343]: "16"
+                          - generic [ref=e344]:
+                            - button "Collapse" [ref=e345] [cursor=pointer]: ▼
+                            - generic [ref=e346]: "\"hook_presence\""
+                            - generic [ref=e347]: ":"
+                            - generic [ref=e348]: "{"
+                        - generic [ref=e349]:
+                          - generic [ref=e351]:
+                            - generic "Line number 17" [ref=e352]: "17"
+                            - generic [ref=e353]:
+                              - generic [ref=e354]: "\"score\""
+                              - generic [ref=e355]: ":"
+                              - generic [ref=e356]: "25"
+                              - generic [ref=e357]: ","
+                          - generic [ref=e359]:
+                            - generic "Line number 18" [ref=e360]: "18"
+                            - generic [ref=e361]:
+                              - generic [ref=e362]: "\"status\""
+                              - generic [ref=e363]: ":"
+                              - generic [ref=e364]: "\"warn\""
+                          - generic [ref=e365]:
+                            - generic "Line number 19" [ref=e366]: "19"
+                            - generic [ref=e367]:
+                              - generic [ref=e368]: "}"
+                              - generic [ref=e369]: ","
+                      - generic [ref=e370]:
+                        - generic [ref=e371]:
+                          - generic "Line number 20" [ref=e372]: "20"
+                          - generic [ref=e373]:
+                            - button "Collapse" [ref=e374] [cursor=pointer]: ▼
+                            - generic [ref=e375]: "\"anti_patterns\""
+                            - generic [ref=e376]: ":"
+                            - generic [ref=e377]: "{"
+                        - generic [ref=e378]:
+                          - generic [ref=e380]:
+                            - generic "Line number 21" [ref=e381]: "21"
+                            - generic [ref=e382]:
+                              - generic [ref=e383]: "\"score\""
+                              - generic [ref=e384]: ":"
+                              - generic [ref=e385]: "100"
+                              - generic [ref=e386]: ","
+                          - generic [ref=e388]:
+                            - generic "Line number 22" [ref=e389]: "22"
+                            - generic [ref=e390]:
+                              - generic [ref=e391]: "\"status\""
+                              - generic [ref=e392]: ":"
+                              - generic [ref=e393]: "\"ok\""
+                              - generic [ref=e394]: ","
+                          - generic [ref=e395]:
+                            - generic [ref=e396]:
+                              - generic "Line number 23" [ref=e397]: "23"
+                              - generic [ref=e398]:
+                                - button "Expand" [ref=e399] [cursor=pointer]: ▶
+                                - generic [ref=e400]: "\"triggered\""
+                                - generic [ref=e401]: ":"
+                                - generic [ref=e402]: "["
+                                - button "Array(0)" [ref=e403] [cursor=pointer]
+                                - generic [ref=e404]: "]"
+                            - text: "24"
+                          - generic [ref=e405]:
+                            - generic "Line number 25" [ref=e406]: "25"
+                            - generic [ref=e408]: "}"
+                      - generic [ref=e409]:
+                        - generic "Line number 26" [ref=e410]: "26"
+                        - generic [ref=e411]:
+                          - generic [ref=e412]: "}"
+                          - generic [ref=e413]: ","
+                  - generic [ref=e414]:
+                    - generic [ref=e415]:
+                      - generic "Line number 27" [ref=e416]: "27"
+                      - generic [ref=e417]:
+                        - button "Collapse" [ref=e418] [cursor=pointer]: ▼
+                        - generic [ref=e419]: "\"suggestions\""
+                        - generic [ref=e420]: ":"
+                        - generic [ref=e421]: "["
+                    - generic [ref=e422]:
+                      - generic [ref=e424]:
+                        - generic "Line number 28" [ref=e425]: "28"
+                        - generic [ref=e426]:
+                          - generic [ref=e427]: "\"Body is 360 words, above target 1-1\""
+                          - generic [ref=e428]: ","
+                      - generic [ref=e430]:
+                        - generic "Line number 29" [ref=e431]: "29"
+                        - generic [ref=e433]: "\"Hook type 'tutorial_howto' not clearly present\""
+                      - generic [ref=e434]:
+                        - generic "Line number 30" [ref=e435]: "30"
+                        - generic [ref=e437]: "]"
+                  - generic [ref=e438]:
+                    - generic "Line number 31" [ref=e439]: "31"
+                    - generic [ref=e441]: "}"
+            - generic [ref=e157]:
+              - generic [ref=e158]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: 元数据建议
+              - button "Copy" [ref=e166] [cursor=pointer]:
+                - img [ref=e168]
+              - generic [ref=e172]:
+                - generic [ref=e173]:
+                  - generic "Line number 1" [ref=e174]: "1"
+                  - generic [ref=e175]:
+                    - button "Collapse" [ref=e176] [cursor=pointer]: ▼
+                    - generic [ref=e177]: "{"
+                - generic [ref=e178]:
+                  - generic [ref=e180]:
+                    - generic "Line number 2" [ref=e181]: "2"
+                    - generic [ref=e182]:
+                      - generic [ref=e183]: "\"recommended_day\""
+                      - generic [ref=e184]: ":"
+                      - generic [ref=e185]: "\"Tuesday\""
+                      - generic [ref=e186]: ","
+                  - generic [ref=e188]:
+                    - generic "Line number 3" [ref=e189]: "3"
+                    - generic [ref=e190]:
+                      - generic [ref=e191]: "\"recommended_hour_utc\""
+                      - generic [ref=e192]: ":"
+                      - generic [ref=e193]: "14"
+                      - generic [ref=e194]: ","
+                  - generic [ref=e196]:
+                    - generic "Line number 4" [ref=e197]: "4"
+                    - generic [ref=e198]:
+                      - generic [ref=e199]: "\"recommended_flair\""
+                      - generic [ref=e200]: ":"
+                      - generic [ref=e201]: "\"Progress\""
+                      - generic [ref=e202]: ","
+                  - generic [ref=e204]:
+                    - generic "Line number 5" [ref=e205]: "5"
+                    - generic [ref=e206]:
+                      - generic [ref=e207]: "\"should_mark_oc\""
+                      - generic [ref=e208]: ":"
+                      - generic [ref=e209]: "false"
+                  - generic [ref=e210]:
+                    - generic "Line number 6" [ref=e211]: "6"
+                    - generic [ref=e213]: "}"

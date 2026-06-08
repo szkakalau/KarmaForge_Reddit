@@ -1,0 +1,84 @@
+- main [ref=e6]:
+  - generic [ref=e7]:
+    - heading "KarmaForge Desktop" [level=1] [ref=e12]
+    - paragraph [ref=e17]: Reddit 爆款引擎 — 从研究到行动闭环
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - button [ref=e21] [cursor=pointer]: 生成
+          - button [ref=e22] [cursor=pointer]: 追踪
+          - button [ref=e23] [cursor=pointer]: 历史
+          - button [ref=e24] [cursor=pointer]: 模式库
+          - button [ref=e25] [cursor=pointer]: 进化
+          - button [ref=e26] [cursor=pointer]: 设置
+        - tablist [ref=e27]:
+          - tab "生成" [ref=e28] [cursor=pointer]
+          - tab "追踪" [selected] [ref=e29] [cursor=pointer]
+          - tab "历史" [ref=e30] [cursor=pointer]
+          - tab "模式库" [ref=e31] [cursor=pointer]
+          - tab "进化" [ref=e32] [cursor=pointer]
+          - tab "设置" [ref=e33] [cursor=pointer]
+      - tabpanel [ref=e539]:
+        - generic [ref=e540]:
+          - generic [ref=e543]:
+            - generic [ref=e544]: 选择生成记录
+            - generic [ref=e547]:
+              - listbox "选择生成记录" [ref=e548]: "gen_fa1a0a99: Why do 80% of SaaS apps fail before reaching 100 paying user"
+              - generic:
+                - img
+          - generic [ref=e552]:
+            - heading "Why do 80% of SaaS apps fail before reaching 100 paying users?" [level=2] [ref=e553]
+            - paragraph [ref=e554]:
+              - strong [ref=e555]: "Subreddit:"
+              - text: r/SaaS |
+              - strong [ref=e556]: "Pattern:"
+              - text: "Pattern 31: tutorial_howto + no_body (tutorial_howto)"
+              - strong [ref=e557]: "ID:"
+              - code [ref=e558]: gen_fa1a0a99
+              - text: "|"
+              - strong [ref=e559]: "Created:"
+              - text: 2026-05-23T18:24
+            - blockquote [ref=e560]:
+              - paragraph [ref=e561]: I’ve been digging into this stat that keeps floating around—something like 80% of SaaS apps never hit 100 paying users. It feels brutal, but honestly, after building a few products myself and talking to other founders, I’m starting to see the pattern...
+          - generic [ref=e563]:
+            - generic [ref=e565]:
+              - generic [ref=e566]: Upvotes
+              - spinbutton "Upvotes" [ref=e567]: "7"
+            - generic [ref=e569]:
+              - generic [ref=e570]: Comments
+              - spinbutton "Comments" [ref=e571]: "0"
+            - generic [ref=e573]:
+              - generic [ref=e574]:
+                - generic [ref=e576]: Upvote Ratio (%)
+                - generic [ref=e577]:
+                  - spinbutton "number input for Upvote Ratio (%)" [ref=e578]: "90"
+                  - button "Reset to default value" [ref=e579] [cursor=pointer]: ↺
+              - generic [ref=e580]:
+                - generic [ref=e581]: "0"
+                - slider "range slider for Upvote Ratio (%)" [ref=e582] [cursor=pointer]: "90"
+                - generic [ref=e583]: "100"
+            - generic [ref=e585]:
+              - generic [ref=e586]: 目标 Subreddit (自动识别)
+              - textbox "目标 Subreddit (自动识别)" [disabled] [ref=e588]:
+                - /placeholder: ""
+                - text: SaaS
+          - button "记录效果" [ref=e589] [cursor=pointer]
+          - generic [ref=e590]:
+            - paragraph [ref=e595]:
+              - strong [ref=e596]: r/SaaS
+              - text: "|"
+              - strong [ref=e597]: "Upvotes:"
+              - text: 7 |
+              - strong [ref=e598]: "Comments:"
+              - text: 0 |
+              - strong [ref=e599]: "Ratio:"
+              - text: 90% |
+              - strong [ref=e600]: "Median:"
+              - text: "62"
+            - generic [ref=e601]:
+              - generic:
+                - generic:
+                  - img
+                - text: 效果判定
+              - heading "**[failed]** 失败 (upvotes < median × 1.5)" [level=2] [ref=e603]
+            - button "分析归因" [active] [ref=e604] [cursor=pointer]
