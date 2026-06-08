@@ -68,6 +68,15 @@ const zh = {
     button: '免费注册',
     dashboard: '进入 Dashboard',
   },
+  anti: {
+    title: '5 种反模式检测',
+    desc: '每篇 AI 生成的内容都会经过反模式检测——标题过短、正文缺失、通用低互动等 5 种已知失败模式。触发时自动警告并给出改进建议。',
+  },
+  evolve: {
+    title: '自我进化引擎',
+    desc: '每篇 Reddit 帖子发布后，系统自动追踪效果数据。失败案例通过多维度归因（标题/正文/时间/社区匹配）自动反馈到模式权重，下一次生成更精准。',
+  },
+  footer: { pricing: '定价', login: '登录' },
 }
 
 const en = {
@@ -135,6 +144,15 @@ const en = {
     button: 'Sign up free',
     dashboard: 'Go to Dashboard',
   },
+  anti: {
+    title: '5 Anti-Patterns Detected',
+    desc: 'Every AI-generated post is checked against 5 known failure patterns — title too short, missing body, generic low-engagement. Triggers automatic warnings with improvement suggestions.',
+  },
+  evolve: {
+    title: 'Self-Evolving Engine',
+    desc: 'After each Reddit post goes live, the system automatically tracks performance. Failed posts undergo multi-dimensional attribution (title/body/timing/community fit), feeding back to improve future generations.',
+  },
+  footer: { pricing: 'Pricing', login: 'Login' },
 }
 
 export default function Landing() {
@@ -238,20 +256,16 @@ export default function Landing() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Target size={16} className="text-accent" />
-                <h3 className="text-sm font-semibold">5 Anti-Patterns</h3>
+                <h3 className="text-sm font-semibold">{t.anti.title}</h3>
               </div>
-              <p className="text-text-secondary text-sm leading-relaxed">
-                每篇 AI 生成的内容都会经过反模式检测——标题过短、正文缺失、通用低互动等 5 种已知失败模式。触发时自动警告并给出改进建议。
-              </p>
+              <p className="text-text-secondary text-sm leading-relaxed">{t.anti.desc}</p>
             </div>
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Brain size={16} className="text-accent" />
-                <h3 className="text-sm font-semibold">Self-Evolving Engine</h3>
+                <h3 className="text-sm font-semibold">{t.evolve.title}</h3>
               </div>
-              <p className="text-text-secondary text-sm leading-relaxed">
-                每篇 Reddit 帖子发布后，系统自动追踪效果数据。失败案例通过多维度归因（标题/正文/时间/社区匹配）自动反馈到模式权重，下一次生成更精准。
-              </p>
+              <p className="text-text-secondary text-sm leading-relaxed">{t.evolve.desc}</p>
             </div>
           </div>
         </div>
@@ -276,8 +290,8 @@ export default function Landing() {
             <span className="text-xs text-text-muted font-mono">Reddpilot v3</span>
           </div>
           <div className="flex items-center gap-6">
-            <Link to="/pricing" className="text-xs text-text-muted hover:text-text-secondary transition-colors">定价</Link>
-            <Link to="/login" className="text-xs text-text-muted hover:text-text-secondary transition-colors">登录</Link>
+            <Link to="/pricing" className="text-xs text-text-muted hover:text-text-secondary transition-colors">{t.footer.pricing}</Link>
+            <Link to="/login" className="text-xs text-text-muted hover:text-text-secondary transition-colors">{t.footer.login}</Link>
           </div>
         </div>
       </footer>
