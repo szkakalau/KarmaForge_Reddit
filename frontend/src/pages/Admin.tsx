@@ -13,7 +13,6 @@ interface AdminStats {
 export default function Admin() {
   const [stats, setStats] = useState<AdminStats | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
 
   useEffect(() => {
     // Admin stats from available endpoints
@@ -41,10 +40,6 @@ export default function Admin() {
   return (
     <div className="max-w-4xl">
       <h1 className="text-[22px] font-semibold tracking-[-0.4px] mb-8">Admin</h1>
-
-      {error && (
-        <div className="bg-error/10 border border-error/30 rounded-md p-3 text-error text-sm mb-6">{error}</div>
-      )}
 
       {stats ? (
         <>

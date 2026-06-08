@@ -27,7 +27,6 @@ export default function Dashboard() {
 
   // Quota state
   const [quota, setQuota] = useState<QuotaInfo | null>(null)
-  const [quotaExhausted, setQuotaExhausted] = useState(false)
 
   useEffect(() => {
     api.getQuota().then(setQuota).catch(() => {})
@@ -252,7 +251,7 @@ export default function Dashboard() {
             </span>
           </div>
           <div className="grid grid-cols-3 gap-4">
-            {titles.map((t, i) => (
+            {titles.map((title, i) => (
               <div
                 key={i}
                 onClick={() => setSelectedIndex(i)}
@@ -263,16 +262,16 @@ export default function Dashboard() {
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] text-text-muted uppercase tracking-wide">{t.hook_type}</span>
-                  <span className="text-xs font-mono font-semibold text-accent">{Math.round(t.score)}%</span>
+                  <span className="text-[11px] text-text-muted uppercase tracking-wide">{title.hook_type}</span>
+                  <span className="text-xs font-mono font-semibold text-accent">{Math.round(title.score)}%</span>
                 </div>
-                <p className="text-sm text-text-primary leading-relaxed mb-3">{t.title}</p>
+                <p className="text-sm text-text-primary leading-relaxed mb-3">{title.title}</p>
                 <button
-                  onClick={() => copyTitle(t.title)}
+                  onClick={() => copyTitle(title.title)}
                   className="flex items-center gap-1.5 text-xs text-text-muted hover:text-accent transition-colors"
                 >
-                  {copied === t.title ? <Check size={14} /> : <Copy size={14} />}
-                  {copied === t.title ? t('dash.copied') : t('dash.copy')}
+                  {copied === title.title ? <Check size={14} /> : <Copy size={14} />}
+                  {copied === title.title ? t('dash.copied') : t('dash.copy')}
                 </button>
               </div>
             ))}
