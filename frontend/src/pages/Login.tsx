@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { api } from '../api'
 import { useLang } from '../i18n/LanguageContext'
 import LangSwitch from '../components/LangSwitch'
+import { trackSignUp } from '../redditPixel'
 
 export default function Login() {
   const { t } = useLang()
@@ -33,6 +34,7 @@ export default function Login() {
       const fn = isRegister ? api.register : api.login
       const res = await fn(email, password)
       localStorage.setItem('kf_token', res.token)
+      if (isRegister) trackSignUp()
       navigate('/')
     } catch (e) {
       setError(mapError(e instanceof Error ? e.message : 'Auth failed'))

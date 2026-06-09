@@ -1,7 +1,9 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Database, Microscope, Brain, Target, Hash, GitBranch } from 'lucide-react'
 import { useLang } from '../i18n/LanguageContext'
 import LangSwitch from '../components/LangSwitch'
+import { trackPurchase, RD_EVENTS } from '../redditPixel'
 
 const zh = {
   hero: {
@@ -159,6 +161,17 @@ export default function Landing() {
   const { lang } = useLang()
   const t = lang === 'zh' ? zh : en
   const token = localStorage.getItem('kf_token')
+
+  // Fire Purchase when returning from Stripe checkout success
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search)
+    if (p.get('upgraded') === 'true' && !localStorage.getItem(RD_EVENTS.PURCHASE_FIRED)) {
+      trackPurchase(`stripe_${Date.now()}`)
+      localStorage.setItem(RD_EVENTS.PURCHASE_FIRED, '1')
+      // Clean URL without reloading
+      window.history.replaceState({}, '', '/')
+    }
+  }, [])
 
   return (
     <div className="min-h-screen">

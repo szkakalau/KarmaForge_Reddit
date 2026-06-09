@@ -6,6 +6,7 @@ import type { QuotaInfo } from '../api'
 import type { TitleItem, FullGenerationResponse } from '../api'
 import { useLang } from '../i18n/LanguageContext'
 import Onboarding from '../components/Onboarding'
+import { trackLead, RD_EVENTS } from '../redditPixel'
 
 export default function Dashboard() {
   const { t } = useLang()
@@ -53,6 +54,10 @@ export default function Dashboard() {
       const res = await api.generateTitles(input, subreddit || undefined)
       setTitles(res.titles)
       setGenId(res.generation_id)
+      if (!localStorage.getItem(RD_EVENTS.LEAD_FIRED)) {
+        trackLead()
+        localStorage.setItem(RD_EVENTS.LEAD_FIRED, '1')
+      }
     } catch (e) {
       setError(_handleApiError(e))
     } finally {
