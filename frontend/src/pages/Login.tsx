@@ -8,18 +8,26 @@ import { trackSignUp } from '../redditPixel'
 export default function Login() {
   const { t } = useLang()
   const navigate = useNavigate()
-  const hasToken = !!localStorage.getItem('kf_token')
 
-  useEffect(() => {
-    if (hasToken) navigate('/app')
-  }, [hasToken, navigate])
-
-  if (hasToken) return null
+  // All hooks must be called before any conditional return (Rules of Hooks)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isRegister, setIsRegister] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [checking, setChecking] = useState(true)
+
+  useEffect(() => {
+    const token = localStorage.getItem('kf_token')
+    if (token) {
+      navigate('/app')
+    } else {
+      setChecking(false)
+    }
+  }, [navigate])
+
+  // Show nothing while checking for existing token to avoid flash
+  if (checking) return null
 
   function mapError(msg: string): string {
     if (msg.includes('409') || msg.includes('already registered')) return t('login.error.email_taken')
