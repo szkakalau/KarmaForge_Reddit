@@ -176,7 +176,7 @@ export default function Landing() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="max-w-[960px] mx-auto pt-24 pb-16 px-8">
+      <section className="max-w-[960px] mx-auto pt-16 pb-12 px-4 sm:px-8 lg:pt-24 lg:pb-16">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-accent" />
@@ -185,7 +185,7 @@ export default function Landing() {
           <LangSwitch />
         </div>
 
-        <h1 className="text-[40px] sm:text-[48px] font-bold tracking-[-1.2px] leading-[1.08] mb-6 max-w-[760px]">
+        <h1 className="text-[28px] sm:text-[40px] lg:text-[48px] font-bold tracking-[-0.8px] sm:tracking-[-1.2px] leading-[1.08] mb-6 max-w-[760px]">
           {t.hero.line1}
           <br />
           <span className="text-accent">{t.hero.line2}</span>
@@ -195,11 +195,11 @@ export default function Landing() {
           {t.hero.sub}
         </p>
 
-        <div className="flex items-center gap-4">
-          <Link to={token ? '/app' : '/login'} className="flex items-center gap-2 bg-accent text-base font-semibold px-6 py-3 rounded-md text-sm hover:bg-accent-hover transition-colors">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+          <Link to={token ? '/app' : '/login'} className="flex items-center justify-center gap-2 bg-accent text-base font-semibold px-6 py-3 rounded-md text-sm hover:bg-accent-hover transition-colors">
             {token ? t.hero.dashboard : t.hero.cta} <ArrowRight size={16} />
           </Link>
-          <Link to="/pricing" className="flex items-center gap-2 bg-surface-1 border border-border text-text-primary font-semibold px-6 py-3 rounded-md text-sm hover:bg-surface-2 transition-colors">
+          <Link to="/pricing" className="flex items-center justify-center gap-2 bg-surface-1 border border-border text-text-primary font-semibold px-6 py-3 rounded-md text-sm hover:bg-surface-2 transition-colors">
             {t.hero.pricing}
           </Link>
         </div>
@@ -207,7 +207,7 @@ export default function Landing() {
 
       {/* Metrics bar */}
       <section className="border-y border-border">
-        <div className="max-w-[960px] mx-auto px-8 py-12">
+        <div className="max-w-[960px] mx-auto px-4 sm:px-8 py-8 lg:py-12">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {t.metrics.map(m => (
               <div key={m.label} className="text-center lg:text-left">
@@ -222,8 +222,8 @@ export default function Landing() {
 
       {/* Methodology */}
       <section className="border-b border-border">
-        <div className="max-w-[960px] mx-auto px-8 py-20">
-          <h2 className="text-[11px] font-mono uppercase tracking-widest text-text-muted mb-12">
+        <div className="max-w-[960px] mx-auto px-4 sm:px-8 py-12 lg:py-20">
+          <h2 className="text-[11px] font-mono uppercase tracking-widest text-text-muted mb-8 lg:mb-12">
             {t.methodology.title}
           </h2>
           <div className="space-y-0">
@@ -242,11 +242,11 @@ export default function Landing() {
 
       {/* Pattern Library */}
       <section className="border-b border-border">
-        <div className="max-w-[960px] mx-auto px-8 py-20">
+        <div className="max-w-[960px] mx-auto px-4 sm:px-8 py-12 lg:py-20">
           <h2 className="text-[11px] font-mono uppercase tracking-widest text-text-muted mb-3">
             {t.patterns.title}
           </h2>
-          <p className="text-text-secondary text-sm mb-12">{t.patterns.sub}</p>
+          <p className="text-text-secondary text-sm mb-8 lg:mb-12">{t.patterns.sub}</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {t.patterns.list.map(p => (
               <div key={p.name} className="bg-surface-1 border border-border rounded-lg p-5 group hover:border-accent/30 transition-colors">
@@ -264,8 +264,8 @@ export default function Landing() {
 
       {/* Anti-patterns + Self-evolution */}
       <section className="border-b border-border">
-        <div className="max-w-[960px] mx-auto px-8 py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <div className="max-w-[960px] mx-auto px-4 sm:px-8 py-12 lg:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Target size={16} className="text-accent" />
@@ -286,7 +286,7 @@ export default function Landing() {
 
       {/* CTA */}
       <section className="border-b border-border">
-        <div className="max-w-[960px] mx-auto px-8 py-20 text-center">
+        <div className="max-w-[960px] mx-auto px-4 sm:px-8 py-12 lg:py-20 text-center">
           <h2 className="text-[22px] font-semibold mb-3">{t.cta.title}</h2>
           <p className="text-text-secondary text-sm mb-8 max-w-[400px] mx-auto">{t.cta.sub}</p>
           <Link to={token ? '/app' : '/login'} className="inline-flex items-center gap-2 bg-accent text-base font-semibold px-6 py-3 rounded-md text-sm hover:bg-accent-hover transition-colors">
@@ -297,7 +297,7 @@ export default function Landing() {
 
       {/* Footer */}
       <footer className="border-b border-border">
-        <div className="max-w-[960px] mx-auto px-8 py-8 flex items-center justify-between">
+        <div className="max-w-[960px] mx-auto px-4 sm:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-accent" />
             <span className="text-xs text-text-muted font-mono">Reddpilot v3</span>

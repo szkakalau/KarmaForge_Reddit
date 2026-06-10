@@ -48,7 +48,7 @@ export default function Analytics() {
     return (
       <div className="max-w-5xl">
         <h1 className="text-[22px] font-semibold mb-8">Analytics</h1>
-        <div className="grid grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[1,2,3,4].map(i => (
             <div key={i} className="h-24 bg-surface-1 border border-border rounded-lg animate-pulse" />
           ))}
@@ -62,7 +62,7 @@ export default function Analytics() {
       <h1 className="text-[22px] font-semibold tracking-[-0.4px] mb-8">Analytics</h1>
 
       {/* Metric cards */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <MetricCard icon={<TrendingUp size={20} />} label="Total Posts" value={data?.total_posts ?? 0} />
         <MetricCard icon={<Zap size={20} />} label="Avg Upvotes" value={data?.avg_upvotes ?? 0} mono />
         <MetricCard icon={<Target size={20} />} label="Survival Rate" value={`${data?.survival_rate ?? 0}%`} accent />
@@ -85,7 +85,7 @@ export default function Analytics() {
 
       {/* Timing Optimization */}
       <div className="bg-surface-1 border border-border rounded-lg p-5 mb-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <h2 className="text-sm font-semibold text-text-secondary flex items-center gap-2">
             <Clock size={16} /> Best Posting Times
           </h2>
@@ -116,8 +116,8 @@ export default function Analytics() {
       </div>
 
       {/* Quick History */}
-      <div className="border border-border rounded-lg overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="border border-border rounded-lg overflow-x-auto">
+        <table className="w-full text-sm min-w-[500px]">
           <thead>
             <tr className="bg-surface-2 text-text-muted text-xs font-semibold uppercase">
               <th className="text-left p-3 pl-4">Recent Posts</th>

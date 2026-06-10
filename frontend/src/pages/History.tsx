@@ -37,8 +37,8 @@ export default function History() {
           </p>
         </div>
       ) : (
-        <div className="border border-border rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="border border-border rounded-lg overflow-x-auto">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="bg-surface-2 text-text-muted text-xs font-semibold uppercase tracking-wide">
                 <th className="text-left p-3 pl-4">Status</th>

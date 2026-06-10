@@ -145,8 +145,8 @@ export default function Pricing({ quota }: PricingProps) {
       </div>
 
       <h2 className="text-[16px] font-semibold mb-4">{t('pricing.compare_title')}</h2>
-      <div className="bg-surface-1 border border-border rounded-lg overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="bg-surface-1 border border-border rounded-lg overflow-x-auto">
+        <table className="w-full text-sm min-w-[400px]">
           <thead>
             <tr className="border-b border-border">
               <th className="text-left p-4 text-text-secondary font-semibold text-xs uppercase tracking-wide">{t('pricing.compare.feature')}</th>

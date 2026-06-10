@@ -62,7 +62,7 @@ export default function Onboarding({ onComplete }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-base/80 backdrop-blur-sm">
-      <div className="bg-surface-1 border border-border rounded-lg w-full max-w-md mx-4 p-8">
+      <div className="bg-surface-1 border border-border rounded-lg w-full max-w-md mx-4 p-6 sm:p-8">
         {/* Progress */}
         <div className="flex gap-2 mb-8">
           {steps.map((_, i) => (

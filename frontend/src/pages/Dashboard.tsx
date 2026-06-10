@@ -172,7 +172,7 @@ export default function Dashboard() {
 
       {/* Generator Card */}
       <div className="bg-surface-1 border border-border rounded-lg p-6 mb-8">
-        <div className="flex gap-3 items-end">
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-end">
           <div className="flex-1">
             <label className="block text-[13px] font-semibold text-text-secondary mb-2">
               {t('dash.what_promoting')}
@@ -186,7 +186,7 @@ export default function Dashboard() {
               className="w-full bg-surface-2 border border-border rounded-md px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-accent transition-colors"
             />
           </div>
-          <div style={{ width: 200 }}>
+          <div className="w-full sm:w-[200px]">
             <label className="block text-[13px] font-semibold text-text-secondary mb-2">
               {t('dash.subreddit')}
             </label>
@@ -201,7 +201,7 @@ export default function Dashboard() {
           <button
             onClick={generate}
             disabled={loading || !input.trim()}
-            className="flex items-center gap-2 bg-accent text-base font-semibold px-5 py-2.5 rounded-md text-sm hover:bg-accent-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-2 bg-accent text-base font-semibold px-5 py-2.5 rounded-md text-sm hover:bg-accent-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="animate-spin w-4 h-4 border-2 border-base border-t-transparent rounded-full" />
@@ -222,7 +222,7 @@ export default function Dashboard() {
       {/* Upgrade Banner — shows when quota is low or exhausted */}
       {quota && quota.remaining === 0 && !error && (
         <div className="bg-accent/8 border-l-2 border-accent rounded-r-lg p-4 mb-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <p className="text-sm font-semibold text-text-primary mb-1">
                 {t('dash.upgrade_banner_title', { limit: quota?.limit ?? 20 })}
@@ -233,7 +233,7 @@ export default function Dashboard() {
             </div>
             <button
               onClick={() => navigate('/app/pricing')}
-              className="flex items-center gap-1.5 bg-accent text-base font-semibold px-4 py-2 rounded-md text-xs hover:bg-accent-hover transition-colors shrink-0 ml-4"
+              className="flex items-center gap-1.5 bg-accent text-base font-semibold px-4 py-2 rounded-md text-xs hover:bg-accent-hover transition-colors shrink-0 sm:ml-4 w-full sm:w-auto justify-center"
             >
               {t('dash.upgrade_button')} <ArrowUpRight size={14} />
             </button>
@@ -243,7 +243,7 @@ export default function Dashboard() {
 
       {/* Loading skeleton */}
       {loading && (
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {[1, 2, 3].map(i => (
             <div key={i} className="bg-surface-1 border border-border rounded-lg p-5 animate-pulse">
               <div className="h-3 bg-surface-3 rounded w-24 mb-3" />
@@ -263,7 +263,7 @@ export default function Dashboard() {
               {genId.slice(0, 10)}...
             </span>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {titles.map((title, i) => (
               <div
                 key={i}
@@ -291,7 +291,7 @@ export default function Dashboard() {
           </div>
 
           {/* Full post generation button */}
-          <div className="mt-6 flex items-center gap-4">
+          <div className="mt-6 flex flex-wrap items-center gap-4">
             <button
               onClick={generateFull}
               disabled={generatingFull}
@@ -304,7 +304,7 @@ export default function Dashboard() {
               )}
               {t('dash.generate_full')}
             </button>
-            <span className="text-xs text-text-muted truncate max-w-[300px]">
+            <span className="text-xs text-text-muted truncate max-w-[200px] sm:max-w-[300px]">
               Using: {titles[selectedIndex]?.title?.slice(0, 60)}...
             </span>
           </div>
@@ -349,7 +349,7 @@ export default function Dashboard() {
                 </span>
               </div>
               {selfCheck.dimensions && (
-                <div className="grid grid-cols-2 gap-3 mb-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                   {Object.entries(selfCheck.dimensions).map(([dim, info]: [string, any]) => (
                     <div key={dim} className="flex justify-between items-center bg-surface-2 rounded px-3 py-2">
                       <span className="text-xs text-text-secondary">{dim}</span>
@@ -376,7 +376,7 @@ export default function Dashboard() {
                 </div>
               )}
               {/* Action buttons */}
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <button
                   onClick={recheck}
                   disabled={!editedBody}
