@@ -11,7 +11,7 @@ export default function Login() {
   const hasToken = !!localStorage.getItem('kf_token')
 
   useEffect(() => {
-    if (hasToken) navigate('/')
+    if (hasToken) navigate('/app')
   }, [hasToken, navigate])
 
   if (hasToken) return null
@@ -35,7 +35,7 @@ export default function Login() {
       const res = await fn(email, password)
       localStorage.setItem('kf_token', res.token)
       if (isRegister) trackSignUp()
-      navigate('/')
+      navigate('/app')
     } catch (e) {
       setError(mapError(e instanceof Error ? e.message : 'Auth failed'))
     } finally {

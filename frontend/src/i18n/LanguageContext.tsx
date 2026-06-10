@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import type { Lang } from './translations'
 import { tx } from './translations'
 
@@ -16,14 +16,21 @@ const LanguageContext = createContext<LanguageCtx>({
   t: (key) => key,
 })
 
+function detectLang(): Lang {
+  const stored = localStorage.getItem(LS_KEY)
+  if (stored === 'en' || stored === 'zh') return stored
+  if (typeof navigator !== 'undefined' && navigator.language.startsWith('en')) return 'en'
+  return 'zh'
+}
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(() => {
-    const stored = localStorage.getItem(LS_KEY)
-    if (stored === 'en' || stored === 'zh') return stored
-    // Default to browser language
-    if (typeof navigator !== 'undefined' && navigator.language.startsWith('en')) return 'en'
-    return 'zh'
-  })
+  // Always start with 'zh' for SSR — avoids hydration mismatch.
+  // Browser language detection happens in useEffect after mount.
+  const [lang, setLangState] = useState<Lang>('zh')
+
+  useEffect(() => {
+    setLangState(detectLang())
+  }, [])
 
   const setLang = (l: Lang) => {
     setLangState(l)
