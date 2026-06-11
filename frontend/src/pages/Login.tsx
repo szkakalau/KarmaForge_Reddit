@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { api } from '../api'
 import { useLang } from '../i18n/LanguageContext'
 import LangSwitch from '../components/LangSwitch'
@@ -8,6 +8,7 @@ import { trackSignUp } from '../redditPixel'
 export default function Login() {
   const { t } = useLang()
   const navigate = useNavigate()
+  const location = useLocation()
 
   // All hooks must be called before any conditional return (Rules of Hooks)
   const [email, setEmail] = useState('')
@@ -21,10 +22,19 @@ export default function Login() {
     const token = localStorage.getItem('kf_token')
     if (token) {
       navigate('/app')
-    } else {
-      setChecking(false)
+      return
     }
-  }, [navigate])
+    // Read query params for ad → signup flow
+    const params = new URLSearchParams(location.search)
+    if (params.get('mode') === 'register') {
+      setIsRegister(true)
+    }
+    const emailParam = params.get('email')
+    if (emailParam) {
+      setEmail(emailParam)
+    }
+    setChecking(false)
+  }, [navigate, location.search])
 
   // Show nothing while checking for existing token to avoid flash
   if (checking) return null

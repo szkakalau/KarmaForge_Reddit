@@ -19,7 +19,7 @@ export default function Pricing({ quota }: PricingProps) {
   const isPro = quota?.tier === 'pro'
 
   async function upgrade() {
-    if (!token) { navigate('/login'); return }
+    if (!token) { navigate('/login?mode=register'); return }
     setLoading(true)
     setError('')
     try {
@@ -78,7 +78,7 @@ export default function Pricing({ quota }: PricingProps) {
             </button>
           ) : (
             <button
-              onClick={() => token ? navigate('/app') : navigate('/login')}
+              onClick={() => token ? navigate('/app') : navigate('/login?mode=register')}
               className="w-full bg-surface-2 border border-border text-text-primary font-semibold py-2.5 rounded-md text-sm hover:bg-surface-3 transition-colors mb-4"
             >
               {token ? t('pricing.free_back') : t('pricing.free_signup')}
