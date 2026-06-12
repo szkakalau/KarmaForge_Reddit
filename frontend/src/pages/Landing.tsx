@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowRight, ArrowUp, MessageCircle, Check, CreditCard, Gift, Shield, Database, Microscope, Brain, Target, Hash, GitBranch } from 'lucide-react'
+import { ArrowRight, ArrowUp, MessageCircle, CreditCard, Gift, Shield, Database, Microscope, Brain, Target, Hash, GitBranch } from 'lucide-react'
 import { useLang } from '../i18n/LanguageContext'
 import LangSwitch from '../components/LangSwitch'
 import { trackPurchase, RD_EVENTS } from '../redditPixel'
