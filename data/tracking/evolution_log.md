@@ -1,3 +1,44 @@
+## Evolution Run — 2026-06-10T07:05:15.795825+00:00
+
+- Feedback entries processed: **55**
+- Patterns updated: **1**
+- Patterns marked inactive: **1**
+
+Processed 55 feedback entries (run_id=5d401139339c).
+Updated 1 patterns, marked 1 inactive.
+
+Changes:
+  - `Pattern A`: success_rate 0.65→0.00 (down)
+  - `Pattern A`: MARKED INACTIVE (55 consecutive failures)
+
+---
+## Evolution Run — 2026-06-10T07:05:15.765379+00:00
+
+- Feedback entries processed: **55**
+- Patterns updated: **1**
+- Patterns marked inactive: **1**
+
+Processed 55 feedback entries (run_id=a5eac72827f4).
+Updated 1 patterns, marked 1 inactive.
+
+Changes:
+  - `Pattern A`: success_rate 0.65→0.58 (down)
+  - `Pattern A`: MARKED INACTIVE (10 consecutive failures)
+
+---
+## Evolution Run — 2026-06-10T07:05:15.744326+00:00
+
+- Feedback entries processed: **55**
+- Patterns updated: **1**
+- Patterns marked inactive: **0**
+
+Processed 55 feedback entries (run_id=afe0cd7a3ee9).
+Updated 1 patterns, marked 0 inactive.
+
+Changes:
+  - `Pattern A`: success_rate 0.65→0.81 (up)
+
+---
 ## Evolution Run — 2026-06-06T13:52:12.695733+00:00
 
 - Feedback entries processed: **55**
